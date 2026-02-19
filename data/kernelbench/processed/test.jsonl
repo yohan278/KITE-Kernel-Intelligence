@@ -1,0 +1,1 @@
+{"task_id": "kb_default_3", "level": 3, "prompt": "Implement decode-step KV cache update kernel.", "reference_kernel": "def kernel(cache, token): return cache", "metadata": {"source": "default"}}

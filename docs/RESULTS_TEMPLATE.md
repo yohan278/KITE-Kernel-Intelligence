@@ -3,7 +3,7 @@
 ## Run Metadata
 
 - Date:
-- Commit:
+- Commit: b6c52595fbb7980b6082e75cb5b208a15a5d8eca
 - Hardware:
 - Base Model:
 - Dataset Split:
