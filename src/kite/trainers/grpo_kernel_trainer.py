@@ -24,6 +24,9 @@ class GRPOKernelConfig:
     group_size: int = 8
     keep_top_k: int = 4
     energy_aware: bool = False
+    telemetry_trace_dir: Path | None = Path("data/telemetry/runs")
+    ipw_profile_dir: Path | None = None
+    allow_synthetic_fallback: bool = True
 
 
 class GRPOKernelTrainer:
@@ -42,6 +45,8 @@ class GRPOKernelTrainer:
     def run(self) -> dict[str, object]:
         tasks = self.adapter.discover_tasks()
         rollout_cfg = RolloutConfig(group_size=self.config.group_size)
+        telemetry_corpus = self._load_telemetry_corpus()
+        telemetry_idx = 0
 
         history: list[dict[str, object]] = []
 
@@ -53,8 +58,15 @@ class GRPOKernelTrainer:
 
                 for cand in shortlisted:
                     if self.config.energy_aware:
-                        trace = self.energy_capture.synthetic_trace(steps=120)
-                        trace = attribute_prefill_decode(trace, ttft_s=0.4)
+                        if telemetry_corpus:
+                            trace = telemetry_corpus[telemetry_idx % len(telemetry_corpus)]
+                            telemetry_idx += 1
+                        else:
+                            trace = self.energy_capture.synthetic_trace(steps=120)
+
+                        if not trace.phase_segments:
+                            trace = attribute_prefill_decode(trace, ttft_s=0.4)
+
                         summary = self.ipw_adapter.summarize(trace, input_tokens=512, output_tokens=128)
                         reward = compute_energy_aware_reward(
                             candidate=cand,
@@ -92,3 +104,10 @@ class GRPOKernelTrainer:
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
         return checkpoint
+
+    def _load_telemetry_corpus(self):
+        return self.energy_capture.load_trace_corpus(
+            trace_dir=self.config.telemetry_trace_dir,
+            ipw_profile_dir=self.config.ipw_profile_dir,
+            allow_synthetic_fallback=self.config.allow_synthetic_fallback,
+        )

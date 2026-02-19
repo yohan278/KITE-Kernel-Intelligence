@@ -1,8 +1,11 @@
-"""Qwen policy wrapper (v0 heuristic stub)."""
+"""Qwen policy wrapper with optional KernelBench generation backend."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
+import sys
+from typing import Optional
 
 from kite.types import KernelCandidate, KernelTask
 
@@ -12,19 +15,47 @@ class QwenPolicyConfig:
     model_name: str = "Qwen/Qwen2.5-Coder-7B-Instruct"
     temperature: float = 0.8
     max_new_tokens: int = 1024
+    generation_mode: str = "stub"  # stub | kernelbench_server
+    server_type: str = "local"
+    backend: str = "cuda"
+    precision: str = "fp32"
+    prompt_option: str = "one_shot"
+    include_hardware_info: bool = False
+    hardware_gpu_name: Optional[str] = None
+    custom_prompt_key: Optional[str] = None
+    check_kernel: bool = False
+    reasoning_effort: Optional[str] = None
+    budget_tokens: int = 0
+    is_reasoning_model: bool = False
+    kernelbench_root: Path = Path("external/KernelBench")
 
 
 class QwenPolicy:
     """Policy facade for kernel generation.
 
-    This v0 implementation is deterministic and model-free to keep local tests
-    lightweight. Replace `generate_candidate` with real model inference.
+    `generation_mode` controls execution:
+    - `stub`: deterministic local fallback for tests/offline.
+    - `kernelbench_server`: use KernelBench prompt construction + inference server.
     """
 
     def __init__(self, config: QwenPolicyConfig | None = None) -> None:
         self.config = config or QwenPolicyConfig()
 
     def generate_candidate(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
+        if self.config.generation_mode == "stub":
+            return self._generate_candidate_stub(task, attempt)
+        if self.config.generation_mode == "kernelbench_server":
+            try:
+                return self._generate_candidate_kernelbench(task, attempt)
+            except Exception as exc:
+                # Keep training loops alive when external services are unavailable.
+                fallback = self._generate_candidate_stub(task, attempt)
+                fallback.logs["generation_fallback"] = True
+                fallback.logs["generation_error"] = str(exc)
+                return fallback
+        raise ValueError(f"Unsupported generation_mode: {self.config.generation_mode}")
+
+    def _generate_candidate_stub(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
         compile_ok = attempt % 5 != 0
         correct = compile_ok and attempt % 3 != 0
 
@@ -52,3 +83,101 @@ class QwenPolicy:
             speedup=speedup,
             logs={"policy": self.config.model_name, "attempt": attempt},
         )
+
+    def _generate_candidate_kernelbench(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
+        self._ensure_kernelbench_on_path()
+
+        # Imports are intentionally local; many environments won't have these deps.
+        from kernelbench.prompt_constructor_toml import (  # type: ignore
+            get_custom_prompt,
+            get_prompt_for_backend,
+        )
+        from kernelbench.utils import (  # type: ignore
+            create_inference_server_from_presets,
+            extract_first_code,
+        )
+
+        reference_src = (
+            str(task.metadata.get("ref_arch_src"))
+            if task.metadata.get("ref_arch_src")
+            else task.reference_kernel
+        )
+        if not reference_src:
+            reference_src = task.prompt
+
+        if self.config.custom_prompt_key:
+            prompt = get_custom_prompt(
+                self.config.custom_prompt_key,
+                ref_arch_src=reference_src,
+                backend=self.config.backend,
+                option=self.config.prompt_option,
+                precision=self.config.precision,
+                include_hardware=self.config.include_hardware_info,
+                gpu_name=self.config.hardware_gpu_name,
+            )
+        else:
+            prompt = get_prompt_for_backend(
+                reference_src,
+                self.config.backend,
+                option=self.config.prompt_option,
+                precision=self.config.precision,
+                include_hardware=self.config.include_hardware_info,
+                gpu_name=self.config.hardware_gpu_name,
+            )
+
+        inference_server = create_inference_server_from_presets(
+            server_type=self.config.server_type,
+            model_name=self.config.model_name,
+            temperature=self.config.temperature,
+            max_tokens=self.config.max_new_tokens,
+            is_reasoning_model=self.config.is_reasoning_model,
+            reasoning_effort=self.config.reasoning_effort,
+            budget_tokens=self.config.budget_tokens,
+        )
+
+        raw = inference_server(prompt)
+        code = extract_first_code(raw, ["python", "cpp"]) or ""
+
+        compile_ok = bool(code and "TODO" not in code)
+        if self.config.check_kernel and compile_ok:
+            from kernelbench.kernel_static_checker import validate_kernel_static  # type: ignore
+
+            static_ok, errors, warnings = validate_kernel_static(
+                code,
+                backend=self.config.backend,
+                precision=self.config.precision,
+            )
+            compile_ok = bool(static_ok)
+        else:
+            errors = []
+            warnings = []
+
+        return KernelCandidate(
+            task_id=task.task_id,
+            code=code,
+            compile_ok=compile_ok,
+            # Correctness/perf are delegated to KernelBench eval in adapter.
+            correct=False,
+            runtime_ms=None,
+            speedup=None,
+            logs={
+                "policy": self.config.model_name,
+                "attempt": attempt,
+                "generation_mode": self.config.generation_mode,
+                "server_type": self.config.server_type,
+                "backend": self.config.backend,
+                "static_errors": errors,
+                "static_warnings": warnings,
+            },
+        )
+
+    def _ensure_kernelbench_on_path(self) -> None:
+        src_dir = self.config.kernelbench_root / "src"
+        if not src_dir.exists():
+            raise FileNotFoundError(
+                f"KernelBench src path not found: {src_dir}. "
+                "Set QwenPolicyConfig.kernelbench_root correctly."
+            )
+        src_dir_str = str(src_dir.resolve())
+        if src_dir_str not in sys.path:
+            sys.path.insert(0, src_dir_str)
