@@ -1,0 +1,6 @@
+slas:
+  ttft_p95_max_s: 2.0
+  tbt_p95_max_s: 0.10
+  e2e_p95_max_s: 30.0
+  throughput_min_tps: 100.0
+  power_max_w: 700.0

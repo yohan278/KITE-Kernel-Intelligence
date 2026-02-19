@@ -1,0 +1,18 @@
+project:
+  name: KITE
+  mode: staged_then_hrl
+  seed: 42
+  output_root: ./outputs
+  checkpoints_root: ./checkpoints
+  logs_root: ./logs
+
+data:
+  kernelbench_root: ./external/KernelBench
+  processed_root: ./data/kernelbench/processed
+  traces_root: ./data/traces
+  telemetry_root: ./data/telemetry/runs
+
+tracks:
+  kernel_only: true
+  energy_aware_kernel: true
+  hierarchical_rl: true

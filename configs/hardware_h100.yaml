@@ -1,0 +1,12 @@
+hardware:
+  target: H100
+  num_gpus: 8
+  memory_gb_per_gpu: 80
+  interconnect: NVLink
+  telemetry_sampling_ms: 50
+
+runtime_action_space:
+  power_cap_w: [350, 450, 550, 650, 700]
+  dvfs_profile: ["efficiency", "balanced", "performance"]
+  microbatch: [1, 2, 4, 8, 16]
+  concurrency: [1, 2, 4, 8]

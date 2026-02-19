@@ -1,0 +1,16 @@
+energy_reward:
+  correctness_weight: 0.45
+  speedup_weight: 0.20
+  energy_per_output_token_weight: 0.15
+  avg_power_weight: 0.10
+  latency_sla_weight: 0.10
+  prefill_energy_per_token_weight: 0.05
+  decode_energy_per_token_weight: 0.05
+  incorrect_kernel_penalty: 2.0
+
+hrl_reward:
+  throughput_weight: 0.35
+  apj_weight: 0.25
+  apw_weight: 0.20
+  latency_violation_weight: 0.15
+  stability_weight: 0.05
