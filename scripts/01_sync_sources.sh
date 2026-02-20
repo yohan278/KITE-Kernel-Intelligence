@@ -4,9 +4,61 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-echo "[01] Source sync checklist"
-echo "- Populate external/KernelBench with pinned commit"
-echo "- Populate external/ipw_internal (or symlink)"
+echo "=== KITE source sync ==="
 
-test -d external/KernelBench && echo "KernelBench path exists" || echo "KernelBench path missing"
-test -d external/ipw_internal && echo "IPW path exists" || echo "IPW path missing"
+# ---- KernelBench ----
+KB_DIR="$ROOT/external/KernelBench"
+if [ -d "$KB_DIR/src/kernelbench" ]; then
+    echo "[OK] KernelBench source tree present"
+    KB_COMMIT=$(cd "$KB_DIR" && git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+    echo "     commit: $KB_COMMIT"
+else
+    echo "[MISSING] external/KernelBench – clone it:"
+    echo "  git clone https://github.com/ScalingIntelligence/KernelBench.git external/KernelBench"
+    exit 1
+fi
+
+# ---- IPW internal ----
+IPW_DIR="$ROOT/external/ipw_internal"
+if [ -d "$IPW_DIR" ] || [ -L "$IPW_DIR" ]; then
+    echo "[OK] IPW path exists"
+    if [ -f "$IPW_DIR/intelligence-per-watt/src/ipw/execution/runner.py" ]; then
+        echo "     ProfilerRunner found"
+    elif [ -f "$IPW_DIR/README.md" ]; then
+        echo "     README found (symlink target may be incomplete)"
+    fi
+else
+    echo "[MISSING] external/ipw_internal – create a symlink:"
+    echo "  ln -s /path/to/ipw_internal external/ipw_internal"
+    exit 1
+fi
+
+# ---- Python package ----
+if python -c "import kite" 2>/dev/null; then
+    echo "[OK] kite package importable"
+else
+    echo "[WARN] kite not importable; run: pip install -e ."
+fi
+
+# ---- GPU availability ----
+if python -c "import torch; assert torch.cuda.is_available()" 2>/dev/null; then
+    GPU_NAME=$(python -c "import torch; print(torch.cuda.get_device_name(0))")
+    echo "[OK] CUDA available: $GPU_NAME"
+else
+    echo "[INFO] No CUDA GPU detected (stub mode will be used)"
+fi
+
+# ---- IPW telemetry smoke check ----
+if python -c "
+import sys, os
+sys.path.insert(0, '$IPW_DIR/intelligence-per-watt/src')
+from ipw.execution.runner import ProfilerRunner
+print('IPW ProfilerRunner importable')
+" 2>/dev/null; then
+    echo "[OK] IPW profiler importable"
+else
+    echo "[INFO] IPW profiler not importable (will use synthetic traces)"
+fi
+
+echo ""
+echo "=== Sync complete ==="
