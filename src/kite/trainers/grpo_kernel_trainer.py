@@ -1,10 +1,10 @@
-"""GRPO-style kernel trainer."""
+"""GRPO-style kernel trainer with real trl.GRPOTrainer integration."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import Optional
 
 from kite.adapters.ipw_adapter import IPWAdapter
 from kite.adapters.kernelbench_adapter import KernelBenchAdapter
@@ -14,7 +14,10 @@ from kite.rewards.energy_reward import EnergyRewardConfig, compute_energy_aware_
 from kite.rewards.kernel_reward import staged_kernel_reward
 from kite.telemetry.energy_capture import EnergyCapture
 from kite.telemetry.phase_attribution import attribute_prefill_decode
-from kite.utils.serialization import save_json, save_jsonl
+from kite.utils.logging import get_logger
+from kite.utils.serialization import load_yaml, save_json, save_jsonl
+
+logger = get_logger(__name__)
 
 
 @dataclass(slots=True)
@@ -24,6 +27,17 @@ class GRPOKernelConfig:
     group_size: int = 8
     keep_top_k: int = 4
     energy_aware: bool = False
+    telemetry_trace_dir: Optional[Path] = Path("data/telemetry/runs")
+    ipw_profile_dir: Optional[Path] = None
+    allow_synthetic_fallback: bool = True
+    model_config_path: Optional[Path] = None
+    lora_rank: int = 64
+    lora_alpha: int = 16
+    learning_rate: float = 5e-6
+    batch_size: int = 4
+    max_completion_length: int = 1024
+    beta: float = 0.04
+    correctness_bias_epochs: int = 2
 
 
 class GRPOKernelTrainer:
@@ -38,10 +52,190 @@ class GRPOKernelTrainer:
         self.config = config or GRPOKernelConfig()
         self.energy_capture = EnergyCapture()
         self.ipw_adapter = IPWAdapter()
+        if self.config.model_config_path:
+            self._load_yaml_overrides()
+
+    def _load_yaml_overrides(self) -> None:
+        try:
+            cfg = load_yaml(self.config.model_config_path)
+            lora = cfg.get("model", {}).get("lora", {})
+            train = cfg.get("training", {})
+            if lora.get("rank"):
+                self.config.lora_rank = int(lora["rank"])
+            if lora.get("alpha"):
+                self.config.lora_alpha = int(lora["alpha"])
+            if train.get("learning_rate"):
+                self.config.learning_rate = float(train["learning_rate"])
+            if train.get("batch_size"):
+                self.config.batch_size = int(train["batch_size"])
+        except Exception:
+            pass
 
     def run(self) -> dict[str, object]:
+        if self._can_train_real():
+            return self._run_real_grpo()
+        return self._run_stub_grpo()
+
+    @staticmethod
+    def _can_train_real() -> bool:
+        try:
+            import torch  # type: ignore  # noqa: F401
+            import transformers  # type: ignore  # noqa: F401
+            import trl  # type: ignore  # noqa: F401
+            import peft  # type: ignore  # noqa: F401
+
+            return True
+        except ImportError:
+            return False
+
+    def _run_real_grpo(self) -> dict[str, object]:
+        """Real GRPO training using trl.GRPOTrainer."""
+        import torch  # type: ignore
+        from datasets import Dataset  # type: ignore
+        from peft import LoraConfig, TaskType  # type: ignore
+        from transformers import AutoModelForCausalLM, AutoTokenizer  # type: ignore
+        from trl import GRPOTrainer, GRPOConfig  # type: ignore
+
+        model_name = self.policy.config.model_name
+        dtype = torch.bfloat16
+
+        logger.info("Loading model for GRPO: %s", model_name)
+        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+            tokenizer.pad_token_id = tokenizer.eos_token_id
+
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, torch_dtype=dtype, device_map="auto", trust_remote_code=True
+        )
+
+        if self.policy.config.lora_weights_path:
+            from peft import PeftModel  # type: ignore
+
+            logger.info("Loading SFT LoRA checkpoint: %s", self.policy.config.lora_weights_path)
+            model = PeftModel.from_pretrained(model, self.policy.config.lora_weights_path)
+            model = model.merge_and_unload()
+
+        peft_config = LoraConfig(
+            task_type=TaskType.CAUSAL_LM,
+            r=self.config.lora_rank,
+            lora_alpha=self.config.lora_alpha,
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+            bias="none",
+        )
+
+        tasks = self.adapter.discover_tasks()
+        telemetry_corpus = self._load_telemetry_corpus()
+        telemetry_idx = 0
+
+        adapter = self.adapter
+        energy_aware = self.config.energy_aware
+        energy_capture = self.energy_capture
+        ipw_adapter = self.ipw_adapter
+        config = self.config
+
+        def kernel_reward_fn(completions: list[str], **kwargs) -> list[float]:
+            nonlocal telemetry_idx
+            prompts = kwargs.get("prompts", kwargs.get("prompt", [""]))
+            rewards = []
+            for i, code in enumerate(completions):
+                if isinstance(code, list):
+                    code = code[0].get("content", "") if code else ""
+                task_idx = i % len(tasks)
+                task = tasks[task_idx]
+                candidate = adapter.evaluate_candidate(task, code)
+
+                if energy_aware:
+                    if telemetry_corpus:
+                        trace = telemetry_corpus[telemetry_idx % len(telemetry_corpus)]
+                        telemetry_idx += 1
+                    else:
+                        trace = energy_capture.synthetic_trace(steps=120)
+                    if not trace.phase_segments:
+                        trace = attribute_prefill_decode(trace, ttft_s=0.4)
+                    summary = ipw_adapter.summarize(trace, input_tokens=512, output_tokens=128)
+                    reward = compute_energy_aware_reward(
+                        candidate=candidate,
+                        summary=summary,
+                        p95_latency_s=(candidate.runtime_ms or 0.0) / 1000.0,
+                        sla_latency_s=1.0,
+                        timeout_ms=500.0,
+                        config=EnergyRewardConfig(),
+                    )
+                else:
+                    reward = staged_kernel_reward(
+                        candidate,
+                        timeout_ms=500.0,
+                        epoch=1,
+                        correctness_bias_epochs=config.correctness_bias_epochs,
+                    )
+                rewards.append(reward.total)
+            return rewards
+
+        prompts = []
+        for task in tasks:
+            ref_src = task.metadata.get("ref_arch_src", task.reference_kernel)
+            prompt = (
+                "You are an expert GPU kernel engineer. "
+                "Optimize this PyTorch model with a custom GPU kernel implementation "
+                "that produces identical outputs and runs faster on NVIDIA H100.\n\n"
+                f"```python\n{ref_src}\n```\n\n"
+                "Write the optimized kernel:"
+            )
+            prompts.append([{"role": "user", "content": prompt}])
+
+        train_dataset = Dataset.from_dict({"prompt": prompts})
+
+        lora_out = self.config.output_dir / "lora_weights"
+        grpo_config = GRPOConfig(
+            output_dir=str(self.config.output_dir / "runs"),
+            num_train_epochs=self.config.epochs,
+            per_device_train_batch_size=self.config.batch_size,
+            num_generations=self.config.group_size,
+            max_completion_length=self.config.max_completion_length,
+            beta=self.config.beta,
+            learning_rate=self.config.learning_rate,
+            logging_steps=5,
+            save_strategy="epoch",
+            report_to="none",
+            seed=42,
+        )
+
+        trainer = GRPOTrainer(
+            model=model,
+            args=grpo_config,
+            reward_funcs=kernel_reward_fn,
+            train_dataset=train_dataset,
+            peft_config=peft_config,
+            processing_class=tokenizer,
+        )
+
+        logger.info("Starting GRPO training (%d epochs, %d tasks, group_size=%d)",
+                     self.config.epochs, len(tasks), self.config.group_size)
+        train_result = trainer.train()
+        logger.info("GRPO training complete: %s", train_result.metrics)
+
+        lora_out.mkdir(parents=True, exist_ok=True)
+        trainer.save_model(str(lora_out))
+        tokenizer.save_pretrained(str(lora_out))
+
+        checkpoint = {
+            "stage": "energy_grpo" if self.config.energy_aware else "kernel_grpo",
+            "epochs": self.config.epochs,
+            "mode": "trained",
+            "lora_weights_path": str(lora_out),
+            "train_loss": train_result.metrics.get("train_loss"),
+            "num_tasks": len(tasks),
+        }
+        save_json(self.config.output_dir / "checkpoint.json", checkpoint)
+        return checkpoint
+
+    def _run_stub_grpo(self) -> dict[str, object]:
+        """Stub fallback: run grouped rollouts and record rewards without gradient updates."""
         tasks = self.adapter.discover_tasks()
         rollout_cfg = RolloutConfig(group_size=self.config.group_size)
+        telemetry_corpus = self._load_telemetry_corpus()
+        telemetry_idx = 0
 
         history: list[dict[str, object]] = []
 
@@ -53,8 +247,15 @@ class GRPOKernelTrainer:
 
                 for cand in shortlisted:
                     if self.config.energy_aware:
-                        trace = self.energy_capture.synthetic_trace(steps=120)
-                        trace = attribute_prefill_decode(trace, ttft_s=0.4)
+                        if telemetry_corpus:
+                            trace = telemetry_corpus[telemetry_idx % len(telemetry_corpus)]
+                            telemetry_idx += 1
+                        else:
+                            trace = self.energy_capture.synthetic_trace(steps=120)
+
+                        if not trace.phase_segments:
+                            trace = attribute_prefill_decode(trace, ttft_s=0.4)
+
                         summary = self.ipw_adapter.summarize(trace, input_tokens=512, output_tokens=128)
                         reward = compute_energy_aware_reward(
                             candidate=cand,
@@ -65,7 +266,12 @@ class GRPOKernelTrainer:
                             config=EnergyRewardConfig(),
                         )
                     else:
-                        reward = staged_kernel_reward(cand, timeout_ms=500.0, epoch=epoch)
+                        reward = staged_kernel_reward(
+                            cand,
+                            timeout_ms=500.0,
+                            epoch=epoch,
+                            correctness_bias_epochs=self.config.correctness_bias_epochs,
+                        )
                     epoch_rewards.append(reward.total)
 
                     history.append(
@@ -89,6 +295,14 @@ class GRPOKernelTrainer:
             "epochs": self.config.epochs,
             "num_records": len(history),
             "avg_reward": avg_reward,
+            "mode": "stub",
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
         return checkpoint
+
+    def _load_telemetry_corpus(self):
+        return self.energy_capture.load_trace_corpus(
+            trace_dir=self.config.telemetry_trace_dir,
+            ipw_profile_dir=self.config.ipw_profile_dir,
+            allow_synthetic_fallback=self.config.allow_synthetic_fallback,
+        )

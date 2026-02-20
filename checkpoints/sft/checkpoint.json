@@ -1,0 +1,23 @@
+{
+  "model": {
+    "backend": "cuda",
+    "budget_tokens": 0,
+    "check_kernel": false,
+    "custom_prompt_key": null,
+    "generation_mode": "kernelbench_server",
+    "hardware_gpu_name": null,
+    "include_hardware_info": false,
+    "is_reasoning_model": false,
+    "kernelbench_root": "/Users/gabrielbo/Downloads/cs234/KITE-Kernel-Intelligence/external/KernelBench",
+    "max_new_tokens": 1024,
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "precision": "fp32",
+    "prompt_option": "one_shot",
+    "reasoning_effort": null,
+    "server_type": "local",
+    "temperature": 0.8
+  },
+  "num_samples": 3,
+  "num_tasks": 3,
+  "stage": "sft"
+}

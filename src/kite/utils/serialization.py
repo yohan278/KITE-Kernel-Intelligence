@@ -13,14 +13,14 @@ def load_json(path: Path) -> Any:
 
 def save_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True))
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str))
 
 
 def save_jsonl(path: Path, rows: Iterable[Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         for row in rows:
-            f.write(json.dumps(row))
+            f.write(json.dumps(row, default=str))
             f.write("\n")
 
 

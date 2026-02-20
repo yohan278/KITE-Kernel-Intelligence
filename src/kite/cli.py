@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 from kite.adapters.kernelbench_adapter import KernelBenchAdapter
 from kite.eval.ablations import run_ablations
 from kite.eval.benchmark_runner import BenchmarkRunner
 from kite.eval.reports import save_suite_artifacts
-from kite.policies.qwen_policy import QwenPolicy
+from kite.policies.qwen_policy import QwenPolicy, QwenPolicyConfig
 from kite.trainers.grpo_kernel_trainer import GRPOKernelConfig, GRPOKernelTrainer
 from kite.trainers.hrl_trainer import HRLTrainer
 from kite.trainers.ppo_runtime_trainer import PPORuntimeConfig, PPORuntimeTrainer
@@ -36,12 +37,26 @@ def _build_parser() -> argparse.ArgumentParser:
     sft = train_sub.add_parser("sft", help="Run SFT stage")
     sft.add_argument("--kernelbench-root", type=Path, default=Path("external/KernelBench"))
     sft.add_argument("--output", type=Path, default=Path("checkpoints/sft"))
+    sft.add_argument("--generation-mode", choices=["stub", "local", "kernelbench_server"], default=None)
+    sft.add_argument("--server-type", default=None)
+    sft.add_argument("--model-name", default=None)
+    sft.add_argument("--model-config", type=Path, default=None)
+    sft.add_argument("--epochs", type=int, default=3)
+    sft.add_argument("--max-examples", type=int, default=256)
 
     kernel = train_sub.add_parser("kernel-grpo", help="Run kernel GRPO stage")
     kernel.add_argument("--kernelbench-root", type=Path, default=Path("external/KernelBench"))
     kernel.add_argument("--output", type=Path, default=Path("checkpoints/kernel_grpo"))
     kernel.add_argument("--epochs", type=int, default=3)
     kernel.add_argument("--energy-aware", action="store_true")
+    kernel.add_argument("--generation-mode", choices=["stub", "local", "kernelbench_server"], default=None)
+    kernel.add_argument("--server-type", default=None)
+    kernel.add_argument("--model-name", default=None)
+    kernel.add_argument("--model-config", type=Path, default=None)
+    kernel.add_argument("--lora-weights", type=Path, default=None)
+    kernel.add_argument("--telemetry-trace-dir", type=Path, default=Path("data/telemetry/runs"))
+    kernel.add_argument("--ipw-profile-dir", type=Path, default=None)
+    kernel.add_argument("--no-synthetic-fallback", action="store_true")
 
     runtime = train_sub.add_parser("runtime-ppo", help="Run runtime PPO stage")
     runtime.add_argument("--output", type=Path, default=Path("checkpoints/runtime_ppo"))
@@ -52,13 +67,37 @@ def _build_parser() -> argparse.ArgumentParser:
     hrl.add_argument("--kernelbench-root", type=Path, default=Path("external/KernelBench"))
     hrl.add_argument("--output", type=Path, default=Path("checkpoints/hrl"))
     hrl.add_argument("--rounds", type=int, default=2)
+    hrl.add_argument("--generation-mode", choices=["stub", "local", "kernelbench_server"], default=None)
+    hrl.add_argument("--server-type", default=None)
+    hrl.add_argument("--model-name", default=None)
+    hrl.add_argument("--lora-weights", type=Path, default=None)
 
     ev = sub.add_parser("eval", help="Evaluation operations")
     ev_sub = ev.add_subparsers(dest="eval_cmd", required=True)
     suite = ev_sub.add_parser("suite", help="Run benchmark suite and reports")
     suite.add_argument("--output", type=Path, default=Path("outputs/eval"))
+    suite.add_argument("--checkpoints-root", type=Path, default=Path("checkpoints"))
 
     return parser
+
+
+def _build_qwen_policy(args: argparse.Namespace) -> QwenPolicy:
+    generation_mode = getattr(args, "generation_mode", None) or os.environ.get("KITE_GENERATION_MODE", "stub")
+    server_type = getattr(args, "server_type", None) or os.environ.get("KITE_SERVER_TYPE", "local")
+    model_name = getattr(args, "model_name", None) or os.environ.get(
+        "KITE_MODEL_NAME", "Qwen/Qwen2.5-Coder-7B-Instruct"
+    )
+    lora_weights = getattr(args, "lora_weights", None)
+    kb_root = getattr(args, "kernelbench_root", Path("external/KernelBench"))
+
+    config = QwenPolicyConfig(
+        model_name=model_name,
+        generation_mode=generation_mode,
+        server_type=server_type,
+        kernelbench_root=kb_root,
+        lora_weights_path=str(lora_weights) if lora_weights else None,
+    )
+    return QwenPolicy(config=config)
 
 
 def _cmd_data_build(args: argparse.Namespace) -> int:
@@ -73,7 +112,17 @@ def _cmd_data_build(args: argparse.Namespace) -> int:
 
 def _cmd_train_sft(args: argparse.Namespace) -> int:
     adapter = KernelBenchAdapter(args.kernelbench_root)
-    trainer = SFTTrainer(adapter=adapter, policy=QwenPolicy(), config=SFTConfig(output_dir=args.output))
+    sft_config = SFTConfig(
+        output_dir=args.output,
+        model_config_path=getattr(args, "model_config", None),
+        epochs=getattr(args, "epochs", 3),
+        max_examples=getattr(args, "max_examples", 256),
+    )
+    trainer = SFTTrainer(
+        adapter=adapter,
+        policy=_build_qwen_policy(args),
+        config=sft_config,
+    )
     summary = trainer.run()
     get_logger("kite.train").info("SFT complete: %s", summary)
     return 0
@@ -83,11 +132,14 @@ def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
     adapter = KernelBenchAdapter(args.kernelbench_root)
     trainer = GRPOKernelTrainer(
         adapter=adapter,
-        policy=QwenPolicy(),
+        policy=_build_qwen_policy(args),
         config=GRPOKernelConfig(
             output_dir=args.output,
             epochs=args.epochs,
             energy_aware=bool(args.energy_aware),
+            telemetry_trace_dir=args.telemetry_trace_dir,
+            ipw_profile_dir=args.ipw_profile_dir,
+            allow_synthetic_fallback=not args.no_synthetic_fallback,
         ),
     )
     summary = trainer.run()
@@ -112,15 +164,17 @@ def _cmd_train_hrl(args: argparse.Namespace) -> int:
     trainer = HRLTrainer(kernelbench_root=args.kernelbench_root)
     trainer.config.output_dir = args.output
     trainer.config.alternating_rounds = args.rounds
+    trainer.policy = _build_qwen_policy(args)
     summary = trainer.run()
     get_logger("kite.train").info("HRL complete: %s", summary)
     return 0
 
 
 def _cmd_eval_suite(args: argparse.Namespace) -> int:
-    runner = BenchmarkRunner(output_dir=args.output)
+    ckpt_root = getattr(args, "checkpoints_root", Path("checkpoints"))
+    runner = BenchmarkRunner(output_dir=args.output, checkpoints_root=ckpt_root)
     suite = runner.run()
-    ablations = run_ablations(output_dir=args.output)
+    ablations = run_ablations(output_dir=args.output, checkpoints_root=ckpt_root)
     artifacts = save_suite_artifacts(args.output, suite)
 
     get_logger("kite.eval").info("Suite complete (%d experiments)", suite.get("num_experiments", 0))

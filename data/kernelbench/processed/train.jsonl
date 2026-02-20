@@ -1,0 +1,2 @@
+{"task_id": "kb_default_1", "level": 1, "prompt": "Implement a fused layernorm + residual kernel.", "reference_kernel": "def kernel(x, y): return x + y", "metadata": {"source": "default"}}
+{"task_id": "kb_default_2", "level": 2, "prompt": "Implement attention score matmul tile kernel.", "reference_kernel": "def kernel(q, k): return q @ k.T", "metadata": {"source": "default"}}
