@@ -20,9 +20,23 @@ fi
 
 # ---- IPW internal ----
 IPW_DIR="$ROOT/external/ipw_internal"
+IPW_SRC=""
 if [ -d "$IPW_DIR" ] || [ -L "$IPW_DIR" ]; then
     echo "[OK] IPW path exists"
-    if [ -f "$IPW_DIR/intelligence-per-watt/src/ipw/execution/runner.py" ]; then
+
+    # Support both direct and nested symlink layouts:
+    # 1) external/ipw_internal/intelligence-per-watt
+    # 2) external/ipw_internal/ipw_internal/intelligence-per-watt
+    for candidate in \
+      "$IPW_DIR/intelligence-per-watt/src" \
+      "$IPW_DIR/ipw_internal/intelligence-per-watt/src"; do
+      if [ -f "$candidate/ipw/execution/runner.py" ]; then
+        IPW_SRC="$candidate"
+        break
+      fi
+    done
+
+    if [ -n "$IPW_SRC" ]; then
         echo "     ProfilerRunner found"
     elif [ -f "$IPW_DIR/README.md" ]; then
         echo "     README found (symlink target may be incomplete)"
@@ -49,9 +63,9 @@ else
 fi
 
 # ---- IPW telemetry smoke check ----
-if python -c "
+if [ -n "$IPW_SRC" ] && python -c "
 import sys, os
-sys.path.insert(0, '$IPW_DIR/intelligence-per-watt/src')
+sys.path.insert(0, '$IPW_SRC')
 from ipw.execution.runner import ProfilerRunner
 print('IPW ProfilerRunner importable')
 " 2>/dev/null; then
