@@ -23,6 +23,9 @@ class KernelCandidate:
     correct: bool
     runtime_ms: Optional[float] = None
     speedup: Optional[float] = None
+    compile_log: Optional[str] = None
+    correctness_log: Optional[str] = None
+    reference_runtime_ms: Optional[float] = None
     logs: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -42,6 +45,9 @@ class EnergyTrace:
     gpu_util: List[float] = field(default_factory=list)
     temp_c: List[float] = field(default_factory=list)
     phase_segments: List[PhaseSegment] = field(default_factory=list)
+    sampling_ms: Optional[float] = None
+    source: str = "unknown"
+    device_id: Optional[str] = None
 
 
 @dataclass(slots=True)
@@ -54,6 +60,9 @@ class RuntimeState:
     clocks: str
     ttft_p95: float
     e2e_p95: float
+    throughput_tps: float = 0.0
+    avg_power_w: float = 0.0
+    phase_id: str = "mixed"
 
 
 @dataclass(slots=True)

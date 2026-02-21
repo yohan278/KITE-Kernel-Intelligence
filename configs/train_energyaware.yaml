@@ -1,0 +1,10 @@
+train:
+  mode: energy_aware
+  epochs: 3
+  energy_aware: true
+  reward:
+    alpha: 1.0
+    beta: 0.5
+  telemetry:
+    trace_dir: ./data/telemetry/runs
+    ipw_profile_dir: null

@@ -1,0 +1,8 @@
+sweep:
+  alpha_beta:
+    - [1.0, 0.0]
+    - [1.0, 0.25]
+    - [1.0, 0.5]
+    - [1.0, 1.0]
+  epochs: 3
+  output_dir: ./outputs/sweeps

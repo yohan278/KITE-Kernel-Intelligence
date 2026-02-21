@@ -48,6 +48,9 @@ class RuntimeEnv:
             clocks="balanced",
             ttft_p95=1.0,
             e2e_p95=8.0,
+            throughput_tps=0.0,
+            avg_power_w=0.0,
+            phase_id="mixed",
         )
         self._step_count = 0
 
@@ -91,6 +94,9 @@ class RuntimeEnv:
             clocks=clocks,
             ttft_p95=ttft,
             e2e_p95=e2e,
+            throughput_tps=throughput,
+            avg_power_w=float(power_cap),
+            phase_id="decode" if phase_ratio >= 0.5 else "prefill",
         )
 
         return RuntimeStepResult(
@@ -146,6 +152,9 @@ class RuntimeEnv:
             clocks=clocks,
             ttft_p95=ttft,
             e2e_p95=e2e,
+            throughput_tps=throughput,
+            avg_power_w=avg_power,
+            phase_id="decode" if state.phase_ratio >= 0.5 else "prefill",
         )
 
         return RuntimeStepResult(
