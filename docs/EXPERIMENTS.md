@@ -5,6 +5,8 @@
 1. Baselines
 - KernelBench default outputs.
 - IPW telemetry validation on fixed kernels.
+- `python scripts/smoke_test_one_task.py --config configs/smoke.yaml`
+- `python scripts/run_baselines.py --config configs/project.yaml`
 
 2. SFT
 - Build prompt/kernel pairs from valid trajectories.
@@ -27,6 +29,7 @@
 7. Final Evaluation
 - Run B0/B1/E1/E2/E3/E4 and A1/A2/A3.
 - Generate Pareto curves and SLA analysis.
+- `python scripts/reproduce.sh`
 
 ## Acceptance Targets
 

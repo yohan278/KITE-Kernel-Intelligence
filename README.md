@@ -21,9 +21,10 @@ This repository contains a complete v0 scaffold with:
 
 ```bash
 cd /Users/gabrielbo/Downloads/cs234/KITE-Kernel-Intelligence
-python -m venv .venv
-source .venv/bin/activate
-pip install -e '.[dev]'
+
+# Conda-first setup (core env only)
+bash scripts/setup_conda_envs.sh
+conda activate kite-core
 
 # Build local dataset splits
 kite data build --kernelbench-root ./external/KernelBench --output ./data/kernelbench/processed
@@ -36,6 +37,39 @@ kite train hrl
 
 # Run experiment suite
 kite eval suite
+```
+
+For all environments (`core`, `train`, `telemetry`) and optional local IPW package:
+
+```bash
+bash scripts/setup_conda_envs.sh --all --with-ipw
+```
+
+`--with-ipw` installs IPW into `kite-telemetry` (Python 3.13) only.
+
+Environment specs are centralized in `/Users/gabrielbo/Downloads/cs234/KITE-Kernel-Intelligence/envs/`.
+See `/Users/gabrielbo/Downloads/cs234/KITE-Kernel-Intelligence/docs/ENVIRONMENTS.md` for full setup matrix.
+
+## Phase Commands
+
+```bash
+# Phase 0
+python scripts/smoke_test_one_task.py --config configs/smoke.yaml
+
+# Phase 1
+python scripts/run_baselines.py --config configs/project.yaml
+
+# Phase 2
+python scripts/eval_candidate.py --task L1_1 --code /abs/path/kernel.py
+
+# Phase 3
+python scripts/multiturn_optimize.py --generation-mode stub
+
+# Phase 4+
+python scripts/train_rl.py --config configs/train_throughput.yaml
+python scripts/train_rl.py --config configs/train_energyaware.yaml
+python scripts/run_phase_trace.py --config configs/hierarchical.yaml
+python scripts/reproduce.sh
 ```
 
 ## External Sources

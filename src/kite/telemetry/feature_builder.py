@@ -20,6 +20,8 @@ def build_runtime_features(
         "power_cap": float(state.power_cap),
         "ttft_p95": state.ttft_p95,
         "e2e_p95": state.e2e_p95,
+        "throughput_tps": state.throughput_tps,
+        "avg_power_w": state.avg_power_w,
     }
 
     if trace is not None:

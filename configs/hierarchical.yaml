@@ -1,0 +1,15 @@
+hierarchical:
+  rounds: 2
+  kernel_epochs_per_round: 1
+  runtime_episodes_per_round: 10
+  runtime_horizon: 10
+  joint_finetune_episodes: 5
+  use_live_telemetry: false
+  phase_trace:
+    regimes:
+      - name: latency_sensitive
+        queue_depth: 8
+        phase_ratio: 0.2
+      - name: throughput
+        queue_depth: 48
+        phase_ratio: 0.8

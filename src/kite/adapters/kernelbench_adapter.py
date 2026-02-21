@@ -125,6 +125,9 @@ class KernelBenchAdapter:
             correct=correct,
             runtime_ms=runtime_ms,
             speedup=speedup,
+            compile_log=None if compile_ok else "proxy compile check failed",
+            correctness_log=None if correct else "proxy correctness check failed",
+            reference_runtime_ms=baseline_runtime_ms,
             logs={"proxy_eval": True},
         )
 
@@ -212,6 +215,9 @@ class KernelBenchAdapter:
             correct=correctness,
             runtime_ms=runtime_ms,
             speedup=speedup,
+            compile_log=None if compiled else str(metadata.get("compile_error", "kernelbench compilation failed")),
+            correctness_log=None if correctness else str(metadata.get("correctness_error", "kernelbench correctness failed")),
+            reference_runtime_ms=(ref_runtime_us / 1000.0) if ref_runtime_us > 0 else baseline_runtime_ms,
             logs=logs,
         )
 
