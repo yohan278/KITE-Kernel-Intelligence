@@ -148,7 +148,7 @@ class GRPOKernelTrainer:
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.pad_token_id = tokenizer.eos_token_id
 
-        model_kwargs: dict[str, object] = {"torch_dtype": dtype, "device_map": "auto", "trust_remote_code": True}
+        model_kwargs: dict[str, object] = {"dtype": dtype, "device_map": "auto", "trust_remote_code": True}
         if cache_dir:
             model_kwargs["cache_dir"] = cache_dir
         if local_files_only:
