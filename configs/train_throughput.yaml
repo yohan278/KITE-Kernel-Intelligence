@@ -1,6 +1,6 @@
 train:
   mode: throughput
-  epochs: 3
+  epochs: 1
   energy_aware: false
   reward:
     alpha: 1.0
