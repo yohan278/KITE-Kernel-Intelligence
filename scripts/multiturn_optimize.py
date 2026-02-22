@@ -32,6 +32,11 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, default=Path("./outputs/multiturn"))
     parser.add_argument("--num-tasks", type=int, default=20)
     parser.add_argument("--max-turns", type=int, default=5)
+    parser.add_argument("--num-correct-trials", type=int, default=3)
+    parser.add_argument("--num-perf-trials", type=int, default=25)
+    parser.add_argument("--warmup-iters", type=int, default=2)
+    parser.add_argument("--measure-iters", type=int, default=8)
+    parser.add_argument("--measurement-repeats", type=int, default=1)
     parser.add_argument("--generation-mode", default="stub", choices=["stub", "local", "kernelbench_server"])
     parser.add_argument("--model-name", default="Qwen/Qwen2.5-Coder-7B-Instruct")
     parser.add_argument("--temperature", type=float, default=0.1)
@@ -41,7 +46,11 @@ def main() -> int:
     parser.add_argument("--verbose-turns", action="store_true", help="Print per-turn metrics for each task")
     args = parser.parse_args()
 
-    adapter = KernelBenchAdapter(args.kernelbench_root)
+    adapter = KernelBenchAdapter(
+        args.kernelbench_root,
+        num_correct_trials=max(1, args.num_correct_trials),
+        num_perf_trials=max(1, args.num_perf_trials),
+    )
     tasks = adapter.discover_tasks()[: args.num_tasks]
     print(f"[multiturn] discovered {len(tasks)} tasks", flush=True)
 
@@ -60,7 +69,11 @@ def main() -> int:
     agent = LLMKernelAgent(policy)
     env = KernelBenchEnergyEnv(
         adapter=adapter,
-        measurement_config=MeasurementConfig(warmup_iters=2, measure_iters=8, repeats=1),
+        measurement_config=MeasurementConfig(
+            warmup_iters=max(0, args.warmup_iters),
+            measure_iters=max(1, args.measure_iters),
+            repeats=max(1, args.measurement_repeats),
+        ),
         reward_config=IPWRewardConfig(),
         sla_latency_s=1.0,
     )
