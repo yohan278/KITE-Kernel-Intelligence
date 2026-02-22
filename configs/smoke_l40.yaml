@@ -1,0 +1,12 @@
+kernelbench_root: ./external/KernelBench
+output_jsonl: ./results/measurement/smoke_one_task.jsonl
+power_trace_dir: ./results/measurement/power_traces
+task_id: L1_1
+task_index: 0
+candidate_code_path: /home/users/gabebo/projects/KITE-Kernel-Intelligence/results/measurement/candidates/L1_1_modelnew.py
+baseline_runtime_ms: 100.0
+warmup_iters: 3
+measure_iters: 10
+repeats: 1
+sampling_interval_ms: 50.0
+sla_latency_s: 1.0
