@@ -33,6 +33,10 @@ def main() -> int:
     parser.add_argument("--num-tasks", type=int, default=20)
     parser.add_argument("--max-turns", type=int, default=5)
     parser.add_argument("--generation-mode", default="stub", choices=["stub", "local", "kernelbench_server"])
+    parser.add_argument("--model-name", default="Qwen/Qwen2.5-Coder-7B-Instruct")
+    parser.add_argument("--temperature", type=float, default=0.1)
+    parser.add_argument("--max-new-tokens", type=int, default=1024)
+    parser.add_argument("--allow-triton", action="store_true")
     parser.add_argument("--no-progress", action="store_true", help="Disable tqdm progress output")
     parser.add_argument("--verbose-turns", action="store_true", help="Print per-turn metrics for each task")
     args = parser.parse_args()
@@ -42,7 +46,16 @@ def main() -> int:
     print(f"[multiturn] discovered {len(tasks)} tasks", flush=True)
 
     print(f"[multiturn] initializing policy (mode={args.generation_mode})", flush=True)
-    policy = QwenPolicy(QwenPolicyConfig(generation_mode=args.generation_mode))
+    policy = QwenPolicy(
+        QwenPolicyConfig(
+            generation_mode=args.generation_mode,
+            model_name=args.model_name,
+            temperature=args.temperature,
+            max_new_tokens=args.max_new_tokens,
+            allow_triton=bool(args.allow_triton),
+            kernelbench_root=args.kernelbench_root,
+        )
+    )
     print("[multiturn] policy initialized", flush=True)
     agent = LLMKernelAgent(policy)
     env = KernelBenchEnergyEnv(

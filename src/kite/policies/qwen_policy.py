@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import re
 import sys
 from typing import Optional
 
@@ -154,12 +155,12 @@ class QwenPolicy:
 
     def extract_code(self, raw: str) -> str:
         """Public wrapper to normalize model generations into Python source."""
-        return self._extract_code(raw)
+        return self._normalize_modelnew_contract(self._extract_code(raw))
 
     def _generate_candidate_local(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
         prompt = self._build_kernel_prompt(task)
         raw = self.generate_text(prompt)
-        code = self._extract_code(raw)
+        code = self.extract_code(raw)
 
         compile_ok = bool(code and "TODO" not in code and len(code.strip()) > 10)
 
@@ -198,6 +199,8 @@ class QwenPolicy:
             "- The replacement must produce identical outputs to the reference.\n"
             "- Optimize for speed on NVIDIA H100 GPU.\n"
             f"{triton_rule}"
+            "- Output only valid Python source code (no markdown, no prose).\n"
+            "- Must define class ModelNew(nn.Module).\n"
             "- Return a complete, self-contained Python module.\n\n"
             f"Reference implementation:\n```python\n{ref}\n```\n\n"
             "Write the optimized kernel implementation:"
@@ -217,7 +220,32 @@ class QwenPolicy:
                 if code.startswith(("python\n", "Python\n", "py\n")):
                     code = "\n".join(code.split("\n")[1:])
                 return code.strip()
-        return raw.strip()
+        # Try to salvage raw model output by stripping leading prose.
+        text = raw.strip()
+        starts = [p for p in (text.find("\nimport "), text.find("\nfrom "), text.find("\nclass ")) if p >= 0]
+        if starts:
+            start = min(starts) + 1
+            return text[start:].strip()
+        return text
+
+    @staticmethod
+    def _normalize_modelnew_contract(code: str) -> str:
+        """Best-effort rewrite to satisfy KernelBench evaluator entry-point."""
+        if not code:
+            return code
+        if "class ModelNew" in code:
+            return code
+        if re.search(r"^\s*class\s+Model\s*\(", code, re.MULTILINE):
+            rewritten = re.sub(
+                r"(^\s*class\s+)Model(\s*\()",
+                r"\1ModelNew\2",
+                code,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            rewritten = rewritten.replace("super(Model, self)", "super(ModelNew, self)")
+            return rewritten
+        return code
 
     def _generate_candidate_stub(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
         compile_ok = attempt % 5 != 0
