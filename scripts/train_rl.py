@@ -79,11 +79,26 @@ def main() -> int:
     args = parser.parse_args()
 
     cfg = load_yaml(args.config)
+    train = cfg.get("train", {})
+
+    def _int_cfg(key: str, default: int | None = None) -> int | None:
+        value = train.get(key, default)
+        if value is None:
+            return None
+        return int(value)
+
     if "sweep" in cfg:
         sweep_cfg = cfg["sweep"]
         combos = sweep_cfg.get("alpha_beta", [])
         epochs = int(sweep_cfg.get("epochs", 3))
         out_root = Path(sweep_cfg.get("output_dir", "./outputs/sweeps"))
+        group_size = _int_cfg("group_size")
+        batch_size = _int_cfg("batch_size")
+        max_completion_length = _int_cfg("max_completion_length")
+        max_tasks = _int_cfg("max_tasks")
+        eval_num_correct_trials = _int_cfg("eval_num_correct_trials")
+        eval_num_perf_trials = _int_cfg("eval_num_perf_trials")
+        failure_log_every_steps = _int_cfg("failure_log_every_steps")
         records = []
         if tqdm is not None and not args.no_progress:
             combo_iter = tqdm(
@@ -109,6 +124,20 @@ def main() -> int:
                 str(epochs),
                 "--energy-aware",
             ]
+            if group_size is not None:
+                cmd.extend(["--group-size", str(group_size)])
+            if batch_size is not None:
+                cmd.extend(["--batch-size", str(batch_size)])
+            if max_completion_length is not None:
+                cmd.extend(["--max-completion-length", str(max_completion_length)])
+            if max_tasks is not None:
+                cmd.extend(["--max-tasks", str(max_tasks)])
+            if eval_num_correct_trials is not None:
+                cmd.extend(["--eval-num-correct-trials", str(eval_num_correct_trials)])
+            if eval_num_perf_trials is not None:
+                cmd.extend(["--eval-num-perf-trials", str(eval_num_perf_trials)])
+            if failure_log_every_steps is not None:
+                cmd.extend(["--failure-log-every-steps", str(failure_log_every_steps)])
             if args.hf_cache_dir:
                 cmd.extend(["--hf-cache-dir", str(args.hf_cache_dir)])
             if args.local_files_only:
@@ -126,9 +155,15 @@ def main() -> int:
         save_json(out_root / "sweep_manifest.json", {"runs": records})
         return 0
 
-    train = cfg.get("train", {})
     energy_aware = bool(train.get("energy_aware", False))
     epochs = int(train.get("epochs", 3))
+    group_size = _int_cfg("group_size")
+    batch_size = _int_cfg("batch_size")
+    max_completion_length = _int_cfg("max_completion_length")
+    max_tasks = _int_cfg("max_tasks")
+    eval_num_correct_trials = _int_cfg("eval_num_correct_trials")
+    eval_num_perf_trials = _int_cfg("eval_num_perf_trials")
+    failure_log_every_steps = _int_cfg("failure_log_every_steps")
     cmd = [
         "train",
         "kernel-grpo",
@@ -139,6 +174,20 @@ def main() -> int:
         "--epochs",
         str(epochs),
     ]
+    if group_size is not None:
+        cmd.extend(["--group-size", str(group_size)])
+    if batch_size is not None:
+        cmd.extend(["--batch-size", str(batch_size)])
+    if max_completion_length is not None:
+        cmd.extend(["--max-completion-length", str(max_completion_length)])
+    if max_tasks is not None:
+        cmd.extend(["--max-tasks", str(max_tasks)])
+    if eval_num_correct_trials is not None:
+        cmd.extend(["--eval-num-correct-trials", str(eval_num_correct_trials)])
+    if eval_num_perf_trials is not None:
+        cmd.extend(["--eval-num-perf-trials", str(eval_num_perf_trials)])
+    if failure_log_every_steps is not None:
+        cmd.extend(["--failure-log-every-steps", str(failure_log_every_steps)])
     if energy_aware:
         cmd.append("--energy-aware")
     if args.hf_cache_dir:

@@ -59,6 +59,13 @@ def _build_parser() -> argparse.ArgumentParser:
     kernel.add_argument("--telemetry-trace-dir", type=Path, default=Path("data/telemetry/runs"))
     kernel.add_argument("--ipw-profile-dir", type=Path, default=None)
     kernel.add_argument("--no-synthetic-fallback", action="store_true")
+    kernel.add_argument("--group-size", type=int, default=8)
+    kernel.add_argument("--batch-size", type=int, default=4)
+    kernel.add_argument("--max-completion-length", type=int, default=1024)
+    kernel.add_argument("--max-tasks", type=int, default=None)
+    kernel.add_argument("--eval-num-correct-trials", type=int, default=3)
+    kernel.add_argument("--eval-num-perf-trials", type=int, default=25)
+    kernel.add_argument("--failure-log-every-steps", type=int, default=10)
     kernel.add_argument("--hf-cache-dir", type=Path, default=None)
     kernel.add_argument("--local-files-only", action="store_true")
 
@@ -142,7 +149,11 @@ def _cmd_train_sft(args: argparse.Namespace) -> int:
 
 
 def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
-    adapter = KernelBenchAdapter(args.kernelbench_root)
+    adapter = KernelBenchAdapter(
+        args.kernelbench_root,
+        num_correct_trials=args.eval_num_correct_trials,
+        num_perf_trials=args.eval_num_perf_trials,
+    )
     trainer = GRPOKernelTrainer(
         adapter=adapter,
         policy=_build_qwen_policy(args),
@@ -153,6 +164,13 @@ def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
             telemetry_trace_dir=args.telemetry_trace_dir,
             ipw_profile_dir=args.ipw_profile_dir,
             allow_synthetic_fallback=not args.no_synthetic_fallback,
+            group_size=args.group_size,
+            batch_size=args.batch_size,
+            max_completion_length=args.max_completion_length,
+            max_tasks=args.max_tasks,
+            eval_num_correct_trials=args.eval_num_correct_trials,
+            eval_num_perf_trials=args.eval_num_perf_trials,
+            failure_log_every_steps=args.failure_log_every_steps,
         ),
     )
     summary = trainer.run()

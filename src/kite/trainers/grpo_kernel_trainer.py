@@ -39,9 +39,13 @@ class GRPOKernelConfig:
     lora_alpha: int = 16
     learning_rate: float = 5e-6
     batch_size: int = 4
+    max_tasks: Optional[int] = None
+    eval_num_correct_trials: int = 3
+    eval_num_perf_trials: int = 25
     max_completion_length: int = 1024
     beta: float = 0.04
     correctness_bias_epochs: int = 2
+    failure_log_every_steps: int = 10
 
 
 class GRPOKernelTrainer:
@@ -102,6 +106,16 @@ class GRPOKernelTrainer:
         warnings.filterwarnings(
             "ignore",
             message=r".*Passing `generation_config` together with generation-related arguments=.*",
+            category=UserWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*generation_config.*disable_compile.*",
+            category=FutureWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*generation_config.*disable_compile.*",
             category=UserWarning,
         )
 
@@ -171,15 +185,31 @@ class GRPOKernelTrainer:
         )
 
         tasks = self.adapter.discover_tasks()
+        if self.config.max_tasks is not None:
+            tasks = tasks[: max(1, int(self.config.max_tasks))]
         telemetry_corpus = self._load_telemetry_corpus()
         telemetry_idx = 0
 
-        adapter = self.adapter
+        adapter = KernelBenchAdapter(
+            kernelbench_root=self.adapter.kernelbench_root,
+            enable_kernelbench_eval=self.adapter.enable_kernelbench_eval,
+            num_correct_trials=self.config.eval_num_correct_trials,
+            num_perf_trials=self.config.eval_num_perf_trials,
+            timing_method=self.adapter.timing_method,
+            backend=self.adapter.backend,
+            precision=self.adapter.precision,
+            verbose=self.adapter.verbose,
+        )
         energy_aware = self.config.energy_aware
         energy_capture = self.energy_capture
         ipw_adapter = self.ipw_adapter
         config = self.config
         policy = self.policy
+        reward_steps = 0
+        failure_counts: dict[str, int] = {}
+
+        def _record_failure(reason: str) -> None:
+            failure_counts[reason] = failure_counts.get(reason, 0) + 1
 
         def _completion_to_code(completion: Any) -> str:
             text: str
@@ -199,7 +229,7 @@ class GRPOKernelTrainer:
             return code if code else text.strip()
 
         def kernel_reward_fn(completions: list[str], **kwargs) -> list[float]:
-            nonlocal telemetry_idx
+            nonlocal telemetry_idx, reward_steps
             prompts = kwargs.get("prompts", kwargs.get("prompt", [""]))
             rewards = []
             for i, completion in enumerate(completions):
@@ -208,6 +238,7 @@ class GRPOKernelTrainer:
                 task = tasks[task_idx]
                 precheck_error = self._precheck_candidate_code(task, code)
                 if precheck_error is not None:
+                    _record_failure(precheck_error)
                     candidate = KernelCandidate(
                         task_id=task.task_id,
                         code=code,
@@ -222,6 +253,10 @@ class GRPOKernelTrainer:
                     )
                 else:
                     candidate = adapter.evaluate_candidate(task, code)
+                    if not candidate.compile_ok:
+                        _record_failure("kernelbench:compile_fail")
+                    elif not candidate.correct:
+                        _record_failure("kernelbench:correctness_fail")
 
                 if energy_aware:
                     if telemetry_corpus:
@@ -246,8 +281,15 @@ class GRPOKernelTrainer:
                         timeout_ms=500.0,
                         epoch=1,
                         correctness_bias_epochs=config.correctness_bias_epochs,
-                    )
+                        )
                 rewards.append(reward.total)
+            reward_steps += 1
+            if config.failure_log_every_steps > 0 and reward_steps % config.failure_log_every_steps == 0:
+                if failure_counts:
+                    parts = ", ".join(
+                        f"{k}={v}" for k, v in sorted(failure_counts.items(), key=lambda kv: kv[1], reverse=True)
+                    )
+                    logger.info("GRPO failure reasons @step %d: %s", reward_steps, parts)
             return rewards
 
         prompts = []
