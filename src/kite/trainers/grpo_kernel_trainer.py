@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import ast
 from dataclasses import dataclass
 import os
 from pathlib import Path
 from typing import Any, Optional
+import warnings
 
 from kite.adapters.ipw_adapter import IPWAdapter
 from kite.adapters.kernelbench_adapter import KernelBenchAdapter
+from kite.types import KernelCandidate, KernelTask
 from kite.adapters.kevin_style_rollouts import RolloutConfig, filter_trajectories, grouped_rollouts
 from kite.policies.qwen_policy import QwenPolicy
 from kite.rewards.energy_reward import EnergyRewardConfig, compute_energy_aware_reward
@@ -91,6 +94,17 @@ class GRPOKernelTrainer:
 
     def _run_real_grpo(self) -> dict[str, object]:
         """Real GRPO training using trl.GRPOTrainer."""
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*Passing `generation_config` together with generation-related arguments=.*",
+            category=FutureWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*Passing `generation_config` together with generation-related arguments=.*",
+            category=UserWarning,
+        )
+
         import torch  # type: ignore
         from datasets import Dataset  # type: ignore
         from peft import LoraConfig, TaskType  # type: ignore
@@ -104,13 +118,22 @@ class GRPOKernelTrainer:
         if not local_files_only:
             local_env = os.environ.get("KITE_HF_LOCAL_FILES_ONLY", "").strip().lower()
             local_files_only = local_env in {"1", "true", "yes", "on"}
+        if local_files_only:
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
         if cache_dir:
             cache_dir = str(Path(cache_dir).expanduser().resolve())
             Path(cache_dir).mkdir(parents=True, exist_ok=True)
+        model_source = self._resolve_model_source(
+            model_name=model_name,
+            cache_dir=cache_dir,
+            local_files_only=local_files_only,
+        )
 
         logger.info(
-            "Loading model for GRPO: %s (cache_dir=%s, local_files_only=%s)",
+            "Loading model for GRPO: %s (source=%s, cache_dir=%s, local_files_only=%s)",
             model_name,
+            model_source,
             cache_dir or "default",
             local_files_only,
         )
@@ -120,7 +143,7 @@ class GRPOKernelTrainer:
         if local_files_only:
             hf_kwargs["local_files_only"] = True
 
-        tokenizer = AutoTokenizer.from_pretrained(model_name, **hf_kwargs)
+        tokenizer = AutoTokenizer.from_pretrained(model_source, **hf_kwargs)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.pad_token_id = tokenizer.eos_token_id
@@ -130,7 +153,7 @@ class GRPOKernelTrainer:
             model_kwargs["cache_dir"] = cache_dir
         if local_files_only:
             model_kwargs["local_files_only"] = True
-        model = AutoModelForCausalLM.from_pretrained(model_name, **model_kwargs)
+        model = AutoModelForCausalLM.from_pretrained(model_source, **model_kwargs)
 
         if self.policy.config.lora_weights_path:
             from peft import PeftModel  # type: ignore
@@ -183,7 +206,22 @@ class GRPOKernelTrainer:
                 code = _completion_to_code(completion)
                 task_idx = i % len(tasks)
                 task = tasks[task_idx]
-                candidate = adapter.evaluate_candidate(task, code)
+                precheck_error = self._precheck_candidate_code(task, code)
+                if precheck_error is not None:
+                    candidate = KernelCandidate(
+                        task_id=task.task_id,
+                        code=code,
+                        compile_ok=False,
+                        correct=False,
+                        runtime_ms=None,
+                        speedup=None,
+                        compile_log=precheck_error,
+                        correctness_log=None,
+                        reference_runtime_ms=None,
+                        logs={"precheck_error": precheck_error},
+                    )
+                else:
+                    candidate = adapter.evaluate_candidate(task, code)
 
                 if energy_aware:
                     if telemetry_corpus:
@@ -222,6 +260,7 @@ class GRPOKernelTrainer:
                 "Output only valid Python code.\n"
                 "Do not include markdown or explanations.\n"
                 "Must define class ModelNew(nn.Module).\n"
+                "ModelNew.forward must keep the same input argument count/order as the reference Model.forward.\n"
                 "Do not use Triton.\n\n"
                 f"```python\n{ref_src}\n```\n\n"
                 "Write the optimized kernel:"
@@ -364,4 +403,80 @@ class GRPOKernelTrainer:
             trace_dir=self.config.telemetry_trace_dir,
             ipw_profile_dir=self.config.ipw_profile_dir,
             allow_synthetic_fallback=self.config.allow_synthetic_fallback,
+        )
+
+    @staticmethod
+    def _forward_arity_from_source(source: str, class_name: str) -> int | None:
+        if not source:
+            return None
+        try:
+            tree = ast.parse(source)
+        except SyntaxError:
+            return None
+        for node in tree.body:
+            if isinstance(node, ast.ClassDef) and node.name == class_name:
+                for item in node.body:
+                    if isinstance(item, ast.FunctionDef) and item.name == "forward":
+                        positional = [
+                            arg.arg for arg in item.args.args
+                            if arg.arg not in {"self"}
+                        ]
+                        return len(positional)
+        return None
+
+    def _precheck_candidate_code(self, task: KernelTask, code: str) -> str | None:
+        if not code or not code.strip():
+            return "precheck: empty completion"
+        try:
+            ast.parse(code)
+        except SyntaxError as exc:
+            return f"precheck: syntax_error: {exc}"
+
+        if "class ModelNew" not in code:
+            return "precheck: missing ModelNew class"
+
+        ref_src = str(task.metadata.get("ref_arch_src", "") or "")
+        ref_arity = self._forward_arity_from_source(ref_src, "Model")
+        cand_arity = self._forward_arity_from_source(code, "ModelNew")
+        if cand_arity is None:
+            return "precheck: missing ModelNew.forward method"
+        if ref_arity is not None and cand_arity is not None and ref_arity != cand_arity:
+            return (
+                f"precheck: forward_arity_mismatch ref={ref_arity} candidate={cand_arity}"
+            )
+        return None
+
+    @staticmethod
+    def _resolve_model_source(
+        model_name: str,
+        cache_dir: str | None,
+        local_files_only: bool,
+    ) -> str:
+        if local_files_only and not cache_dir:
+            raise FileNotFoundError(
+                "local_files_only=True requires a cache directory. "
+                "Set KITE_HF_CACHE or pass --hf-cache-dir."
+            )
+        if not local_files_only:
+            return model_name
+
+        repo_dir = Path(cache_dir) / f"models--{model_name.replace('/', '--')}"
+        snapshots_dir = repo_dir / "snapshots"
+        refs_main = repo_dir / "refs" / "main"
+
+        if refs_main.exists():
+            ref = refs_main.read_text().strip()
+            candidate = snapshots_dir / ref
+            if candidate.exists():
+                return str(candidate)
+
+        if snapshots_dir.exists():
+            snapshots = [p for p in snapshots_dir.iterdir() if p.is_dir()]
+            if snapshots:
+                snapshots.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+                return str(snapshots[0])
+
+        raise FileNotFoundError(
+            f"Local model cache not found for {model_name} under {cache_dir}. "
+            "Run once without local-files-only to populate cache."
         )

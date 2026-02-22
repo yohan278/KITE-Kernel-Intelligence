@@ -79,6 +79,14 @@ class QwenPolicy:
         dtype = dtype_map.get(self.config.dtype, torch.bfloat16)
         cache_dir = self._resolve_hf_cache_dir()
         local_only = self._resolve_local_files_only()
+        if local_only:
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+        model_source = self._resolve_model_source(
+            model_name=self.config.model_name,
+            cache_dir=cache_dir,
+            local_files_only=local_only,
+        )
 
         load_kwargs: dict = {"torch_dtype": dtype, "device_map": "auto"}
         token_kwargs: dict = {"trust_remote_code": True}
@@ -99,17 +107,18 @@ class QwenPolicy:
             )
 
         logger.info(
-            "Loading base model: %s (cache_dir=%s, local_files_only=%s)",
+            "Loading base model: %s (source=%s, cache_dir=%s, local_files_only=%s)",
             self.config.model_name,
+            model_source,
             cache_dir or "default",
             local_only,
         )
-        self._tokenizer = AutoTokenizer.from_pretrained(self.config.model_name, **token_kwargs)
+        self._tokenizer = AutoTokenizer.from_pretrained(model_source, **token_kwargs)
         if self._tokenizer.pad_token is None:
             self._tokenizer.pad_token = self._tokenizer.eos_token
 
         self._model = AutoModelForCausalLM.from_pretrained(
-            self.config.model_name, trust_remote_code=True, **load_kwargs
+            model_source, trust_remote_code=True, **load_kwargs
         )
 
         if self.config.lora_weights_path:
@@ -400,3 +409,39 @@ class QwenPolicy:
         if env in {"1", "true", "yes", "on"}:
             return True
         return bool(self.config.local_files_only)
+
+    @staticmethod
+    def _resolve_model_source(
+        model_name: str,
+        cache_dir: str | None,
+        local_files_only: bool,
+    ) -> str:
+        """Resolve model source path for strict offline/local-cache loading."""
+        if local_files_only and not cache_dir:
+            raise FileNotFoundError(
+                "local_files_only=True requires a cache directory. "
+                "Set KITE_HF_CACHE or pass --hf-cache-dir."
+            )
+        if not local_files_only:
+            return model_name
+
+        repo_dir = Path(cache_dir) / f"models--{model_name.replace('/', '--')}"
+        snapshots_dir = repo_dir / "snapshots"
+        refs_main = repo_dir / "refs" / "main"
+
+        if refs_main.exists():
+            ref = refs_main.read_text().strip()
+            candidate = snapshots_dir / ref
+            if candidate.exists():
+                return str(candidate)
+
+        if snapshots_dir.exists():
+            snapshots = [p for p in snapshots_dir.iterdir() if p.is_dir()]
+            if snapshots:
+                snapshots.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+                return str(snapshots[0])
+
+        raise FileNotFoundError(
+            f"Local model cache not found for {model_name} under {cache_dir}. "
+            "Run once without local-files-only to populate cache."
+        )
