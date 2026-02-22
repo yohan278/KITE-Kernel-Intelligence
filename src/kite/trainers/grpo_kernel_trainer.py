@@ -187,10 +187,23 @@ class GRPOKernelTrainer:
         train_dataset = Dataset.from_dict({"prompt": prompts})
 
         lora_out = self.config.output_dir / "lora_weights"
+        effective_batch_size = self.config.batch_size
+        if effective_batch_size % self.config.group_size != 0:
+            # trl.GRPOConfig requires generation_batch_size to be divisible by num_generations.
+            effective_batch_size = (
+                (effective_batch_size + self.config.group_size - 1) // self.config.group_size
+            ) * self.config.group_size
+            logger.warning(
+                "Adjusted per_device_train_batch_size from %d to %d to satisfy divisibility by num_generations=%d",
+                self.config.batch_size,
+                effective_batch_size,
+                self.config.group_size,
+            )
+
         grpo_config = GRPOConfig(
             output_dir=str(self.config.output_dir / "runs"),
             num_train_epochs=self.config.epochs,
-            per_device_train_batch_size=self.config.batch_size,
+            per_device_train_batch_size=effective_batch_size,
             num_generations=self.config.group_size,
             max_completion_length=self.config.max_completion_length,
             beta=self.config.beta,
@@ -226,6 +239,8 @@ class GRPOKernelTrainer:
             "lora_weights_path": str(lora_out),
             "train_loss": train_result.metrics.get("train_loss"),
             "num_tasks": len(tasks),
+            "batch_size": effective_batch_size,
+            "group_size": self.config.group_size,
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
         return checkpoint
