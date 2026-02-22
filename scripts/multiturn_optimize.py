@@ -20,6 +20,11 @@ from kite.policies.qwen_policy import QwenPolicy, QwenPolicyConfig
 from kite.rewards.ipw_reward import IPWRewardConfig
 from kite.utils.serialization import save_json
 
+try:
+    from tqdm import tqdm
+except Exception:  # pragma: no cover - optional dependency
+    tqdm = None
+
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -28,11 +33,17 @@ def main() -> int:
     parser.add_argument("--num-tasks", type=int, default=20)
     parser.add_argument("--max-turns", type=int, default=5)
     parser.add_argument("--generation-mode", default="stub", choices=["stub", "local", "kernelbench_server"])
+    parser.add_argument("--no-progress", action="store_true", help="Disable tqdm progress output")
+    parser.add_argument("--verbose-turns", action="store_true", help="Print per-turn metrics for each task")
     args = parser.parse_args()
 
     adapter = KernelBenchAdapter(args.kernelbench_root)
     tasks = adapter.discover_tasks()[: args.num_tasks]
+    print(f"[multiturn] discovered {len(tasks)} tasks", flush=True)
+
+    print(f"[multiturn] initializing policy (mode={args.generation_mode})", flush=True)
     policy = QwenPolicy(QwenPolicyConfig(generation_mode=args.generation_mode))
+    print("[multiturn] policy initialized", flush=True)
     agent = LLMKernelAgent(policy)
     env = KernelBenchEnergyEnv(
         adapter=adapter,
@@ -50,7 +61,15 @@ def main() -> int:
     }
     turns = []
 
-    for task in tasks:
+    task_iter = tasks
+    progress = None
+    if tqdm is not None and not args.no_progress:
+        progress = tqdm(tasks, total=len(tasks), desc="multiturn tasks", dynamic_ncols=True)
+        task_iter = progress
+
+    for idx, task in enumerate(task_iter, start=1):
+        print(f"[multiturn] [{idx}/{len(tasks)}] start task={task.task_id}", flush=True)
+
         def _eval(code: str) -> dict:
             step = env.evaluate(task=task, code=code)
             return {
@@ -61,7 +80,23 @@ def main() -> int:
                 "joules": step.joules,
             }
 
-        result = agent.optimize_task(task=task, evaluate_fn=_eval, max_turns=args.max_turns)
+        def _on_step(step) -> None:
+            if progress is not None:
+                progress.set_postfix(
+                    task=task.task_id,
+                    turn=step.turn,
+                    correct=int(step.correct),
+                    reward=f"{step.reward:.3f}",
+                )
+            if args.verbose_turns:
+                print(
+                    f"[multiturn] task={task.task_id} turn={step.turn} "
+                    f"compile_ok={step.compile_ok} correct={step.correct} "
+                    f"reward={step.reward:.4f} runtime_ms={step.runtime_ms:.4f} joules={step.joules:.6f}",
+                    flush=True,
+                )
+
+        result = agent.optimize_task(task=task, evaluate_fn=_eval, max_turns=args.max_turns, on_step=_on_step)
         summary["pass_at_k_count"] += int(result.pass_at_k)
         if result.turns_to_success > 0:
             turns.append(result.turns_to_success)
@@ -90,6 +125,11 @@ def main() -> int:
                 "pass_at_k": result.pass_at_k,
                 "turns_to_success": result.turns_to_success,
             }
+        )
+        print(
+            f"[multiturn] [{idx}/{len(tasks)}] done task={task.task_id} "
+            f"pass_at_k={result.pass_at_k} turns_to_success={result.turns_to_success}",
+            flush=True,
         )
 
     summary["avg_turns_to_success"] = (sum(turns) / len(turns)) if turns else 0.0

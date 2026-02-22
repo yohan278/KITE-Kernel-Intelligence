@@ -46,6 +46,7 @@ class LLMKernelAgent:
         task: KernelTask,
         evaluate_fn: Callable[[str], dict],
         max_turns: int = 5,
+        on_step: Callable[[MultiTurnStep], None] | None = None,
     ) -> MultiTurnResult:
         steps: list[MultiTurnStep] = []
 
@@ -65,6 +66,8 @@ class LLMKernelAgent:
                 joules=float(metrics.get("joules", 0.0)),
             )
             steps.append(step)
+            if on_step is not None:
+                on_step(step)
             if step.correct:
                 break
 
@@ -83,4 +86,3 @@ class LLMKernelAgent:
             code = self.policy.generate_text(repair_prompt).strip()
 
         return MultiTurnResult(task_id=task.task_id, steps=steps)
-
