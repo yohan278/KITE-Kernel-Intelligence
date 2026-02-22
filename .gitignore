@@ -1,5 +1,9 @@
+# Byte-compiled / cached Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.pyc
+*.pyo
 *.so
 .pytest_cache/
 .mypy_cache/
