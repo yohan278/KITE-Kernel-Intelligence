@@ -44,6 +44,7 @@ def main() -> int:
     power_trace_dir = Path(cfg.get("power_trace_dir", "./results/measurement/power_traces"))
     task_id = cfg.get("task_id")
     task_index = int(cfg.get("task_index", 0))
+    candidate_code_path = cfg.get("candidate_code_path")
     baseline_runtime_ms = float(cfg.get("baseline_runtime_ms", 100.0))
 
     measurement_cfg = MeasurementConfig(
@@ -64,7 +65,16 @@ def main() -> int:
     )
 
     task = _choose_task(adapter, task_id=task_id, task_index=task_index)
-    code = task.reference_kernel or "def kernel(*args, **kwargs):\n    return args[0] if args else None\n"
+    if candidate_code_path:
+        candidate_path = Path(candidate_code_path)
+        if not candidate_path.is_absolute():
+            candidate_path = (args.config.parent / candidate_path).resolve()
+        if not candidate_path.exists():
+            raise FileNotFoundError(f"candidate_code_path does not exist: {candidate_path}")
+        code = candidate_path.read_text()
+    else:
+        code = task.reference_kernel or "def kernel(*args, **kwargs):\n    return args[0] if args else None\n"
+
     result = env.evaluate(task=task, code=code, baseline_runtime_ms=baseline_runtime_ms)
 
     power_trace_dir.mkdir(parents=True, exist_ok=True)

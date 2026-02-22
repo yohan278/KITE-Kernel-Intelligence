@@ -3,6 +3,7 @@ output_jsonl: ./results/measurement/smoke_one_task.jsonl
 power_trace_dir: ./results/measurement/power_traces
 task_id: null
 task_index: 0
+candidate_code_path: null
 baseline_runtime_ms: 100.0
 warmup_iters: 3
 measure_iters: 10
