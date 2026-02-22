@@ -42,6 +42,8 @@ def main() -> int:
     parser.add_argument("--temperature", type=float, default=0.1)
     parser.add_argument("--max-new-tokens", type=int, default=1024)
     parser.add_argument("--allow-triton", action="store_true")
+    parser.add_argument("--hf-cache-dir", type=Path, default=None)
+    parser.add_argument("--local-files-only", action="store_true")
     parser.add_argument("--no-progress", action="store_true", help="Disable tqdm progress output")
     parser.add_argument("--verbose-turns", action="store_true", help="Print per-turn metrics for each task")
     args = parser.parse_args()
@@ -63,6 +65,8 @@ def main() -> int:
             max_new_tokens=args.max_new_tokens,
             allow_triton=bool(args.allow_triton),
             kernelbench_root=args.kernelbench_root,
+            hf_cache_dir=str(args.hf_cache_dir) if args.hf_cache_dir else None,
+            local_files_only=bool(args.local_files_only),
         )
     )
     print("[multiturn] policy initialized", flush=True)

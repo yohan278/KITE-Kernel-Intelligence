@@ -43,6 +43,8 @@ def _build_parser() -> argparse.ArgumentParser:
     sft.add_argument("--model-config", type=Path, default=None)
     sft.add_argument("--epochs", type=int, default=3)
     sft.add_argument("--max-examples", type=int, default=256)
+    sft.add_argument("--hf-cache-dir", type=Path, default=None)
+    sft.add_argument("--local-files-only", action="store_true")
 
     kernel = train_sub.add_parser("kernel-grpo", help="Run kernel GRPO stage")
     kernel.add_argument("--kernelbench-root", type=Path, default=Path("external/KernelBench"))
@@ -57,6 +59,8 @@ def _build_parser() -> argparse.ArgumentParser:
     kernel.add_argument("--telemetry-trace-dir", type=Path, default=Path("data/telemetry/runs"))
     kernel.add_argument("--ipw-profile-dir", type=Path, default=None)
     kernel.add_argument("--no-synthetic-fallback", action="store_true")
+    kernel.add_argument("--hf-cache-dir", type=Path, default=None)
+    kernel.add_argument("--local-files-only", action="store_true")
 
     runtime = train_sub.add_parser("runtime-ppo", help="Run runtime PPO stage")
     runtime.add_argument("--output", type=Path, default=Path("checkpoints/runtime_ppo"))
@@ -71,6 +75,8 @@ def _build_parser() -> argparse.ArgumentParser:
     hrl.add_argument("--server-type", default=None)
     hrl.add_argument("--model-name", default=None)
     hrl.add_argument("--lora-weights", type=Path, default=None)
+    hrl.add_argument("--hf-cache-dir", type=Path, default=None)
+    hrl.add_argument("--local-files-only", action="store_true")
 
     ev = sub.add_parser("eval", help="Evaluation operations")
     ev_sub = ev.add_subparsers(dest="eval_cmd", required=True)
@@ -89,6 +95,11 @@ def _build_qwen_policy(args: argparse.Namespace) -> QwenPolicy:
     )
     lora_weights = getattr(args, "lora_weights", None)
     kb_root = getattr(args, "kernelbench_root", Path("external/KernelBench"))
+    hf_cache_dir = getattr(args, "hf_cache_dir", None) or os.environ.get("KITE_HF_CACHE")
+    local_files_only = bool(getattr(args, "local_files_only", False))
+    if not local_files_only:
+        local_env = os.environ.get("KITE_HF_LOCAL_FILES_ONLY", "").strip().lower()
+        local_files_only = local_env in {"1", "true", "yes", "on"}
 
     config = QwenPolicyConfig(
         model_name=model_name,
@@ -96,6 +107,8 @@ def _build_qwen_policy(args: argparse.Namespace) -> QwenPolicy:
         server_type=server_type,
         kernelbench_root=kb_root,
         lora_weights_path=str(lora_weights) if lora_weights else None,
+        hf_cache_dir=str(hf_cache_dir) if hf_cache_dir else None,
+        local_files_only=local_files_only,
     )
     return QwenPolicy(config=config)
 

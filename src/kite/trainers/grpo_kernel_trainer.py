@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -98,16 +99,38 @@ class GRPOKernelTrainer:
 
         model_name = self.policy.config.model_name
         dtype = torch.bfloat16
+        cache_dir = self.policy.config.hf_cache_dir or os.environ.get("KITE_HF_CACHE")
+        local_files_only = bool(self.policy.config.local_files_only)
+        if not local_files_only:
+            local_env = os.environ.get("KITE_HF_LOCAL_FILES_ONLY", "").strip().lower()
+            local_files_only = local_env in {"1", "true", "yes", "on"}
+        if cache_dir:
+            cache_dir = str(Path(cache_dir).expanduser().resolve())
+            Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
-        logger.info("Loading model for GRPO: %s", model_name)
-        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+        logger.info(
+            "Loading model for GRPO: %s (cache_dir=%s, local_files_only=%s)",
+            model_name,
+            cache_dir or "default",
+            local_files_only,
+        )
+        hf_kwargs: dict[str, object] = {"trust_remote_code": True}
+        if cache_dir:
+            hf_kwargs["cache_dir"] = cache_dir
+        if local_files_only:
+            hf_kwargs["local_files_only"] = True
+
+        tokenizer = AutoTokenizer.from_pretrained(model_name, **hf_kwargs)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.pad_token_id = tokenizer.eos_token_id
 
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name, torch_dtype=dtype, device_map="auto", trust_remote_code=True
-        )
+        model_kwargs: dict[str, object] = {"torch_dtype": dtype, "device_map": "auto", "trust_remote_code": True}
+        if cache_dir:
+            model_kwargs["cache_dir"] = cache_dir
+        if local_files_only:
+            model_kwargs["local_files_only"] = True
+        model = AutoModelForCausalLM.from_pretrained(model_name, **model_kwargs)
 
         if self.policy.config.lora_weights_path:
             from peft import PeftModel  # type: ignore

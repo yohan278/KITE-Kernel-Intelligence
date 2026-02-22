@@ -74,6 +74,8 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=Path("./checkpoints/kernel_grpo"))
     parser.add_argument("--heartbeat-seconds", type=float, default=15.0)
     parser.add_argument("--no-progress", action="store_true")
+    parser.add_argument("--hf-cache-dir", type=Path, default=None)
+    parser.add_argument("--local-files-only", action="store_true")
     args = parser.parse_args()
 
     cfg = load_yaml(args.config)
@@ -107,6 +109,10 @@ def main() -> int:
                 str(epochs),
                 "--energy-aware",
             ]
+            if args.hf_cache_dir:
+                cmd.extend(["--hf-cache-dir", str(args.hf_cache_dir)])
+            if args.local_files_only:
+                cmd.append("--local-files-only")
             label = f"sweep {idx + 1}/{len(combos)} alpha={alpha} beta={beta}"
             if tqdm is not None and not args.no_progress:
                 combo_iter.set_postfix(alpha=alpha, beta=beta)
@@ -135,6 +141,10 @@ def main() -> int:
     ]
     if energy_aware:
         cmd.append("--energy-aware")
+    if args.hf_cache_dir:
+        cmd.extend(["--hf-cache-dir", str(args.hf_cache_dir)])
+    if args.local_files_only:
+        cmd.append("--local-files-only")
     label = f"kernel-grpo epochs={epochs} energy_aware={energy_aware}"
     return _run_with_progress(
         label=label,

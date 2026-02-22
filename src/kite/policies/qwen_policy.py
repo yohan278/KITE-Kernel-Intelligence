@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
 import re
 import sys
@@ -36,6 +37,8 @@ class QwenPolicyConfig:
     load_in_4bit: bool = False
     dtype: str = "bfloat16"
     allow_triton: bool = False
+    hf_cache_dir: Optional[str] = None
+    local_files_only: bool = False
 
 
 class QwenPolicy:
@@ -74,8 +77,17 @@ class QwenPolicy:
             "float32": torch.float32,
         }
         dtype = dtype_map.get(self.config.dtype, torch.bfloat16)
+        cache_dir = self._resolve_hf_cache_dir()
+        local_only = self._resolve_local_files_only()
 
         load_kwargs: dict = {"torch_dtype": dtype, "device_map": "auto"}
+        token_kwargs: dict = {"trust_remote_code": True}
+        if cache_dir:
+            load_kwargs["cache_dir"] = cache_dir
+            token_kwargs["cache_dir"] = cache_dir
+        if local_only:
+            load_kwargs["local_files_only"] = True
+            token_kwargs["local_files_only"] = True
         if self.config.load_in_4bit:
             from transformers import BitsAndBytesConfig  # type: ignore
 
@@ -86,10 +98,13 @@ class QwenPolicy:
                 bnb_4bit_use_double_quant=True,
             )
 
-        logger.info("Loading base model: %s", self.config.model_name)
-        self._tokenizer = AutoTokenizer.from_pretrained(
-            self.config.model_name, trust_remote_code=True
+        logger.info(
+            "Loading base model: %s (cache_dir=%s, local_files_only=%s)",
+            self.config.model_name,
+            cache_dir or "default",
+            local_only,
         )
+        self._tokenizer = AutoTokenizer.from_pretrained(self.config.model_name, **token_kwargs)
         if self._tokenizer.pad_token is None:
             self._tokenizer.pad_token = self._tokenizer.eos_token
 
@@ -371,3 +386,17 @@ class QwenPolicy:
         src_dir_str = str(src_dir.resolve())
         if src_dir_str not in sys.path:
             sys.path.insert(0, src_dir_str)
+
+    def _resolve_hf_cache_dir(self) -> str | None:
+        cache_dir = self.config.hf_cache_dir or os.environ.get("KITE_HF_CACHE")
+        if not cache_dir:
+            return None
+        resolved = str(Path(cache_dir).expanduser().resolve())
+        Path(resolved).mkdir(parents=True, exist_ok=True)
+        return resolved
+
+    def _resolve_local_files_only(self) -> bool:
+        env = os.environ.get("KITE_HF_LOCAL_FILES_ONLY", "").strip().lower()
+        if env in {"1", "true", "yes", "on"}:
+            return True
+        return bool(self.config.local_files_only)

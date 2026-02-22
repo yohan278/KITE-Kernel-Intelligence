@@ -91,6 +91,7 @@ for env_name in "${ENVS[@]}"; do
         "matplotlib>=3.8" \
         "torch>=2.1" \
         "transformers>=4.40" \
+        "huggingface_hub[cli]>=0.25" \
         "peft>=0.10" \
         "trl>=0.9" \
         "accelerate>=0.30" \

@@ -50,6 +50,35 @@ bash scripts/setup_conda_envs.sh --all --with-ipw
 Environment specs are centralized in `/Users/gabrielbo/Downloads/cs234/KITE-Kernel-Intelligence/envs/`.
 See `/Users/gabrielbo/Downloads/cs234/KITE-Kernel-Intelligence/docs/ENVIRONMENTS.md` for full setup matrix.
 
+## Model Cache (HF)
+
+To avoid repeated model downloads, set a persistent cache path once and reuse it for all runs:
+
+```bash
+export KITE_HF_CACHE=/home/users/$USER/.cache/kite-hf
+mkdir -p "$KITE_HF_CACHE"
+```
+
+One-time auth + cache warm-up (train env):
+
+```bash
+conda run --no-capture-output -n kite-train hf auth login
+conda run -n kite-train python -c "from transformers import AutoModelForCausalLM, AutoTokenizer; m='Qwen/Qwen2.5-Coder-7B-Instruct'; AutoTokenizer.from_pretrained(m, cache_dir='$KITE_HF_CACHE', trust_remote_code=True); AutoModelForCausalLM.from_pretrained(m, cache_dir='$KITE_HF_CACHE', trust_remote_code=True)"
+```
+
+Then training/inference commands can reuse cache directly:
+
+```bash
+python scripts/multiturn_optimize.py --generation-mode local --hf-cache-dir "$KITE_HF_CACHE"
+python scripts/train_rl.py --config configs/train_throughput.yaml --hf-cache-dir "$KITE_HF_CACHE"
+```
+
+Optional offline mode after warm-up:
+
+```bash
+export KITE_HF_LOCAL_FILES_ONLY=1
+```
+
 ## Phase Commands
 
 ```bash
