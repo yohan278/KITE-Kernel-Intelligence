@@ -81,8 +81,12 @@ class LLMKernelAgent:
                 f"{task.prompt}\n\n"
                 f"Previous kernel:\n```python\n{code}\n```\n\n"
                 f"Feedback: {feedback}\n"
-                "Return a corrected improved kernel."
+                "Return only valid Python code that defines class ModelNew(nn.Module).\n"
+                "Do not return markdown fences or prose.\n"
+                "Do not use Triton.\n"
             )
-            code = self.policy.generate_text(repair_prompt).strip()
+            repaired_raw = self.policy.generate_text(repair_prompt).strip()
+            extracted = self.policy.extract_code(repaired_raw).strip()
+            code = extracted if extracted else repaired_raw
 
         return MultiTurnResult(task_id=task.task_id, steps=steps)

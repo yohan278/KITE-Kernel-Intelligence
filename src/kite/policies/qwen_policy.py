@@ -34,6 +34,7 @@ class QwenPolicyConfig:
     lora_weights_path: Optional[str] = None
     load_in_4bit: bool = False
     dtype: str = "bfloat16"
+    allow_triton: bool = False
 
 
 class QwenPolicy:
@@ -151,6 +152,10 @@ class QwenPolicy:
         new_ids = output_ids[0][inputs["input_ids"].shape[1] :]
         return tokenizer.decode(new_ids, skip_special_tokens=True)
 
+    def extract_code(self, raw: str) -> str:
+        """Public wrapper to normalize model generations into Python source."""
+        return self._extract_code(raw)
+
     def _generate_candidate_local(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
         prompt = self._build_kernel_prompt(task)
         raw = self.generate_text(prompt)
@@ -175,13 +180,24 @@ class QwenPolicy:
 
     def _build_kernel_prompt(self, task: KernelTask) -> str:
         ref = task.metadata.get("ref_arch_src", task.reference_kernel)
+        target = (
+            "CUDA/Triton kernel replacement"
+            if self.config.allow_triton
+            else "CUDA kernel replacement"
+        )
+        triton_rule = (
+            "- Triton is allowed if needed.\n"
+            if self.config.allow_triton
+            else "- Do not use Triton. Use PyTorch/CUDA only.\n"
+        )
         return (
             "You are an expert GPU kernel engineer. "
             "Given the following PyTorch reference implementation, write an optimized "
-            "CUDA/Triton kernel replacement.\n\n"
+            f"{target}.\n\n"
             "Requirements:\n"
             "- The replacement must produce identical outputs to the reference.\n"
             "- Optimize for speed on NVIDIA H100 GPU.\n"
+            f"{triton_rule}"
             "- Return a complete, self-contained Python module.\n\n"
             f"Reference implementation:\n```python\n{ref}\n```\n\n"
             "Write the optimized kernel implementation:"
