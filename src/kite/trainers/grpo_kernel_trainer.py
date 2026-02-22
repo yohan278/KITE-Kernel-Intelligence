@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from kite.adapters.ipw_adapter import IPWAdapter
 from kite.adapters.kernelbench_adapter import KernelBenchAdapter
@@ -156,14 +156,31 @@ class GRPOKernelTrainer:
         energy_capture = self.energy_capture
         ipw_adapter = self.ipw_adapter
         config = self.config
+        policy = self.policy
+
+        def _completion_to_code(completion: Any) -> str:
+            text: str
+            if isinstance(completion, list):
+                if completion and isinstance(completion[0], dict):
+                    text = str(completion[0].get("content", ""))
+                elif completion:
+                    text = str(completion[0])
+                else:
+                    text = ""
+            elif isinstance(completion, dict):
+                text = str(completion.get("content", ""))
+            else:
+                text = str(completion)
+
+            code = policy.extract_code(text).strip()
+            return code if code else text.strip()
 
         def kernel_reward_fn(completions: list[str], **kwargs) -> list[float]:
             nonlocal telemetry_idx
             prompts = kwargs.get("prompts", kwargs.get("prompt", [""]))
             rewards = []
-            for i, code in enumerate(completions):
-                if isinstance(code, list):
-                    code = code[0].get("content", "") if code else ""
+            for i, completion in enumerate(completions):
+                code = _completion_to_code(completion)
                 task_idx = i % len(tasks)
                 task = tasks[task_idx]
                 candidate = adapter.evaluate_candidate(task, code)
@@ -202,6 +219,10 @@ class GRPOKernelTrainer:
                 "You are an expert GPU kernel engineer. "
                 "Optimize this PyTorch model with a custom GPU kernel implementation "
                 "that produces identical outputs and runs faster on NVIDIA H100.\n\n"
+                "Output only valid Python code.\n"
+                "Do not include markdown or explanations.\n"
+                "Must define class ModelNew(nn.Module).\n"
+                "Do not use Triton.\n\n"
                 f"```python\n{ref_src}\n```\n\n"
                 "Write the optimized kernel:"
             )
