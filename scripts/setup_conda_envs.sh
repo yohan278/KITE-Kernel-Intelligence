@@ -94,7 +94,10 @@ for env_name in "${ENVS[@]}"; do
         "peft>=0.10" \
         "trl>=0.9" \
         "accelerate>=0.30" \
-        "datasets>=2.18"
+        "datasets>=2.18" \
+        "tqdm>=4.67" \
+        "openai>=2.0" \
+        "litellm>=1.81"
       ;;
     kite-telemetry)
       install_python_deps "$env_name" \
