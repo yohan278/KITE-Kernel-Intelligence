@@ -4,26 +4,26 @@ Tasks measured: 5
 Repeats per task: 30
 
 ## L1_1
-- runtime_ms: mean=0.0186, std=0.0007, cv=0.0394
-- energy_j: mean=0.1118, std=0.0044, cv=0.0394
-- avg_power_w: mean=300.0000, std=0.0000
+- runtime_ms: mean=0.0206, std=0.0022, cv=0.1056
+- energy_j: mean=0.0253, std=0.0058, cv=0.2281
+- avg_power_w: mean=62.0201, std=15.4616
 
 ## L1_2
-- runtime_ms: mean=0.0185, std=0.0003, cv=0.0183
-- energy_j: mean=0.1111, std=0.0020, cv=0.0183
-- avg_power_w: mean=300.0000, std=0.0000
+- runtime_ms: mean=0.0203, std=0.0007, cv=0.0342
+- energy_j: mean=0.0327, std=0.0011, cv=0.0342
+- avg_power_w: mean=80.4224, std=0.1364
 
 ## L1_3
-- runtime_ms: mean=0.0183, std=0.0004, cv=0.0206
-- energy_j: mean=0.1100, std=0.0023, cv=0.0206
-- avg_power_w: mean=300.0000, std=0.0000
+- runtime_ms: mean=0.0200, std=0.0004, cv=0.0222
+- energy_j: mean=0.0323, std=0.0007, cv=0.0219
+- avg_power_w: mean=80.9981, std=0.2660
 
 ## L1_4
-- runtime_ms: mean=0.0182, std=0.0004, cv=0.0202
-- energy_j: mean=0.1093, std=0.0022, cv=0.0202
-- avg_power_w: mean=300.0000, std=0.0000
+- runtime_ms: mean=0.0201, std=0.0016, cv=0.0787
+- energy_j: mean=0.0326, std=0.0026, cv=0.0806
+- avg_power_w: mean=81.1437, std=0.4979
 
 ## L1_5
-- runtime_ms: mean=0.0182, std=0.0003, cv=0.0192
-- energy_j: mean=0.1094, std=0.0021, cv=0.0192
-- avg_power_w: mean=300.0000, std=0.0000
+- runtime_ms: mean=0.0198, std=0.0004, cv=0.0177
+- energy_j: mean=0.0317, std=0.0006, cv=0.0177
+- avg_power_w: mean=80.1758, std=0.0334

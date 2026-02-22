@@ -1,33 +1,33 @@
 {
-  "avg_power_w": 300.0,
-  "compile_ok": false,
-  "correct": false,
-  "joules": 0.07684445008635521,
+  "avg_power_w": 126.478,
+  "compile_ok": true,
+  "correct": true,
+  "joules": 0.04608192552812397,
   "logs": {
     "candidate_logs": {
       "backend": "cuda",
       "kernelbench_eval": true,
       "metadata": {
-        "compilation_error": "Syntax error in custom generated code or ModelNew not found",
-        "compilation_error_name": "SyntaxError",
+        "correctness_trials": "(3 / 3)",
         "device": "cuda:0",
         "hardware": "NVIDIA L40S"
       },
       "num_correct_trials": 3,
       "num_perf_trials": 25,
       "precision": "fp32",
+      "ref_runtime_us": 2.68,
       "timing_method": "cuda_event"
     },
     "energy_j_std": 0.0,
     "measurement_repeats": 1,
     "power_trace": [
       {
-        "power_w": 300.0,
+        "power_w": 126.478,
         "timestamp_s": 0.0
       },
       {
-        "power_w": 300.0,
-        "timestamp_s": 0.00025614816695451736
+        "power_w": 126.478,
+        "timestamp_s": 0.00036434736102819443
       }
     ],
     "runtime_ms_std": 0.0,
@@ -45,16 +45,16 @@
       "task_id": "L1_1"
     }
   },
-  "reward": -1.0,
+  "reward": 9.456070095248824,
   "reward_breakdown": {
-    "correctness": 0.0,
-    "energy": 0.0,
-    "latency_sla": 0.0,
-    "performance": 0.0,
+    "correctness": 1.0,
+    "energy": 1.5386672384164517,
+    "latency_sla": -0.0,
+    "performance": 7.917402856832373,
     "stability": 0.0,
-    "total": -1.0
+    "total": 9.456070095248824
   },
-  "runtime_ms": 0.025614816695451736,
-  "speedup": 3903.9904594654536,
+  "runtime_ms": 0.03643473610281944,
+  "speedup": 2744.6335748884885,
   "task_id": "L1_1"
 }
