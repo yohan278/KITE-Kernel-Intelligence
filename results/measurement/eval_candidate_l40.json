@@ -1,0 +1,60 @@
+{
+  "avg_power_w": 300.0,
+  "compile_ok": false,
+  "correct": false,
+  "joules": 0.07684445008635521,
+  "logs": {
+    "candidate_logs": {
+      "backend": "cuda",
+      "kernelbench_eval": true,
+      "metadata": {
+        "compilation_error": "Syntax error in custom generated code or ModelNew not found",
+        "compilation_error_name": "SyntaxError",
+        "device": "cuda:0",
+        "hardware": "NVIDIA L40S"
+      },
+      "num_correct_trials": 3,
+      "num_perf_trials": 25,
+      "precision": "fp32",
+      "timing_method": "cuda_event"
+    },
+    "energy_j_std": 0.0,
+    "measurement_repeats": 1,
+    "power_trace": [
+      {
+        "power_w": 300.0,
+        "timestamp_s": 0.0
+      },
+      {
+        "power_w": 300.0,
+        "timestamp_s": 0.00025614816695451736
+      }
+    ],
+    "runtime_ms_std": 0.0,
+    "task": {
+      "level": 1,
+      "metadata": {
+        "level": 1,
+        "problem_id": 1,
+        "problem_name": "1_Square_matrix_multiplication_.py",
+        "ref_arch_src": "import torch\nimport torch.nn as nn\n\nclass Model(nn.Module):\n    \"\"\"\n    Simple model that performs a single square matrix multiplication (C = A * B)\n    \"\"\"\n    def __init__(self):\n        super(Model, self).__init__()\n    \n    def forward(self, A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:\n        \"\"\"\n        Performs the matrix multiplication.\n\n        Args:\n            A (torch.Tensor): Input matrix A of shape (N, N).\n            B (torch.Tensor): Input matrix B of shape (N, N).\n\n        Returns:\n            torch.Tensor: Output matrix C of shape (N, N).\n        \"\"\"\n        return torch.matmul(A, B)\n\nN = 2048 * 2\n\ndef get_inputs():\n    A = torch.rand(N, N)\n    B = torch.rand(N, N)\n    return [A, B]\n\ndef get_init_inputs():\n    return []  # No special initialization inputs needed",
+        "source": "kernelbench_dataset_api"
+      },
+      "prompt": "Optimize this PyTorch model with a custom GPU kernel implementation.\n\nimport torch\nimport torch.nn as nn\n\nclass Model(nn.Module):\n    \"\"\"\n    Simple model that performs a single square matrix multiplication (C = A * B)\n    \"\"\"\n    def __init__(self):\n        super(Model, self).__init__()\n    \n    def forward(self, A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:\n        \"\"\"\n        Performs the matrix multiplication.\n\n        Args:\n            A (torch.Tensor): Input matrix A of shape (N, N).\n            B (torch.Tensor): Input matrix B of shape (N, N).\n\n        Returns:\n            torch.Tensor: Output matrix C of shape (N, N).\n        \"\"\"\n        return torch.matmul(A, B)\n\nN = 2048 * 2\n\ndef get_inputs():\n    A = torch.rand(N, N)\n    B = torch.rand(N, N)\n    return [A, B]\n\ndef get_init_inputs():\n    return []  # No special initialization inputs needed",
+      "reference_kernel": "import torch\nimport torch.nn as nn\n\nclass Model(nn.Module):\n    \"\"\"\n    Simple model that performs a single square matrix multiplication (C = A * B)\n    \"\"\"\n    def __init__(self):\n        super(Model, self).__init__()\n    \n    def forward(self, A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:\n        \"\"\"\n        Performs the matrix multiplication.\n\n        Args:\n            A (torch.Tensor): Input matrix A of shape (N, N).\n            B (torch.Tensor): Input matrix B of shape (N, N).\n\n        Returns:\n            torch.Tensor: Output matrix C of shape (N, N).\n        \"\"\"\n        return torch.matmul(A, B)\n\nN = 2048 * 2\n\ndef get_inputs():\n    A = torch.rand(N, N)\n    B = torch.rand(N, N)\n    return [A, B]\n\ndef get_init_inputs():\n    return []  # No special initialization inputs needed",
+      "task_id": "L1_1"
+    }
+  },
+  "reward": -1.0,
+  "reward_breakdown": {
+    "correctness": 0.0,
+    "energy": 0.0,
+    "latency_sla": 0.0,
+    "performance": 0.0,
+    "stability": 0.0,
+    "total": -1.0
+  },
+  "runtime_ms": 0.025614816695451736,
+  "speedup": 3903.9904594654536,
+  "task_id": "L1_1"
+}
