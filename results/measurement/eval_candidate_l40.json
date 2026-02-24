@@ -1,8 +1,8 @@
 {
-  "avg_power_w": 126.478,
+  "avg_power_w": 300.0,
   "compile_ok": true,
   "correct": true,
-  "joules": 0.04608192552812397,
+  "joules": 0.06861984729766846,
   "logs": {
     "candidate_logs": {
       "backend": "cuda",
@@ -15,19 +15,19 @@
       "num_correct_trials": 3,
       "num_perf_trials": 25,
       "precision": "fp32",
-      "ref_runtime_us": 2.68,
+      "ref_runtime_us": 2.64,
       "timing_method": "cuda_event"
     },
     "energy_j_std": 0.0,
     "measurement_repeats": 1,
     "power_trace": [
       {
-        "power_w": 126.478,
+        "power_w": 300.0,
         "timestamp_s": 0.0
       },
       {
-        "power_w": 126.478,
-        "timestamp_s": 0.00036434736102819443
+        "power_w": 300.0,
+        "timestamp_s": 0.00022873282432556152
       }
     ],
     "runtime_ms_std": 0.0,
@@ -45,16 +45,16 @@
       "task_id": "L1_1"
     }
   },
-  "reward": 9.456070095248824,
+  "reward": 9.722542674986752,
   "reward_breakdown": {
     "correctness": 1.0,
-    "energy": 1.5386672384164517,
+    "energy": 1.339586733443517,
     "latency_sla": -0.0,
-    "performance": 7.917402856832373,
+    "performance": 8.382955941543235,
     "stability": 0.0,
-    "total": 9.456070095248824
+    "total": 9.722542674986752
   },
-  "runtime_ms": 0.03643473610281944,
-  "speedup": 2744.6335748884885,
+  "runtime_ms": 0.022873282432556152,
+  "speedup": 4371.912964169381,
   "task_id": "L1_1"
 }
