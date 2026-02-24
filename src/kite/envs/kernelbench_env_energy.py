@@ -87,6 +87,8 @@ class KernelBenchEnergyEnv:
 
         logs = {
             "candidate_logs": candidate.logs,
+            "compile_log": candidate.compile_log,
+            "correctness_log": candidate.correctness_log,
             "task": asdict(task),
             "measurement_repeats": meas.repeats,
             "runtime_ms_std": meas.runtime_ms_std,

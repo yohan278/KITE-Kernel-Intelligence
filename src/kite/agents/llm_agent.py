@@ -58,6 +58,54 @@ class LLMKernelAgent:
     ) -> MultiTurnResult:
         steps: list[MultiTurnStep] = []
 
+        def _clip_text(value: object, max_chars: int = 500) -> str:
+            text = str(value).strip()
+            if len(text) <= max_chars:
+                return text
+            return text[:max_chars] + "...<truncated>"
+
+        def _format_feedback(metrics: dict[str, Any], timeout_error: str | None) -> str:
+            compile_ok = bool(metrics.get("compile_ok", False))
+            correct = bool(metrics.get("correct", False))
+            reward = float(metrics.get("reward", 0.0))
+            runtime_ms = float(metrics.get("runtime_ms", 0.0))
+            speedup = float(metrics.get("speedup", 0.0) or 0.0)
+            joules = float(metrics.get("joules", 0.0))
+
+            compile_log = metrics.get("compile_log")
+            correctness_log = metrics.get("correctness_log")
+
+            lines = [
+                f"Last metrics: compile_ok={compile_ok}, correct={correct}, reward={reward:.4f}, "
+                f"runtime_ms={runtime_ms:.4f}, speedup={speedup:.4f}, joules={joules:.6f}",
+            ]
+            if timeout_error:
+                lines.append(f"Timeout detail: {_clip_text(timeout_error)}")
+            if compile_log:
+                lines.append(f"Compile error detail: {_clip_text(compile_log)}")
+            if correctness_log:
+                lines.append(f"Correctness error detail: {_clip_text(correctness_log)}")
+
+            if timeout_error:
+                lines.append(
+                    "Repair target: simplify implementation and avoid long-running custom classes or heavyweight kernels."
+                )
+            elif not compile_ok:
+                lines.append(
+                    "Repair target: fix compile/loading issues first; return valid Python with class ModelNew(nn.Module)."
+                )
+            elif not correct:
+                lines.append(
+                    "Repair target: preserve exact output shape/dtype semantics of reference and match Model.forward signature."
+                )
+            else:
+                lines.append("Repair target: keep correctness and improve speedup while reducing joules.")
+            lines.append(
+                "Implementation hint: avoid runtime C++ extension compilation paths (torch.utils.cpp_extension/load_inline)."
+            )
+
+            return "\n".join(lines)
+
         def _emit(payload: dict[str, Any]) -> None:
             if on_event is not None:
                 on_event(payload)
@@ -174,23 +222,22 @@ class LLMKernelAgent:
             if step.correct:
                 break
 
-            if step.timeout:
-                feedback = (
-                    "Previous evaluation timed out. Produce a simpler kernel and avoid heavy custom classes."
-                )
-            elif not step.compile_ok:
-                feedback = "Compilation failed. Fix syntax/import/runtime errors and return corrected kernel only."
-            else:
-                feedback = (
-                    "Kernel is incorrect or suboptimal. Keep correctness and improve speedup while reducing joules."
-                )
+            feedback = _format_feedback(metrics, timeout_error=error_msg if step.timeout else None)
             repair_prompt = (
+                "You are fixing a failed GPU-kernel candidate.\n\n"
+                "Task:\n"
                 f"{task.prompt}\n\n"
-                f"Previous kernel:\n```python\n{code}\n```\n\n"
-                f"Feedback: {feedback}\n"
-                "Return only valid Python code that defines class ModelNew(nn.Module).\n"
-                "Do not return markdown fences or prose.\n"
-                "Do not use Triton.\n"
+                "Previous kernel:\n"
+                f"```python\n{code}\n```\n\n"
+                "Execution feedback:\n"
+                f"{feedback}\n\n"
+                "Hard requirements:\n"
+                "- Return only valid Python source code.\n"
+                "- Must define class ModelNew(nn.Module).\n"
+                "- Keep ModelNew.forward argument count/order compatible with the reference Model.forward.\n"
+                "- Do not use Triton.\n"
+                "- Avoid torch.utils.cpp_extension/load_inline runtime compilation.\n"
+                "- No markdown fences or prose in output.\n"
             )
             _emit(
                 {

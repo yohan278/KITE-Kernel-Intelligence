@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import os
 from pathlib import Path
 import sys
@@ -28,6 +29,72 @@ except Exception:  # pragma: no cover - optional dependency
     tqdm = None
 
 
+def _forward_arity_from_source(source: str, class_name: str) -> int | None:
+    if not source:
+        return None
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return None
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef) and node.name == class_name:
+            for item in node.body:
+                if isinstance(item, ast.FunctionDef) and item.name == "forward":
+                    positional = [arg.arg for arg in item.args.args if arg.arg != "self"]
+                    return len(positional)
+    return None
+
+
+def _precheck_candidate_code(
+    task,
+    code: str,
+    allow_triton: bool,
+    block_custom_autograd: bool = False,
+) -> str | None:
+    if not code or not code.strip():
+        return "precheck: empty completion"
+    try:
+        ast.parse(code)
+    except SyntaxError as exc:
+        return f"precheck: syntax_error: {exc}"
+
+    if "class ModelNew" not in code:
+        return "precheck: missing ModelNew class"
+    cand_arity = _forward_arity_from_source(code, "ModelNew")
+    if cand_arity is None:
+        return "precheck: missing ModelNew.forward method"
+
+    ref_src = str(task.metadata.get("ref_arch_src", "") or "")
+    ref_arity = _forward_arity_from_source(ref_src, "Model")
+    if ref_arity is not None and cand_arity != ref_arity:
+        return f"precheck: forward_arity_mismatch ref={ref_arity} candidate={cand_arity}"
+
+    # Guard rails against slow/hanging compile paths during multiturn evaluation.
+    blocked_patterns = [
+        ("torch.utils.cpp_extension", "precheck: disallowed cpp_extension usage"),
+        ("load_inline(", "precheck: disallowed inline extension compilation"),
+    ]
+    if block_custom_autograd:
+        blocked_patterns.extend(
+            [
+                ("from torch.autograd import Function", "precheck: disallowed custom autograd Function"),
+                ("@custom_fwd", "precheck: disallowed custom_fwd decorator"),
+                ("@custom_bwd", "precheck: disallowed custom_bwd decorator"),
+            ]
+        )
+    if not allow_triton:
+        blocked_patterns.extend(
+            [
+                ("import triton", "precheck: triton_not_allowed"),
+                ("@triton", "precheck: triton_not_allowed"),
+            ]
+        )
+    for needle, reason in blocked_patterns:
+        if needle in code:
+            return reason
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--kernelbench-root", type=Path, default=Path("./external/KernelBench"))
@@ -44,6 +111,12 @@ def main() -> int:
     parser.add_argument("--temperature", type=float, default=0.1)
     parser.add_argument("--max-new-tokens", type=int, default=1024)
     parser.add_argument("--allow-triton", action="store_true")
+    parser.add_argument(
+        "--block-custom-autograd",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Optionally block custom autograd decorators/classes during precheck.",
+    )
     default_hf_cache = os.environ.get("KITE_HF_CACHE")
     parser.add_argument(
         "--hf-cache-dir",
@@ -141,13 +214,48 @@ def main() -> int:
         debug_events: list[dict[str, Any]] = []
 
         def _eval(code: str) -> dict:
+            precheck_error = _precheck_candidate_code(
+                task=task,
+                code=code,
+                allow_triton=bool(args.allow_triton),
+                block_custom_autograd=bool(args.block_custom_autograd),
+            )
+            if precheck_error:
+                return {
+                    "compile_ok": False,
+                    "correct": False,
+                    "reward": -1.0,
+                    "runtime_ms": 0.0,
+                    "speedup": 0.0,
+                    "joules": 0.0,
+                    "compile_log": precheck_error,
+                    "correctness_log": None,
+                }
+
             step = env.evaluate(task=task, code=code)
+            candidate_logs = step.logs.get("candidate_logs", {})
+            metadata = candidate_logs.get("metadata", {}) if isinstance(candidate_logs, dict) else {}
+            compile_log = step.logs.get("compile_log")
+            correctness_log = step.logs.get("correctness_log")
+
+            if not compile_log and isinstance(metadata, dict):
+                compile_log = (
+                    metadata.get("compilation_error")
+                    or metadata.get("compile_error")
+                    or metadata.get("error")
+                )
+            if not correctness_log and isinstance(metadata, dict):
+                correctness_log = metadata.get("correctness_error")
+
             return {
                 "compile_ok": step.compile_ok,
                 "correct": step.correct,
                 "reward": step.reward.total,
                 "runtime_ms": step.runtime_ms,
+                "speedup": step.speedup,
                 "joules": step.joules,
+                "compile_log": compile_log,
+                "correctness_log": correctness_log,
             }
 
         def _on_step(step) -> None:
