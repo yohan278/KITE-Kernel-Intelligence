@@ -5,9 +5,12 @@ from __future__ import annotations
 from dataclasses import asdict
 from pathlib import Path
 import sys
+import time
 from typing import Any
 from typing import Iterable, List
 
+from kite.measurement.energy_integrate import integrate_energy
+from kite.measurement.nvml_power import NvmlPowerSampler, PowerSample
 from kite.types import KernelCandidate, KernelTask
 from kite.utils.serialization import load_jsonl, save_jsonl
 
@@ -154,6 +157,11 @@ class KernelBenchAdapter:
         if not torch.cuda.is_available():
             return None
 
+        sampler = NvmlPowerSampler(device_index=0, sampling_interval_ms=50.0)
+        sampler.start()
+        eval_t0 = time.perf_counter()
+        eval_error: Exception | None = None
+        result = None
         try:
             result = eval_kernel_against_ref(
                 original_model_src=ref_arch,
@@ -167,10 +175,81 @@ class KernelBenchAdapter:
                 precision=get_torch_dtype_from_string(self.precision),
                 device=torch.device("cuda:0"),
             )
-            if result is None:
-                return None
+        except Exception as exc:
+            eval_error = exc
+        eval_t1 = time.perf_counter()
+        samples = sampler.stop()
+        duration_s = max(0.0, eval_t1 - eval_t0)
+        if len(samples) < 2:
+            power = sampler.read_power_w()
+            samples = [
+                PowerSample(timestamp_s=0.0, power_w=power),
+                PowerSample(timestamp_s=duration_s, power_w=power),
+            ]
+        window = integrate_energy(samples)
+        sampler.close()
+        try:
+            torch.cuda.empty_cache()
         except Exception:
-            return None
+            pass
+
+        if eval_error is not None:
+            err_name = type(eval_error).__name__
+            err_text = f"{err_name}: {eval_error}"
+            err_lower = err_text.lower()
+            logs = {
+                "kernelbench_eval": True,
+                "num_correct_trials": self.num_correct_trials,
+                "num_perf_trials": self.num_perf_trials,
+                "timing_method": self.timing_method,
+                "backend": self.backend,
+                "precision": self.precision,
+                "avg_power_w": window.avg_power_w,
+                "energy_j": window.energy_j,
+                "eval_wall_ms": duration_s * 1000.0,
+                "metadata": {
+                    "exception_name": err_name,
+                    "exception": str(eval_error),
+                    "oom": ("out of memory" in err_lower),
+                },
+            }
+            return KernelCandidate(
+                task_id=task.task_id,
+                code=candidate_code,
+                compile_ok=False,
+                correct=False,
+                runtime_ms=duration_s * 1000.0,
+                speedup=0.0,
+                compile_log=f"kernelbench eval exception: {err_text}",
+                correctness_log=str(eval_error),
+                reference_runtime_ms=baseline_runtime_ms,
+                logs=logs,
+            )
+        if result is None:
+            logs = {
+                "kernelbench_eval": True,
+                "num_correct_trials": self.num_correct_trials,
+                "num_perf_trials": self.num_perf_trials,
+                "timing_method": self.timing_method,
+                "backend": self.backend,
+                "precision": self.precision,
+                "avg_power_w": window.avg_power_w,
+                "energy_j": window.energy_j,
+                "eval_wall_ms": duration_s * 1000.0,
+                "metadata": {"error": "kernelbench returned no result"},
+            }
+            return KernelCandidate(
+                task_id=task.task_id,
+                code=candidate_code,
+                compile_ok=False,
+                correct=False,
+                runtime_ms=duration_s * 1000.0,
+                speedup=0.0,
+                compile_log="kernelbench returned no result",
+                correctness_log=None,
+                reference_runtime_ms=baseline_runtime_ms,
+                logs=logs,
+            )
 
         compiled = bool(getattr(result, "compiled", False))
         correctness = bool(getattr(result, "correctness", False)) if compiled else False
@@ -203,6 +282,9 @@ class KernelBenchAdapter:
             "timing_method": self.timing_method,
             "backend": self.backend,
             "precision": self.precision,
+            "avg_power_w": window.avg_power_w,
+            "energy_j": window.energy_j,
+            "eval_wall_ms": duration_s * 1000.0,
             "metadata": metadata,
         }
         if ref_runtime_us > 0:

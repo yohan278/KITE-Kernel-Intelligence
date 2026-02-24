@@ -80,12 +80,21 @@ def main() -> int:
 
     cfg = load_yaml(args.config)
     train = cfg.get("train", {})
+    reward_cfg = train.get("reward", {}) if isinstance(train.get("reward", {}), dict) else {}
 
     def _int_cfg(key: str, default: int | None = None) -> int | None:
         value = train.get(key, default)
         if value is None:
             return None
         return int(value)
+
+    def _float_reward(key: str) -> float | None:
+        if key not in reward_cfg:
+            return None
+        value = reward_cfg.get(key)
+        if value is None:
+            return None
+        return float(value)
 
     if "sweep" in cfg:
         sweep_cfg = cfg["sweep"]
@@ -138,6 +147,36 @@ def main() -> int:
                 cmd.extend(["--eval-num-perf-trials", str(eval_num_perf_trials)])
             if failure_log_every_steps is not None:
                 cmd.extend(["--failure-log-every-steps", str(failure_log_every_steps)])
+            reward_alpha = _float_reward("alpha")
+            reward_beta = _float_reward("beta")
+            reward_gamma = _float_reward("gamma_latency")
+            reward_delta = _float_reward("delta_power")
+            reward_eta = _float_reward("eta_runtime")
+            reward_correctness_bonus = _float_reward("correctness_bonus")
+            reward_compile_fail = _float_reward("compile_fail")
+            reward_incorrect = _float_reward("incorrect")
+            reward_oom_penalty = _float_reward("oom_penalty")
+            reward_sla_latency_s = _float_reward("sla_latency_s")
+            if reward_alpha is not None:
+                cmd.extend(["--reward-alpha", str(reward_alpha)])
+            if reward_beta is not None:
+                cmd.extend(["--reward-beta", str(reward_beta)])
+            if reward_gamma is not None:
+                cmd.extend(["--reward-gamma-latency", str(reward_gamma)])
+            if reward_delta is not None:
+                cmd.extend(["--reward-delta-power", str(reward_delta)])
+            if reward_eta is not None:
+                cmd.extend(["--reward-eta-runtime", str(reward_eta)])
+            if reward_correctness_bonus is not None:
+                cmd.extend(["--reward-correctness-bonus", str(reward_correctness_bonus)])
+            if reward_compile_fail is not None:
+                cmd.extend(["--reward-compile-fail", str(reward_compile_fail)])
+            if reward_incorrect is not None:
+                cmd.extend(["--reward-incorrect", str(reward_incorrect)])
+            if reward_oom_penalty is not None:
+                cmd.extend(["--reward-oom-penalty", str(reward_oom_penalty)])
+            if reward_sla_latency_s is not None:
+                cmd.extend(["--reward-sla-latency-s", str(reward_sla_latency_s)])
             if args.hf_cache_dir:
                 cmd.extend(["--hf-cache-dir", str(args.hf_cache_dir)])
             if args.local_files_only:
@@ -188,6 +227,36 @@ def main() -> int:
         cmd.extend(["--eval-num-perf-trials", str(eval_num_perf_trials)])
     if failure_log_every_steps is not None:
         cmd.extend(["--failure-log-every-steps", str(failure_log_every_steps)])
+    reward_alpha = _float_reward("alpha")
+    reward_beta = _float_reward("beta")
+    reward_gamma = _float_reward("gamma_latency")
+    reward_delta = _float_reward("delta_power")
+    reward_eta = _float_reward("eta_runtime")
+    reward_correctness_bonus = _float_reward("correctness_bonus")
+    reward_compile_fail = _float_reward("compile_fail")
+    reward_incorrect = _float_reward("incorrect")
+    reward_oom_penalty = _float_reward("oom_penalty")
+    reward_sla_latency_s = _float_reward("sla_latency_s")
+    if reward_alpha is not None:
+        cmd.extend(["--reward-alpha", str(reward_alpha)])
+    if reward_beta is not None:
+        cmd.extend(["--reward-beta", str(reward_beta)])
+    if reward_gamma is not None:
+        cmd.extend(["--reward-gamma-latency", str(reward_gamma)])
+    if reward_delta is not None:
+        cmd.extend(["--reward-delta-power", str(reward_delta)])
+    if reward_eta is not None:
+        cmd.extend(["--reward-eta-runtime", str(reward_eta)])
+    if reward_correctness_bonus is not None:
+        cmd.extend(["--reward-correctness-bonus", str(reward_correctness_bonus)])
+    if reward_compile_fail is not None:
+        cmd.extend(["--reward-compile-fail", str(reward_compile_fail)])
+    if reward_incorrect is not None:
+        cmd.extend(["--reward-incorrect", str(reward_incorrect)])
+    if reward_oom_penalty is not None:
+        cmd.extend(["--reward-oom-penalty", str(reward_oom_penalty)])
+    if reward_sla_latency_s is not None:
+        cmd.extend(["--reward-sla-latency-s", str(reward_sla_latency_s)])
     if energy_aware:
         cmd.append("--energy-aware")
     if args.hf_cache_dir:

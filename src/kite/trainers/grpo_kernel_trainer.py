@@ -14,8 +14,7 @@ from kite.adapters.kernelbench_adapter import KernelBenchAdapter
 from kite.types import KernelCandidate, KernelTask
 from kite.adapters.kevin_style_rollouts import RolloutConfig, filter_trajectories, grouped_rollouts
 from kite.policies.qwen_policy import QwenPolicy
-from kite.rewards.energy_reward import EnergyRewardConfig, compute_energy_aware_reward
-from kite.rewards.kernel_reward import staged_kernel_reward
+from kite.rewards.grpo_reward import GRPOMultiMetricRewardConfig, compute_grpo_multi_metric_reward
 from kite.telemetry.energy_capture import EnergyCapture
 from kite.telemetry.phase_attribution import attribute_prefill_decode
 from kite.utils.logging import get_logger
@@ -46,6 +45,16 @@ class GRPOKernelConfig:
     beta: float = 0.04
     correctness_bias_epochs: int = 2
     failure_log_every_steps: int = 10
+    reward_alpha_speedup: float = 1.0
+    reward_beta_joules: float = 0.0
+    reward_gamma_latency: float = 0.25
+    reward_delta_avg_power: float = 0.01
+    reward_eta_runtime: float = 0.10
+    reward_correctness_bonus: float = 0.0
+    reward_compile_fail: float = -1.0
+    reward_incorrect: float = -0.5
+    reward_oom_penalty: float = 0.5
+    reward_sla_latency_s: float = 1.0
 
 
 class GRPOKernelTrainer:
@@ -205,6 +214,7 @@ class GRPOKernelTrainer:
         ipw_adapter = self.ipw_adapter
         config = self.config
         policy = self.policy
+        reward_config = self._build_grpo_reward_config(energy_aware=energy_aware)
         reward_steps = 0
         failure_counts: dict[str, int] = {}
 
@@ -230,7 +240,6 @@ class GRPOKernelTrainer:
 
         def kernel_reward_fn(completions: list[str], **kwargs) -> list[float]:
             nonlocal telemetry_idx, reward_steps
-            prompts = kwargs.get("prompts", kwargs.get("prompt", [""]))
             rewards = []
             for i, completion in enumerate(completions):
                 code = _completion_to_code(completion)
@@ -258,6 +267,8 @@ class GRPOKernelTrainer:
                     elif not candidate.correct:
                         _record_failure("kernelbench:correctness_fail")
 
+                avg_power_w = self._maybe_float(candidate.logs.get("avg_power_w"))
+                joules = self._maybe_float(candidate.logs.get("energy_j"))
                 if energy_aware:
                     if telemetry_corpus:
                         trace = telemetry_corpus[telemetry_idx % len(telemetry_corpus)]
@@ -267,21 +278,23 @@ class GRPOKernelTrainer:
                     if not trace.phase_segments:
                         trace = attribute_prefill_decode(trace, ttft_s=0.4)
                     summary = ipw_adapter.summarize(trace, input_tokens=512, output_tokens=128)
-                    reward = compute_energy_aware_reward(
-                        candidate=candidate,
-                        summary=summary,
-                        p95_latency_s=(candidate.runtime_ms or 0.0) / 1000.0,
-                        sla_latency_s=1.0,
-                        timeout_ms=500.0,
-                        config=EnergyRewardConfig(),
-                    )
-                else:
-                    reward = staged_kernel_reward(
-                        candidate,
-                        timeout_ms=500.0,
-                        epoch=1,
-                        correctness_bias_epochs=config.correctness_bias_epochs,
-                        )
+                    if avg_power_w is None:
+                        avg_power_w = self._maybe_float(summary.avg_power_w)
+                    if joules is None:
+                        joules = self._maybe_float(summary.total_energy_j)
+
+                reward = compute_grpo_multi_metric_reward(
+                    compile_ok=candidate.compile_ok,
+                    correct=candidate.correct,
+                    speedup=candidate.speedup,
+                    runtime_ms=candidate.runtime_ms,
+                    joules=joules,
+                    avg_power_w=avg_power_w,
+                    p95_latency_s=(candidate.runtime_ms or 0.0) / 1000.0,
+                    compile_log=candidate.compile_log,
+                    correctness_log=candidate.correctness_log,
+                    config=reward_config,
+                )
                 rewards.append(reward.total)
             reward_steps += 1
             if config.failure_log_every_steps > 0 and reward_steps % config.failure_log_every_steps == 0:
@@ -376,6 +389,7 @@ class GRPOKernelTrainer:
         rollout_cfg = RolloutConfig(group_size=self.config.group_size)
         telemetry_corpus = self._load_telemetry_corpus()
         telemetry_idx = 0
+        reward_config = self._build_grpo_reward_config(energy_aware=self.config.energy_aware)
 
         history: list[dict[str, object]] = []
 
@@ -386,6 +400,8 @@ class GRPOKernelTrainer:
                 shortlisted = filter_trajectories(candidates, keep_top_k=self.config.keep_top_k)
 
                 for cand in shortlisted:
+                    avg_power_w = self._maybe_float(cand.logs.get("avg_power_w"))
+                    joules = self._maybe_float(cand.logs.get("energy_j"))
                     if self.config.energy_aware:
                         if telemetry_corpus:
                             trace = telemetry_corpus[telemetry_idx % len(telemetry_corpus)]
@@ -397,21 +413,23 @@ class GRPOKernelTrainer:
                             trace = attribute_prefill_decode(trace, ttft_s=0.4)
 
                         summary = self.ipw_adapter.summarize(trace, input_tokens=512, output_tokens=128)
-                        reward = compute_energy_aware_reward(
-                            candidate=cand,
-                            summary=summary,
-                            p95_latency_s=(cand.runtime_ms or 0.0) / 1000.0,
-                            sla_latency_s=1.0,
-                            timeout_ms=500.0,
-                            config=EnergyRewardConfig(),
-                        )
-                    else:
-                        reward = staged_kernel_reward(
-                            cand,
-                            timeout_ms=500.0,
-                            epoch=epoch,
-                            correctness_bias_epochs=self.config.correctness_bias_epochs,
-                        )
+                        if avg_power_w is None:
+                            avg_power_w = self._maybe_float(summary.avg_power_w)
+                        if joules is None:
+                            joules = self._maybe_float(summary.total_energy_j)
+
+                    reward = compute_grpo_multi_metric_reward(
+                        compile_ok=cand.compile_ok,
+                        correct=cand.correct,
+                        speedup=cand.speedup,
+                        runtime_ms=cand.runtime_ms,
+                        joules=joules,
+                        avg_power_w=avg_power_w,
+                        p95_latency_s=(cand.runtime_ms or 0.0) / 1000.0,
+                        compile_log=cand.compile_log,
+                        correctness_log=cand.correctness_log,
+                        config=reward_config,
+                    )
                     epoch_rewards.append(reward.total)
 
                     history.append(
@@ -439,6 +457,32 @@ class GRPOKernelTrainer:
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
         return checkpoint
+
+    def _build_grpo_reward_config(self, energy_aware: bool) -> GRPOMultiMetricRewardConfig:
+        beta = float(self.config.reward_beta_joules)
+        if not energy_aware:
+            beta = 0.0
+        return GRPOMultiMetricRewardConfig(
+            alpha_speedup=float(self.config.reward_alpha_speedup),
+            beta_joules=beta,
+            gamma_latency=float(self.config.reward_gamma_latency),
+            delta_avg_power=float(self.config.reward_delta_avg_power),
+            eta_runtime=float(self.config.reward_eta_runtime),
+            correctness_bonus=float(self.config.reward_correctness_bonus),
+            compile_fail_reward=float(self.config.reward_compile_fail),
+            incorrect_reward=float(self.config.reward_incorrect),
+            oom_penalty=float(self.config.reward_oom_penalty),
+            sla_latency_s=float(self.config.reward_sla_latency_s),
+        )
+
+    @staticmethod
+    def _maybe_float(value: Any) -> float | None:
+        if value is None:
+            return None
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
 
     def _load_telemetry_corpus(self):
         return self.energy_capture.load_trace_corpus(

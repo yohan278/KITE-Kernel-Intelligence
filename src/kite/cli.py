@@ -66,6 +66,16 @@ def _build_parser() -> argparse.ArgumentParser:
     kernel.add_argument("--eval-num-correct-trials", type=int, default=3)
     kernel.add_argument("--eval-num-perf-trials", type=int, default=25)
     kernel.add_argument("--failure-log-every-steps", type=int, default=10)
+    kernel.add_argument("--reward-alpha", type=float, default=1.0)
+    kernel.add_argument("--reward-beta", type=float, default=0.0)
+    kernel.add_argument("--reward-gamma-latency", type=float, default=0.25)
+    kernel.add_argument("--reward-delta-power", type=float, default=0.01)
+    kernel.add_argument("--reward-eta-runtime", type=float, default=0.10)
+    kernel.add_argument("--reward-correctness-bonus", type=float, default=0.0)
+    kernel.add_argument("--reward-compile-fail", type=float, default=-1.0)
+    kernel.add_argument("--reward-incorrect", type=float, default=-0.5)
+    kernel.add_argument("--reward-oom-penalty", type=float, default=0.5)
+    kernel.add_argument("--reward-sla-latency-s", type=float, default=1.0)
     kernel.add_argument("--hf-cache-dir", type=Path, default=None)
     kernel.add_argument("--local-files-only", action="store_true")
 
@@ -171,6 +181,16 @@ def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
             eval_num_correct_trials=args.eval_num_correct_trials,
             eval_num_perf_trials=args.eval_num_perf_trials,
             failure_log_every_steps=args.failure_log_every_steps,
+            reward_alpha_speedup=args.reward_alpha,
+            reward_beta_joules=args.reward_beta,
+            reward_gamma_latency=args.reward_gamma_latency,
+            reward_delta_avg_power=args.reward_delta_power,
+            reward_eta_runtime=args.reward_eta_runtime,
+            reward_correctness_bonus=args.reward_correctness_bonus,
+            reward_compile_fail=args.reward_compile_fail,
+            reward_incorrect=args.reward_incorrect,
+            reward_oom_penalty=args.reward_oom_penalty,
+            reward_sla_latency_s=args.reward_sla_latency_s,
         ),
     )
     summary = trainer.run()
