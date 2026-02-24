@@ -1,0 +1,18 @@
+train:
+  mode: throughput
+  epochs: 1
+  energy_aware: false
+  group_size: 4
+  batch_size: 4
+  max_completion_length: 256
+  max_tasks: 16
+  eval_num_correct_trials: 1
+  eval_num_perf_trials: 2
+  failure_log_every_steps: 5
+  reward:
+    alpha: 1.0
+    beta: 0.0
+    ipw_blend_weight: 0.0
+  telemetry:
+    trace_dir: ./data/telemetry/runs
+    ipw_profile_dir: null
