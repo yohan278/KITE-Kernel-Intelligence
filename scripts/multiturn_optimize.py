@@ -155,7 +155,7 @@ def main() -> int:
     parser.add_argument(
         "--turn-timeout-seconds",
         type=float,
-        default=180.0,
+        default=60.0,
         help="Max seconds for each evaluate/generate action within a turn; 0 disables timeout.",
     )
     parser.add_argument(
