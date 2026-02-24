@@ -1,0 +1,42 @@
+# Core ML/Training
+torch
+transformers
+datasets
+peft
+trl
+accelerate
+bitsandbytes
+safetensors
+verl
+
+# LLM API Clients
+openai
+anthropic
+google-genai
+google-generativeai
+httpx
+tavily
+
+# HuggingFace
+huggingface-hub
+
+# Experiment Tracking
+wandb
+
+# Data Science
+numpy
+pandas
+
+# Config & Utils
+pyyaml
+packaging
+regex
+tqdm
+
+# CLI & UI
+rich
+textual
+
+# Optional (local model backends - install only if needed)
+# ollama      # for Ollama local model support
+# flash-attn  # Flash Attention - requires CUDA

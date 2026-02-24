@@ -1,0 +1,70 @@
+# Accelerate FSDP Configuration for 4x H100 80GB GPUs
+# ----------------------------------------------------
+# Optimized for LoRA SFT training with 256K context on GPUs 4,5,6,7.
+#
+# Usage:
+#   CUDA_VISIBLE_DEVICES=4,5,6,7 accelerate launch \
+#       --config_file src/orchestrator/configs/accelerate_4h100_fsdp.yaml \
+#       src/orchestrator/scripts/train_lora_sft_256k_4h100.py
+
+compute_environment: LOCAL_MACHINE
+debug: false
+
+# Distributed training type
+distributed_type: FSDP
+
+# FSDP Configuration
+fsdp_config:
+  # Sharding strategy - FULL_SHARD for maximum memory efficiency
+  fsdp_sharding_strategy: FULL_SHARD
+
+  # Activation checkpointing - disabled here, handled by Trainer's gradient_checkpointing
+  # (FSDP's activation_checkpointing may not detect Qwen3 layer classes correctly)
+  fsdp_activation_checkpointing: false
+
+  # Prefetching for performance
+  fsdp_backward_prefetch: BACKWARD_PRE
+  fsdp_forward_prefetch: false
+
+  # Auto wrapping policy - wrap transformer layers
+  fsdp_auto_wrap_policy: TRANSFORMER_BASED_WRAP
+
+  # CPU efficient loading
+  fsdp_cpu_ram_efficient_loading: true
+
+  # Offload params/optimizer to CPU to avoid OOM with full SFT
+  fsdp_offload_params: true
+
+  # State dict type for checkpointing
+  fsdp_state_dict_type: SHARDED_STATE_DICT
+
+  # Sync module states across ranks
+  fsdp_sync_module_states: true
+
+  # Use original params (required for some models)
+  fsdp_use_orig_params: true
+
+# Mixed precision - bf16 for H100s
+mixed_precision: bf16
+downcast_bf16: 'no'
+
+# Machine configuration
+num_machines: 1
+num_processes: 8  # 4 GPUs
+machine_rank: 0
+
+# Rendezvous backend
+rdzv_backend: static
+same_network: true
+
+# Main function
+main_training_function: main
+
+# CPU settings
+use_cpu: false
+enable_cpu_affinity: false
+
+# TPU settings (not used)
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false

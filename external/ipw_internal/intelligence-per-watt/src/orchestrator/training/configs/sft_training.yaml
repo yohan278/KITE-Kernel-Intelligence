@@ -1,0 +1,79 @@
+# SFT Training Configuration for Orchestrator (Default)
+# ------------------------------------------------------
+# Default configuration for supervised fine-tuning Qwen3-8B.
+# For specific training modes, see:
+#   - sft_training_full.yaml  (full fine-tuning, lora_rank=0)
+#   - sft_training_lora.yaml  (LoRA fine-tuning, lora_rank=64)
+#
+# Usage:
+#   python -m src.cli.train_sft --config training/configs/sft_training.yaml
+
+data:
+  train_batch_size: 64  # Effective batch size
+  micro_batch_size: null  # deprecated, use micro_batch_size_per_gpu
+  micro_batch_size_per_gpu: 4  # 8B model with 32K context - conservative batch size
+  train_files: ./data/sft/successful_trajectories.parquet
+  val_files: null
+  # Single-turn settings (not used for multi-turn trajectories)
+  prompt_key: question
+  response_key: answer
+  prompt_dict_keys: null
+  response_dict_keys: null
+  # Multi-turn settings - enabled for orchestrator trajectories
+  multiturn:
+    enable: true
+    messages_key: messages  # Key for conversation list (renamed from 'conversations')
+    tools_key: null  # Tool definitions (optional)
+  max_length: 32768  # Support long trajectories (32K context)
+  truncation: error  # Fail if trajectory exceeds max_length
+  balance_dp_token: False
+  chat_template: null
+  custom_cls:
+    path: null
+    name: null
+  use_shm: False
+
+model:
+  partial_pretrain: Qwen/Qwen3-8B
+  use_shm: False
+  fsdp_config:
+    model_dtype: bf16  # Use bf16 for efficiency
+    wrap_policy:
+      min_num_params: 0
+    cpu_offload: False
+    offload_params: False
+  external_lib: null
+  enable_gradient_checkpointing: True  # Required for 32K context length
+  trust_remote_code: True  # Required for Qwen models
+  lora_rank: 0  # Set >0 to enable LoRA (see sft_training_lora.yaml)
+  lora_alpha: 16  # LoRA scaling factor
+  target_modules: all-linear  # Target modules for LoRA adaptation
+  use_liger: False
+  strategy: fsdp2
+
+optim:
+  lr: 2e-5  # Slightly higher for smaller model
+  betas: [0.9, 0.95]
+  weight_decay: 0.01
+  warmup_steps_ratio: 0.1
+  clip_grad: 1.0
+  lr_scheduler: cosine
+
+ulysses_sequence_parallel_size: 1
+use_remove_padding: False
+
+trainer:
+  default_local_dir: checkpoints/${trainer.project_name}/${trainer.experiment_name}
+  default_hdfs_dir: null
+  resume_path: null
+  project_name: orchestrator-sft
+  experiment_name: qwen3-8b-100k
+  total_epochs: 3
+  total_training_steps: null
+  logger: ['console', 'wandb']
+  seed: 42
+  save_freq: -1  # Save at end of each epoch
+  test_freq: -1
+  nnodes: 1
+  n_gpus_per_node: 8  # Use all available GPUs
+  max_ckpt_to_keep: 3

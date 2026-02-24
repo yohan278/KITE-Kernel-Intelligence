@@ -1,0 +1,65 @@
+# Multi-objective reward weights for orchestrator training
+#
+# Total should sum to 1.0
+# - alpha: Accuracy (correctness of answer)
+# - beta: Cost + Energy (dollar cost + joules)
+# - gamma: Latency + Power (seconds + watts)
+
+# Default balanced configuration
+default:
+  alpha: 0.5  # Accuracy (most important)
+  beta: 0.3   # Cost + Energy (moderate penalty)
+  gamma: 0.2  # Latency + Power (awareness)
+
+# Accuracy-focused (early training)
+accuracy_focused:
+  alpha: 0.7  # Prioritize getting correct answers
+  beta: 0.2
+  gamma: 0.1
+
+# Efficiency-focused (late training or deployment)
+efficiency_focused:
+  alpha: 0.4  # Still value accuracy
+  beta: 0.4   # Strong penalty for cost/energy
+  gamma: 0.2
+
+# Cost-optimized (minimize dollar cost)
+cost_optimized:
+  alpha: 0.5
+  beta: 0.4   # Heavy cost penalty
+  gamma: 0.1
+
+# Energy-optimized (minimize joules, ideal for battery/edge)
+energy_optimized:
+  alpha: 0.5
+  beta: 0.4   # Heavy energy penalty
+  gamma: 0.1
+
+# Speed-optimized (minimize latency)
+speed_optimized:
+  alpha: 0.5
+  beta: 0.1
+  gamma: 0.4  # Heavy latency penalty
+
+# Normalization constants
+# These are typical values for scaling metrics to similar ranges
+normalizers:
+  energy_scale: 100.0     # joules (e.g., 100J for local LLM query)
+  cost_scale: 0.10        # USD (e.g., $0.10 for GPT-4o query)
+  latency_scale: 30.0     # seconds (e.g., 30s for complex task)
+  power_scale: 200.0      # watts (e.g., 200W GPU power)
+
+# Adaptive schedule (weights change during training)
+adaptive:
+  enabled: true
+  total_steps: 10000
+
+  initial_weights:
+    alpha: 0.7  # Start with accuracy focus
+    beta: 0.2
+    gamma: 0.1
+
+  final_weights:
+    alpha: 0.4  # End with efficiency focus
+    beta: 0.4
+    gamma: 0.2

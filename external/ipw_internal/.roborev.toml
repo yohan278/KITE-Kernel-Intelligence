@@ -1,0 +1,56 @@
+# Roborev Configuration for Intelligence-Per-Watt
+
+[agent]
+type = "claude-code"
+
+[review]
+auto_review = true
+max_files = 20
+
+exclude = [
+    "*.pb.go",
+    "*.pb2.py",
+    "*_pb2_grpc.py",
+    "*.arrow",
+    "*.json",
+    "**/.venv/**",
+    "**/bin/**",
+]
+
+[review_guidelines]
+language = "python"
+python_version = "3.13+"
+
+domain = """
+Energy-profiling toolkit for LLM inference. Key concerns:
+1. Accurate energy measurement and telemetry collection
+2. Proper handling of GPU/CPU power readings (cumulative counters)
+3. Thread-safe telemetry sampling in async contexts
+4. Correct statistical computations (mean, regression, R-squared)
+5. Robust handling of None values and edge cases in metrics
+"""
+
+architecture = """
+- Registry pattern for plugins (ClientRegistry, DatasetRegistry, etc.)
+- Dataclass-based types for strong typing (ProfilingRecord, ModelMetrics)
+- Provider pattern for analysis and visualization modules
+- Separation between CLI orchestration and core execution logic
+"""
+
+quality_focus = """
+PRIORITY CHECKS:
+1. Null/None handling: All Optional[float] values must be validated before math
+2. Energy counter handling: Detect negative deltas (counter resets)
+3. Type safety: Mapping vs dict, Sequence vs list consistency
+4. Error handling: gRPC failures, file I/O, inference client timeouts
+5. Thread safety: TelemetrySession sampling loop runs in background thread
+6. Resource cleanup: Ensure collectors, clients, gRPC channels are closed
+"""
+
+[fix]
+auto_apply = false
+create_branch = true
+branch_prefix = "roborev/"
+
+[analyze]
+default_types = ["complexity", "duplication", "dead-code"]
