@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Callable, List
+import signal
+import threading
+import time
+from typing import Any, Callable, List
 
 from kite.policies.qwen_policy import QwenPolicy
 from kite.types import KernelTask
@@ -18,6 +22,8 @@ class MultiTurnStep:
     reward: float
     runtime_ms: float
     joules: float
+    timeout: bool = False
+    error: str | None = None
 
 
 @dataclass(slots=True)
@@ -46,16 +52,111 @@ class LLMKernelAgent:
         task: KernelTask,
         evaluate_fn: Callable[[str], dict],
         max_turns: int = 5,
+        turn_timeout_seconds: float = 0.0,
         on_step: Callable[[MultiTurnStep], None] | None = None,
+        on_event: Callable[[dict[str, Any]], None] | None = None,
     ) -> MultiTurnResult:
         steps: list[MultiTurnStep] = []
 
-        candidate = self.policy.generate_candidate(task, attempt=0)
-        code = candidate.code
+        def _emit(payload: dict[str, Any]) -> None:
+            if on_event is not None:
+                on_event(payload)
+
+        @contextmanager
+        def _turn_timeout_context() -> Any:
+            timeout_s = float(turn_timeout_seconds)
+            if timeout_s <= 0.0:
+                yield
+                return
+            if not hasattr(signal, "SIGALRM"):
+                yield
+                return
+            if threading.current_thread() is not threading.main_thread():
+                yield
+                return
+
+            def _handler(signum: int, frame: Any) -> None:
+                raise TimeoutError(f"Turn timed out after {timeout_s:.1f}s")
+
+            prev_handler = signal.getsignal(signal.SIGALRM)
+            signal.signal(signal.SIGALRM, _handler)
+            signal.setitimer(signal.ITIMER_REAL, timeout_s)
+            try:
+                yield
+            finally:
+                signal.setitimer(signal.ITIMER_REAL, 0.0)
+                signal.signal(signal.SIGALRM, prev_handler)
+
+        try:
+            t0 = time.monotonic()
+            with _turn_timeout_context():
+                candidate = self.policy.generate_candidate(task, attempt=0)
+            code = candidate.code
+            _emit(
+                {
+                    "event": "initial_candidate",
+                    "turn": 0,
+                    "duration_s": time.monotonic() - t0,
+                    "code": code,
+                }
+            )
+        except TimeoutError as exc:
+            code = (
+                "import torch\n"
+                "import torch.nn as nn\n\n"
+                "class ModelNew(nn.Module):\n"
+                "    def __init__(self):\n"
+                "        super().__init__()\n\n"
+                "    def forward(self, *args):\n"
+                "        raise RuntimeError('initial generation timeout')\n"
+            )
+            _emit(
+                {
+                    "event": "initial_generation_timeout",
+                    "turn": 0,
+                    "error": str(exc),
+                    "code": code,
+                }
+            )
+
         feedback = ""
 
         for turn in range(1, max_turns + 1):
-            metrics = evaluate_fn(code)
+            timed_out = False
+            error_msg = None
+            metrics: dict[str, Any]
+            eval_t0 = time.monotonic()
+            try:
+                with _turn_timeout_context():
+                    metrics = evaluate_fn(code)
+                _emit(
+                    {
+                        "event": "evaluate_ok",
+                        "turn": turn,
+                        "duration_s": time.monotonic() - eval_t0,
+                        "compile_ok": bool(metrics.get("compile_ok", False)),
+                        "correct": bool(metrics.get("correct", False)),
+                        "reward": float(metrics.get("reward", 0.0)),
+                    }
+                )
+            except TimeoutError as exc:
+                timed_out = True
+                error_msg = f"evaluation_timeout: {exc}"
+                metrics = {
+                    "compile_ok": False,
+                    "correct": False,
+                    "reward": -1.0,
+                    "runtime_ms": 0.0,
+                    "joules": 0.0,
+                }
+                _emit(
+                    {
+                        "event": "evaluation_timeout",
+                        "turn": turn,
+                        "duration_s": time.monotonic() - eval_t0,
+                        "error": error_msg,
+                    }
+                )
             step = MultiTurnStep(
                 turn=turn,
                 code=code,
@@ -64,6 +165,8 @@ class LLMKernelAgent:
                 reward=float(metrics.get("reward", 0.0)),
                 runtime_ms=float(metrics.get("runtime_ms", 0.0)),
                 joules=float(metrics.get("joules", 0.0)),
+                timeout=timed_out,
+                error=error_msg,
             )
             steps.append(step)
             if on_step is not None:
@@ -71,7 +174,11 @@ class LLMKernelAgent:
             if step.correct:
                 break
 
-            if not step.compile_ok:
+            if step.timeout:
+                feedback = (
+                    "Previous evaluation timed out. Produce a simpler kernel and avoid heavy custom classes."
+                )
+            elif not step.compile_ok:
                 feedback = "Compilation failed. Fix syntax/import/runtime errors and return corrected kernel only."
             else:
                 feedback = (
@@ -85,8 +192,40 @@ class LLMKernelAgent:
                 "Do not return markdown fences or prose.\n"
                 "Do not use Triton.\n"
             )
-            repaired_raw = self.policy.generate_text(repair_prompt).strip()
-            extracted = self.policy.extract_code(repaired_raw).strip()
-            code = extracted if extracted else repaired_raw
+            _emit(
+                {
+                    "event": "repair_prompt",
+                    "turn": turn,
+                    "feedback": feedback,
+                    "prompt": repair_prompt,
+                }
+            )
+
+            gen_t0 = time.monotonic()
+            try:
+                with _turn_timeout_context():
+                    repaired_raw = self.policy.generate_text(repair_prompt).strip()
+                extracted = self.policy.extract_code(repaired_raw).strip()
+                code = extracted if extracted else repaired_raw
+                _emit(
+                    {
+                        "event": "repair_generation",
+                        "turn": turn,
+                        "duration_s": time.monotonic() - gen_t0,
+                        "raw_output": repaired_raw,
+                        "extracted_code": extracted,
+                    }
+                )
+            except TimeoutError as exc:
+                _emit(
+                    {
+                        "event": "generation_timeout",
+                        "turn": turn,
+                        "duration_s": time.monotonic() - gen_t0,
+                        "error": str(exc),
+                    }
+                )
+                # Keep previous code and continue to next turn.
+                continue
 
         return MultiTurnResult(task_id=task.task_id, steps=steps)
