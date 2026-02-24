@@ -181,6 +181,7 @@ def main() -> int:
             reward_incorrect = _float_reward("incorrect")
             reward_oom_penalty = _float_reward("oom_penalty")
             reward_sla_latency_s = _float_reward("sla_latency_s")
+            reward_ipw_blend_weight = _float_reward("ipw_blend_weight")
             if reward_alpha is not None:
                 cmd.extend(["--reward-alpha", str(reward_alpha)])
             if reward_beta is not None:
@@ -201,6 +202,8 @@ def main() -> int:
                 cmd.extend(["--reward-oom-penalty", str(reward_oom_penalty)])
             if reward_sla_latency_s is not None:
                 cmd.extend(["--reward-sla-latency-s", str(reward_sla_latency_s)])
+            if reward_ipw_blend_weight is not None:
+                cmd.extend(["--reward-ipw-blend-weight", str(reward_ipw_blend_weight)])
             telemetry_trace_dir = _str_telemetry("trace_dir")
             ipw_profile_dir = _str_telemetry("ipw_profile_dir")
             allow_synth = _bool_telemetry("allow_synthetic_fallback")
@@ -271,6 +274,7 @@ def main() -> int:
     reward_incorrect = _float_reward("incorrect")
     reward_oom_penalty = _float_reward("oom_penalty")
     reward_sla_latency_s = _float_reward("sla_latency_s")
+    reward_ipw_blend_weight = _float_reward("ipw_blend_weight")
     if reward_alpha is not None:
         cmd.extend(["--reward-alpha", str(reward_alpha)])
     if reward_beta is not None:
@@ -291,6 +295,8 @@ def main() -> int:
         cmd.extend(["--reward-oom-penalty", str(reward_oom_penalty)])
     if reward_sla_latency_s is not None:
         cmd.extend(["--reward-sla-latency-s", str(reward_sla_latency_s)])
+    if reward_ipw_blend_weight is not None:
+        cmd.extend(["--reward-ipw-blend-weight", str(reward_ipw_blend_weight)])
     telemetry_trace_dir = _str_telemetry("trace_dir")
     ipw_profile_dir = _str_telemetry("ipw_profile_dir")
     allow_synth = _bool_telemetry("allow_synthetic_fallback")

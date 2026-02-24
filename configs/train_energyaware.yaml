@@ -5,6 +5,7 @@ train:
   reward:
     alpha: 1.0
     beta: 0.5
+    ipw_blend_weight: 0.0
   telemetry:
     trace_dir: ./data/telemetry/runs
     ipw_profile_dir: null

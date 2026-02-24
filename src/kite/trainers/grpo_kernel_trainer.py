@@ -15,6 +15,7 @@ from kite.types import KernelCandidate, KernelTask
 from kite.adapters.kevin_style_rollouts import RolloutConfig, filter_trajectories, grouped_rollouts
 from kite.policies.qwen_policy import QwenPolicy
 from kite.rewards.grpo_reward import GRPOMultiMetricRewardConfig, compute_grpo_multi_metric_reward
+from kite.rewards.ipw_reward import IPWRewardConfig, compute_ipw_reward
 from kite.telemetry.energy_capture import EnergyCapture
 from kite.telemetry.phase_attribution import attribute_prefill_decode
 from kite.utils.logging import get_logger
@@ -55,6 +56,7 @@ class GRPOKernelConfig:
     reward_incorrect: float = -0.5
     reward_oom_penalty: float = 0.5
     reward_sla_latency_s: float = 1.0
+    reward_ipw_blend_weight: float = 0.0
 
 
 class GRPOKernelTrainer:
@@ -220,6 +222,8 @@ class GRPOKernelTrainer:
         config = self.config
         policy = self.policy
         reward_config = self._build_grpo_reward_config(energy_aware=energy_aware)
+        ipw_config = self._build_ipw_reward_config(energy_aware=energy_aware)
+        ipw_blend_weight = float(self.config.reward_ipw_blend_weight)
         reward_steps = 0
         failure_counts: dict[str, int] = {}
 
@@ -300,7 +304,19 @@ class GRPOKernelTrainer:
                     correctness_log=candidate.correctness_log,
                     config=reward_config,
                 )
-                rewards.append(reward.total)
+                total_reward = reward.total
+                if ipw_blend_weight != 0.0:
+                    ipw_reward = compute_ipw_reward(
+                        compile_ok=candidate.compile_ok,
+                        correct=candidate.correct,
+                        speedup=candidate.speedup,
+                        joules=joules,
+                        p95_latency_s=(candidate.runtime_ms or 0.0) / 1000.0,
+                        sla_latency_s=float(self.config.reward_sla_latency_s),
+                        config=ipw_config,
+                    )
+                    total_reward += ipw_blend_weight * ipw_reward.total
+                rewards.append(total_reward)
             reward_steps += 1
             if config.failure_log_every_steps > 0 and reward_steps % config.failure_log_every_steps == 0:
                 if failure_counts:
@@ -400,6 +416,8 @@ class GRPOKernelTrainer:
             )
         telemetry_idx = 0
         reward_config = self._build_grpo_reward_config(energy_aware=self.config.energy_aware)
+        ipw_config = self._build_ipw_reward_config(energy_aware=self.config.energy_aware)
+        ipw_blend_weight = float(self.config.reward_ipw_blend_weight)
 
         history: list[dict[str, object]] = []
 
@@ -440,7 +458,19 @@ class GRPOKernelTrainer:
                         correctness_log=cand.correctness_log,
                         config=reward_config,
                     )
-                    epoch_rewards.append(reward.total)
+                    total_reward = reward.total
+                    if ipw_blend_weight != 0.0:
+                        ipw_reward = compute_ipw_reward(
+                            compile_ok=cand.compile_ok,
+                            correct=cand.correct,
+                            speedup=cand.speedup,
+                            joules=joules,
+                            p95_latency_s=(cand.runtime_ms or 0.0) / 1000.0,
+                            sla_latency_s=float(self.config.reward_sla_latency_s),
+                            config=ipw_config,
+                        )
+                        total_reward += ipw_blend_weight * ipw_reward.total
+                    epoch_rewards.append(total_reward)
 
                     history.append(
                         {
@@ -450,7 +480,7 @@ class GRPOKernelTrainer:
                             "correct": cand.correct,
                             "runtime_ms": cand.runtime_ms,
                             "speedup": cand.speedup,
-                            "reward": reward.total,
+                            "reward": total_reward,
                         }
                     )
 
@@ -483,6 +513,18 @@ class GRPOKernelTrainer:
             incorrect_reward=float(self.config.reward_incorrect),
             oom_penalty=float(self.config.reward_oom_penalty),
             sla_latency_s=float(self.config.reward_sla_latency_s),
+        )
+
+    def _build_ipw_reward_config(self, energy_aware: bool) -> IPWRewardConfig:
+        beta = float(self.config.reward_beta_joules)
+        if not energy_aware:
+            beta = 0.0
+        return IPWRewardConfig(
+            alpha_speedup=float(self.config.reward_alpha_speedup),
+            beta_joules=beta,
+            gamma_latency=float(self.config.reward_gamma_latency),
+            compile_fail_reward=float(self.config.reward_compile_fail),
+            incorrect_reward=float(self.config.reward_incorrect),
         )
 
     @staticmethod

@@ -76,6 +76,7 @@ def _build_parser() -> argparse.ArgumentParser:
     kernel.add_argument("--reward-incorrect", type=float, default=-0.5)
     kernel.add_argument("--reward-oom-penalty", type=float, default=0.5)
     kernel.add_argument("--reward-sla-latency-s", type=float, default=1.0)
+    kernel.add_argument("--reward-ipw-blend-weight", type=float, default=0.0)
     kernel.add_argument("--hf-cache-dir", type=Path, default=None)
     kernel.add_argument("--local-files-only", action="store_true")
 
@@ -191,6 +192,7 @@ def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
             reward_incorrect=args.reward_incorrect,
             reward_oom_penalty=args.reward_oom_penalty,
             reward_sla_latency_s=args.reward_sla_latency_s,
+            reward_ipw_blend_weight=args.reward_ipw_blend_weight,
         ),
     )
     summary = trainer.run()
