@@ -1,0 +1,169 @@
+# Trajectory Generation Configuration
+# -----------------------------------
+# Unified configuration for SFT trajectory generation.
+# Includes teacher model, inference engine, and generation settings.
+#
+# Usage:
+#   # Start vLLM server with config settings:
+#   ./scripts/launch_vllm.sh --config configs/trajectory_generation.yaml
+#
+#   # Run trajectory generation:
+#   python -m src.cli.generate_trajectories --config configs/trajectory_generation.yaml
+#
+#   # Or run both with the unified launcher:
+#   ./scripts/run_trajectory_generation.sh --config configs/trajectory_generation.yaml
+
+# =============================================================================
+# INFERENCE ENGINE SETTINGS
+# =============================================================================
+# These settings control the vLLM server that hosts the teacher model.
+# Change these when switching hardware or models.
+
+inference_engine:
+  # Backend type: vllm, tgi, or openai-compatible
+  backend: vllm
+
+  # Server settings
+  host: localhost
+  port: 8000
+
+  # Model settings
+  model_id: "Qwen/Qwen3-235B-A22B-FP8"  # HuggingFace model ID or path
+
+  # Context and memory
+  max_model_len: 256000              # Total context window (input + output)
+  gpu_memory_utilization: 0.90      # Fraction of GPU memory to use
+
+  # Parallelism
+  tensor_parallel_size: 8           # Number of GPUs for tensor parallelism
+
+  # Performance tuning
+  enforce_eager: true               # Disable CUDA graphs (more stable)
+  trust_remote_code: true           # Required for some models
+
+  # Optional: quantization
+  # quantization: fp8               # Options: fp8, awq, gptq, None
+
+  # Optional: additional vLLM args (passed directly to vllm serve)
+  extra_args: []
+
+# =============================================================================
+# TEACHER MODEL SETTINGS
+# =============================================================================
+# The teacher model generates trajectories by solving tasks with tools.
+
+teacher:
+  # Model identifier (must match inference_engine or be an API model)
+  # Format: vllm:<model>@<port>, openai:<model>, anthropic:<model>, etc.
+  model: "vllm:Qwen/Qwen3-235B-A22B-FP8@8000"
+
+  # Generation parameters
+  max_turns: 10                     # Max tool-use turns per trajectory
+  temperature: 0.7                  # Sampling temperature
+
+  # Prompt behavior
+  require_tool_use: true            # Always require at least one tool call
+
+# =============================================================================
+# TOOL SET
+# =============================================================================
+# Tools available to the teacher for solving tasks.
+
+tools:
+  # === Utility tools (always recommended) ===
+  - calculator                      # Fast, accurate math
+  - think                           # Reasoning scratchpad
+  - code_interpreter                # Python execution
+  - web_search                      # Web search via Tavily
+
+  # === Local LLMs via Ollama (<10B, fast & free) ===
+  - openrouter:deepseek/deepseek-r1-distill-qwen-1.5b
+
+  # === Large LLMs via OpenRouter (>10B, paid) ===
+  - openrouter:qwen/qwen3-32b       # General reasoning
+  - openrouter:z-ai/glm-4.7   # Math specialist
+  - openrouter:qwen/qwen3-coder-plus  # Code specialist
+
+  # === Cloud APIs (paid) ===
+  # OpenAI
+  - openai:gpt-5.2-2025-12-11
+  - openai:gpt-5-mini-2025-08-07
+  - openai:gpt-5-nano-2025-08-07
+  # Anthropic
+  - anthropic:claude-haiku-4-5-20251001
+  - anthropic:claude-sonnet-4-5-20250929
+  - anthropic:claude-opus-4-5-20251101
+
+# =============================================================================
+# SOURCE DATASET
+# =============================================================================
+# Where to get tasks/questions for trajectory generation.
+
+source:
+  # Dataset: generalthought, agentdata, or mixed
+  dataset: mixed
+
+  # GeneralThought settings
+  generalthought:
+    min_verifier_score: 0.5         # Quality filter (0-1)
+
+  # AgentData settings
+  agentdata:
+    domains:
+      - codeact
+      - agenttuning_alfworld
+      - agenttuning_db
+      - agenttuning_mind2web
+      - agenttuning_webshop
+      - code_feedback
+    format: sft_openhands
+
+# =============================================================================
+# GENERATION SETTINGS
+# =============================================================================
+# Controls trajectory generation behavior.
+
+generation:
+  traces_per_query: 1               # Trajectories per task
+  max_attempts: 3                   # Retries on failure
+  max_tokens: 200000                 # Max output tokens per LLM call
+
+# =============================================================================
+# OUTPUT SETTINGS
+# =============================================================================
+
+output:
+  format: arrow                     # arrow, parquet, or jsonl
+  include_failures: true            # Keep failed trajectories for training
+
+# =============================================================================
+# EXECUTION SETTINGS
+# =============================================================================
+
+execution:
+  workers: 64                       # Parallel trajectory generators (increased from 8)
+  telemetry: true                   # Collect energy metrics
+  checkpoint_every: 100             # Save progress every N samples
+  code_isolation: auto              # Code interpreter isolation mode:
+                                    #   - "auto": Use bubblewrap if available, else direct execution (default)
+                                    #   - "bubblewrap": Force bubblewrap isolation (requires bwrap installed)
+                                    #   - null: No isolation (direct subprocess execution)
+
+# =============================================================================
+# GRADING SETTINGS
+# =============================================================================
+# Controls how trajectory success is determined.
+
+grading:
+  # LLM grader model (for semantic answer matching)
+  model: "gpt-5-mini-2025-08-07"
+  max_completion_tokens: 1024       # Must be high for reasoning models
+
+# =============================================================================
+# HUGGINGFACE HUB (optional)
+# =============================================================================
+
+hub:
+  push: false
+  repo_id: null
+  private: true

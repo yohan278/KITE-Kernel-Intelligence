@@ -1,0 +1,44 @@
+# Checkpoints and model weights
+checkpoints/
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+*.pt
+
+# Datasets and data
+data/filtered_traces/
+data/glm_filtered_traces/
+*.parquet
+*.arrow
+*.jsonl
+*.hdf5
+
+# Cache directories
+__pycache__/
+*.py[cod]
+*$py.class
+.cache/
+*.cache
+
+# Logs and outputs
+logs/
+wandb/
+*.log
+
+# Environment
+.env
+.venv
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

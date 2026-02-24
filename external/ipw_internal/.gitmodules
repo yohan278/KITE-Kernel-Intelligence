@@ -1,0 +1,6 @@
+[submodule "intelligence-per-watt/evals/src/benchmarks/swebench/openhands-benchmarks"]
+	path = intelligence-per-watt/evals/src/benchmarks/swebench/openhands-benchmarks
+	url = https://github.com/OpenHands/benchmarks.git
+[submodule "intelligence-per-watt/src/evals/benchmarks/swebench/openhands-benchmarks"]
+	path = intelligence-per-watt/src/evals/benchmarks/swebench/openhands-benchmarks
+	url = https://github.com/OpenHands/benchmarks.git

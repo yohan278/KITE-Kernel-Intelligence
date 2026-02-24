@@ -1,0 +1,134 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+.venv*/
+env/
+venv/
+*env/
+ENV/
+env.bak/
+venv.bak/
+
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Roborev local state
+.roborev/
+
+# Roborev local state
+.roborev/
+
+# Scratch directories (testing/temporary files)
+scratch/
+**/scratch/
+
+# Claude plans (temporary planning files)
+plans/
+
+# Database files (cache, test data)
+*.db
+data/*.db
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.env.local
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor backups
+*.swp
+*.swo
+*.bak
+*.tmp
+
+.pytest_cache/
+
+runs/
+
+# tau2-bench data (auto-downloaded on first run)
+intelligence-per-watt/evals/src/benchmarks/tau/data/
+
+# SWEBench outputs
+intelligence-per-watt/evals/src/benchmarks/swebench/outputs/*
+
+# Data files
+*.json
+*.jsonl
+
+# Generated data artifacts (CSVs, NPZ LUTs, profiles)
+data/
+
+# Runtime logs (vLLM, characterization, etc.)
+logs/
