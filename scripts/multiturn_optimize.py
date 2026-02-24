@@ -100,6 +100,18 @@ def main() -> int:
     parser.add_argument("--kernelbench-root", type=Path, default=Path("./external/KernelBench"))
     parser.add_argument("--output-dir", type=Path, default=Path("./outputs/multiturn_l40"))
     parser.add_argument("--num-tasks", type=int, default=20)
+    parser.add_argument(
+        "--task-start-index",
+        type=int,
+        default=0,
+        help="Start index (inclusive) within the first --num-tasks discovered tasks.",
+    )
+    parser.add_argument(
+        "--task-end-index",
+        type=int,
+        default=None,
+        help="End index (exclusive) within the first --num-tasks discovered tasks.",
+    )
     parser.add_argument("--max-turns", type=int, default=5)
     parser.add_argument("--num-correct-trials", type=int, default=1)
     parser.add_argument("--num-perf-trials", type=int, default=5)
@@ -165,8 +177,16 @@ def main() -> int:
         num_correct_trials=max(1, args.num_correct_trials),
         num_perf_trials=max(1, args.num_perf_trials),
     )
-    tasks = adapter.discover_tasks()[: args.num_tasks]
-    print(f"[multiturn] discovered {len(tasks)} tasks", flush=True)
+    discovered = adapter.discover_tasks()[: max(0, args.num_tasks)]
+    start_idx = max(0, int(args.task_start_index))
+    raw_end_idx = len(discovered) if args.task_end_index is None else int(args.task_end_index)
+    end_idx = min(max(start_idx, raw_end_idx), len(discovered))
+    tasks = discovered[start_idx:end_idx]
+    print(
+        f"[multiturn] discovered={len(discovered)} selected={len(tasks)} "
+        f"range=[{start_idx}:{end_idx})",
+        flush=True,
+    )
 
     print(f"[multiturn] initializing policy (mode={args.generation_mode})", flush=True)
     policy = QwenPolicy(
@@ -197,6 +217,9 @@ def main() -> int:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     summary = {
         "num_tasks": len(tasks),
+        "task_start_index": start_idx,
+        "task_end_index": end_idx,
+        "discovered_tasks": len(discovered),
         "pass_at_k_count": 0,
         "avg_turns_to_success": 0.0,
         "task_results": [],
