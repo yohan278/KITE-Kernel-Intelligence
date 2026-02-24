@@ -81,6 +81,7 @@ def main() -> int:
     cfg = load_yaml(args.config)
     train = cfg.get("train", {})
     reward_cfg = train.get("reward", {}) if isinstance(train.get("reward", {}), dict) else {}
+    telemetry_cfg = train.get("telemetry", {}) if isinstance(train.get("telemetry", {}), dict) else {}
 
     def _int_cfg(key: str, default: int | None = None) -> int | None:
         value = train.get(key, default)
@@ -95,6 +96,29 @@ def main() -> int:
         if value is None:
             return None
         return float(value)
+
+    def _str_telemetry(key: str) -> str | None:
+        if key not in telemetry_cfg:
+            return None
+        value = telemetry_cfg.get(key)
+        if value in (None, "", "null"):
+            return None
+        return str(value)
+
+    def _bool_telemetry(key: str) -> bool | None:
+        if key not in telemetry_cfg:
+            return None
+        value = telemetry_cfg.get(key)
+        if isinstance(value, bool):
+            return value
+        if value is None:
+            return None
+        text = str(value).strip().lower()
+        if text in {"1", "true", "yes", "on"}:
+            return True
+        if text in {"0", "false", "no", "off"}:
+            return False
+        return None
 
     if "sweep" in cfg:
         sweep_cfg = cfg["sweep"]
@@ -177,6 +201,16 @@ def main() -> int:
                 cmd.extend(["--reward-oom-penalty", str(reward_oom_penalty)])
             if reward_sla_latency_s is not None:
                 cmd.extend(["--reward-sla-latency-s", str(reward_sla_latency_s)])
+            telemetry_trace_dir = _str_telemetry("trace_dir")
+            ipw_profile_dir = _str_telemetry("ipw_profile_dir")
+            allow_synth = _bool_telemetry("allow_synthetic_fallback")
+            no_synth = _bool_telemetry("no_synthetic_fallback")
+            if telemetry_trace_dir is not None:
+                cmd.extend(["--telemetry-trace-dir", telemetry_trace_dir])
+            if ipw_profile_dir is not None:
+                cmd.extend(["--ipw-profile-dir", ipw_profile_dir])
+            if allow_synth is False or no_synth is True:
+                cmd.append("--no-synthetic-fallback")
             if args.hf_cache_dir:
                 cmd.extend(["--hf-cache-dir", str(args.hf_cache_dir)])
             if args.local_files_only:
@@ -257,6 +291,16 @@ def main() -> int:
         cmd.extend(["--reward-oom-penalty", str(reward_oom_penalty)])
     if reward_sla_latency_s is not None:
         cmd.extend(["--reward-sla-latency-s", str(reward_sla_latency_s)])
+    telemetry_trace_dir = _str_telemetry("trace_dir")
+    ipw_profile_dir = _str_telemetry("ipw_profile_dir")
+    allow_synth = _bool_telemetry("allow_synthetic_fallback")
+    no_synth = _bool_telemetry("no_synthetic_fallback")
+    if telemetry_trace_dir is not None:
+        cmd.extend(["--telemetry-trace-dir", telemetry_trace_dir])
+    if ipw_profile_dir is not None:
+        cmd.extend(["--ipw-profile-dir", ipw_profile_dir])
+    if allow_synth is False or no_synth is True:
+        cmd.append("--no-synthetic-fallback")
     if energy_aware:
         cmd.append("--energy-aware")
     if args.hf_cache_dir:

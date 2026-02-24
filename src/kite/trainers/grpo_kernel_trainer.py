@@ -197,6 +197,11 @@ class GRPOKernelTrainer:
         if self.config.max_tasks is not None:
             tasks = tasks[: max(1, int(self.config.max_tasks))]
         telemetry_corpus = self._load_telemetry_corpus()
+        if self.config.energy_aware and not telemetry_corpus and not self.config.allow_synthetic_fallback:
+            raise RuntimeError(
+                "Energy-aware GRPO requested with --no-synthetic-fallback but no telemetry traces were found. "
+                "Provide --telemetry-trace-dir and/or --ipw-profile-dir with valid traces."
+            )
         telemetry_idx = 0
 
         adapter = KernelBenchAdapter(
@@ -388,6 +393,11 @@ class GRPOKernelTrainer:
         tasks = self.adapter.discover_tasks()
         rollout_cfg = RolloutConfig(group_size=self.config.group_size)
         telemetry_corpus = self._load_telemetry_corpus()
+        if self.config.energy_aware and not telemetry_corpus and not self.config.allow_synthetic_fallback:
+            raise RuntimeError(
+                "Energy-aware GRPO requested with --no-synthetic-fallback but no telemetry traces were found. "
+                "Provide --telemetry-trace-dir and/or --ipw-profile-dir with valid traces."
+            )
         telemetry_idx = 0
         reward_config = self._build_grpo_reward_config(energy_aware=self.config.energy_aware)
 
