@@ -1,0 +1,686 @@
+{
+  "summary": {
+    "total_profiled": 200,
+    "successful": 200,
+    "failed": 0,
+    "kernel_types": 11
+  },
+  "per_type_stats": {
+    "activation": {
+      "count": 15,
+      "energy_j": {
+        "mean": 6.533164068183539,
+        "std": 6.05204735089785,
+        "min": 2.671173406356946,
+        "max": 23.895683388312403
+      },
+      "runtime_ms": {
+        "mean": 26.22355178197225,
+        "std": 15.430631334256075,
+        "min": 7.442431926727295,
+        "max": 68.22502136230469
+      },
+      "avg_power_w": {
+        "mean": 96.94883108620918,
+        "std": 13.75717960652448
+      },
+      "avg_gpu_util_pct": {
+        "mean": 16.47878787878788,
+        "std": 32.94934516365829
+      },
+      "avg_mem_util_pct": {
+        "mean": 10.573737373737373,
+        "std": 23.84633253396217
+      },
+      "energy_per_ms": {
+        "mean": 0.22727299200403936,
+        "std": 0.06704858865847599
+      },
+      "compute_to_mem_ratio": {
+        "mean": 3.494246620507748,
+        "std": 5.078079281772034
+      },
+      "avg_temp_c": {
+        "mean": 35.62651515151515
+      }
+    },
+    "attention": {
+      "count": 1,
+      "energy_j": {
+        "mean": 9.744733941056474,
+        "std": null,
+        "min": 9.744733941056474,
+        "max": 9.744733941056474
+      },
+      "runtime_ms": {
+        "mean": 37.48044967651367,
+        "std": null,
+        "min": 37.48044967651367,
+        "max": 37.48044967651367
+      },
+      "avg_power_w": {
+        "mean": 96.92310948398487,
+        "std": null
+      },
+      "avg_gpu_util_pct": {
+        "mean": 0.0,
+        "std": null
+      },
+      "avg_mem_util_pct": {
+        "mean": 0.0,
+        "std": null
+      },
+      "energy_per_ms": {
+        "mean": 0.2599951181258854,
+        "std": null
+      },
+      "compute_to_mem_ratio": {
+        "mean": null,
+        "std": null
+      },
+      "avg_temp_c": {
+        "mean": 42.666666666666664
+      }
+    },
+    "composite": {
+      "count": 100,
+      "energy_j": {
+        "mean": 5.13240226051035,
+        "std": 5.011465274504201,
+        "min": 0.48996926181111483,
+        "max": 29.66170204478962
+      },
+      "runtime_ms": {
+        "mean": 15.719724156856536,
+        "std": 13.957398153302375,
+        "min": 1.5544320344924927,
+        "max": 66.84646606445312
+      },
+      "avg_power_w": {
+        "mean": 125.17771338868306,
+        "std": 24.005756300636964
+      },
+      "avg_gpu_util_pct": {
+        "mean": 24.798896825396824,
+        "std": 31.994442999202803
+      },
+      "avg_mem_util_pct": {
+        "mean": 11.069968253968254,
+        "std": 20.256837911435042
+      },
+      "energy_per_ms": {
+        "mean": 0.34281748047239957,
+        "std": 0.08303755045492864
+      },
+      "compute_to_mem_ratio": {
+        "mean": 6.1324665196736134,
+        "std": 7.375278684692807
+      },
+      "avg_temp_c": {
+        "mean": 38.26401587301587
+      }
+    },
+    "conv": {
+      "count": 18,
+      "energy_j": {
+        "mean": 2.5294766080565947,
+        "std": 2.451109771922317,
+        "min": 0.48066670043533666,
+        "max": 10.277046196629993
+      },
+      "runtime_ms": {
+        "mean": 9.605594681368935,
+        "std": 9.653708011863706,
+        "min": 1.7940479516983032,
+        "max": 39.63187026977539
+      },
+      "avg_power_w": {
+        "mean": 103.11643765092661,
+        "std": 16.56919503695472
+      },
+      "avg_gpu_util_pct": {
+        "mean": 31.23611111111111,
+        "std": 29.7976598249888
+      },
+      "avg_mem_util_pct": {
+        "mean": 10.916666666666666,
+        "std": 21.03376137658357
+      },
+      "energy_per_ms": {
+        "mean": 0.2864673828632625,
+        "std": 0.07188008532111279
+      },
+      "compute_to_mem_ratio": {
+        "mean": 16.09114378799346,
+        "std": 17.509476407897214
+      },
+      "avg_temp_c": {
+        "mean": 37.083333333333336
+      }
+    },
+    "conv_transpose": {
+      "count": 17,
+      "energy_j": {
+        "mean": 8.183702699105924,
+        "std": 13.612083931799999,
+        "min": 1.0478035995131358,
+        "max": 53.24059392790899
+      },
+      "runtime_ms": {
+        "mean": 20.424782752990723,
+        "std": 27.120591123315997,
+        "min": 2.933759927749634,
+        "max": 100.2577896118164
+      },
+      "avg_power_w": {
+        "mean": 134.23607227358337,
+        "std": 29.294438821178733
+      },
+      "avg_gpu_util_pct": {
+        "mean": 33.40098039215687,
+        "std": 31.700355145327148
+      },
+      "avg_mem_util_pct": {
+        "mean": 8.726470588235294,
+        "std": 14.59655479093289
+      },
+      "energy_per_ms": {
+        "mean": 0.36094235954674275,
+        "std": 0.09454514391951806
+      },
+      "compute_to_mem_ratio": {
+        "mean": 11.334474257539272,
+        "std": 9.383429767042124
+      },
+      "avg_temp_c": {
+        "mean": 38.358823529411765
+      }
+    },
+    "loss": {
+      "count": 6,
+      "energy_j": {
+        "mean": 5.862957011922137,
+        "std": 4.282239194622421,
+        "min": 0.6050157789814984,
+        "max": 12.109459865211742
+      },
+      "runtime_ms": {
+        "mean": 24.694624265034992,
+        "std": 15.533175916956505,
+        "min": 1.6660480499267578,
+        "max": 44.83174514770508
+      },
+      "avg_power_w": {
+        "mean": 97.7503094600048,
+        "std": 11.328981455473283
+      },
+      "avg_gpu_util_pct": {
+        "mean": 22.166666666666668,
+        "std": 14.493676782192525
+      },
+      "avg_mem_util_pct": {
+        "mean": 14.777777777777779,
+        "std": 17.723702480848342
+      },
+      "energy_per_ms": {
+        "mean": 0.2477042163226486,
+        "std": 0.06526025439282708
+      },
+      "compute_to_mem_ratio": {
+        "mean": 7.335759580920872,
+        "std": 10.480042697530942
+      },
+      "avg_temp_c": {
+        "mean": 36.964285714285715
+      }
+    },
+    "matmul": {
+      "count": 18,
+      "energy_j": {
+        "mean": 1.0474551495025044,
+        "std": 0.601702546319269,
+        "min": 0.087225,
+        "max": 1.820625780906994
+      },
+      "runtime_ms": {
+        "mean": 5.032577783697182,
+        "std": 3.8387308689557207,
+        "min": 0.2088959962129593,
+        "max": 12.981247901916504
+      },
+      "avg_power_w": {
+        "mean": 85.93569444444444,
+        "std": 15.219632544782499
+      },
+      "avg_gpu_util_pct": {
+        "mean": 27.22222222222222,
+        "std": 27.77335912568343
+      },
+      "avg_mem_util_pct": {
+        "mean": 8.61111111111111,
+        "std": 15.084619704652381
+      },
+      "energy_per_ms": {
+        "mean": 0.24620689030001763,
+        "std": 0.07627844973914721
+      },
+      "compute_to_mem_ratio": {
+        "mean": 8.623643023643025,
+        "std": 8.484500204505872
+      },
+      "avg_temp_c": {
+        "mean": 34.44444444444444
+      }
+    },
+    "norm": {
+      "count": 8,
+      "energy_j": {
+        "mean": 10.039986019139404,
+        "std": 6.120422097166351,
+        "min": 2.2900949429576283,
+        "max": 20.430513514136372
+      },
+      "runtime_ms": {
+        "mean": 35.44863176345825,
+        "std": 19.138963866279987,
+        "min": 6.1460161209106445,
+        "max": 63.93212890625
+      },
+      "avg_power_w": {
+        "mean": 102.29845515530539,
+        "std": 11.560041102549915
+      },
+      "avg_gpu_util_pct": {
+        "mean": 32.81388888888889,
+        "std": 40.30536690579723
+      },
+      "avg_mem_util_pct": {
+        "mean": 22.305555555555554,
+        "std": 31.059523556026043
+      },
+      "energy_per_ms": {
+        "mean": 0.2841539528241823,
+        "std": 0.049494879605914345
+      },
+      "compute_to_mem_ratio": {
+        "mean": 3.4861988304093567,
+        "std": 5.083528468907841
+      },
+      "avg_temp_c": {
+        "mean": 37.3625
+      }
+    },
+    "pooling": {
+      "count": 6,
+      "energy_j": {
+        "mean": 3.2247204808194265,
+        "std": 2.0626567255788433,
+        "min": 1.7265931009654887,
+        "max": 7.0167705551669926
+      },
+      "runtime_ms": {
+        "mean": 14.938074747721354,
+        "std": 7.852856979756048,
+        "min": 7.15180778503418,
+        "max": 27.976512908935547
+      },
+      "avg_power_w": {
+        "mean": 87.15623426019495,
+        "std": 1.4468797987102888
+      },
+      "avg_gpu_util_pct": {
+        "mean": 16.0,
+        "std": 19.172897537930986
+      },
+      "avg_mem_util_pct": {
+        "mean": 0.6666666666666666,
+        "std": 0.816496580927726
+      },
+      "energy_per_ms": {
+        "mean": 0.2139887197976633,
+        "std": 0.04935324938268825
+      },
+      "compute_to_mem_ratio": {
+        "mean": 24.333333333333332,
+        "std": 2.3094010767585034
+      },
+      "avg_temp_c": {
+        "mean": 36.63333333333333
+      }
+    },
+    "reduction": {
+      "count": 6,
+      "energy_j": {
+        "mean": 3.631849439232154,
+        "std": 0.06426152524960722,
+        "min": 3.588372314308537,
+        "max": 3.7617229635973928
+      },
+      "runtime_ms": {
+        "mean": 13.683136145273844,
+        "std": 0.01816028563452066,
+        "min": 13.661888122558594,
+        "max": 13.70633602142334
+      },
+      "avg_power_w": {
+        "mean": 90.41128701462287,
+        "std": 1.5895162974499593
+      },
+      "avg_gpu_util_pct": {
+        "mean": 2.722222222222222,
+        "std": 6.668055410909762
+      },
+      "avg_mem_util_pct": {
+        "mean": 3.3333333333333335,
+        "std": 8.16496580927726
+      },
+      "energy_per_ms": {
+        "mean": 0.2654251564897379,
+        "std": 0.004676328727234772
+      },
+      "compute_to_mem_ratio": {
+        "mean": 0.8166666666666667,
+        "std": null
+      },
+      "avg_temp_c": {
+        "mean": 36.0
+      }
+    },
+    "scan": {
+      "count": 5,
+      "energy_j": {
+        "mean": 8.171326547146439,
+        "std": 4.709728952024586,
+        "min": 3.510747723501641,
+        "max": 13.629844968223246
+      },
+      "runtime_ms": {
+        "mean": 33.012230682373044,
+        "std": 14.461740705037975,
+        "min": 18.5927677154541,
+        "max": 50.144256591796875
+      },
+      "avg_power_w": {
+        "mean": 94.77305480432553,
+        "std": 5.804899472039308
+      },
+      "avg_gpu_util_pct": {
+        "mean": 20.616666666666667,
+        "std": 24.197652549139736
+      },
+      "avg_mem_util_pct": {
+        "mean": 18.566666666666666,
+        "std": 25.588517390076007
+      },
+      "energy_per_ms": {
+        "mean": 0.23334279729207924,
+        "std": 0.04116046577900282
+      },
+      "compute_to_mem_ratio": {
+        "mean": 1.4468015347052667,
+        "std": 0.7574329937821889
+      },
+      "avg_temp_c": {
+        "mean": 36.75642857142857
+      }
+    }
+  },
+  "within_type_variance": {
+    "matmul": {
+      "n": 18,
+      "energy_cv_pct": 57.444230104272386,
+      "runtime_cv_pct": 76.27762617780343,
+      "energy_range_ratio": 20.872751859065566,
+      "runtime_range_ratio": 62.14215751977723
+    },
+    "activation": {
+      "n": 15,
+      "energy_cv_pct": 92.63577782121341,
+      "runtime_cv_pct": 58.8426444386686,
+      "energy_range_ratio": 8.94576268670715,
+      "runtime_range_ratio": 9.167033307660455
+    },
+    "norm": {
+      "n": 8,
+      "energy_cv_pct": 60.960464342269816,
+      "runtime_cv_pct": 53.99069841112777,
+      "energy_range_ratio": 8.921251748519484,
+      "runtime_range_ratio": 10.402206510447176
+    },
+    "pooling": {
+      "n": 6,
+      "energy_cv_pct": 63.96389199769359,
+      "runtime_cv_pct": 52.56940477522994,
+      "energy_range_ratio": 4.063939877463488,
+      "runtime_range_ratio": 3.911809957683565
+    },
+    "reduction": {
+      "n": 6,
+      "energy_cv_pct": 1.7693884706628533,
+      "runtime_cv_pct": 0.13272019982636235,
+      "energy_range_ratio": 1.0483089919620727,
+      "runtime_range_ratio": 1.00325342284068
+    },
+    "conv": {
+      "n": 18,
+      "energy_cv_pct": 96.90185566908693,
+      "runtime_cv_pct": 100.50088861846412,
+      "energy_range_ratio": 21.38081582793678,
+      "runtime_range_ratio": 22.09075305498863
+    },
+    "conv_transpose": {
+      "n": 17,
+      "energy_cv_pct": 166.33160358192302,
+      "runtime_cv_pct": 132.7827642100371,
+      "energy_range_ratio": 50.81161579579164,
+      "runtime_range_ratio": 34.17382201710009
+    },
+    "scan": {
+      "n": 5,
+      "energy_cv_pct": 57.6372627485962,
+      "runtime_cv_pct": 43.80722055465296,
+      "energy_range_ratio": 3.8823196770825663,
+      "runtime_range_ratio": 2.6969764458530574
+    },
+    "loss": {
+      "n": 6,
+      "energy_cv_pct": 73.03889804947612,
+      "runtime_cv_pct": 62.901041741905985,
+      "energy_range_ratio": 20.015114127431797,
+      "runtime_range_ratio": 26.909034916295454
+    },
+    "composite": {
+      "n": 100,
+      "energy_cv_pct": 97.64365729988351,
+      "runtime_cv_pct": 88.78907806543488,
+      "energy_range_ratio": 60.53788340751941,
+      "runtime_range_ratio": 43.003788252651304
+    }
+  },
+  "feature_energy_correlations": {
+    "num_torch_ops": -0.272,
+    "num_linear_calls": 0.248,
+    "num_norm_calls": 0.244,
+    "num_matmul_calls": -0.145,
+    "num_lines": 0.094,
+    "num_conv_calls": 0.033,
+    "uses_view_reshape": 0.02,
+    "num_tensor_creates": -0.0
+  },
+  "bound_classification_summary": {
+    "compute_bound": {
+      "count": 93,
+      "types": {
+        "matmul": 13,
+        "activation": 2,
+        "norm": 1,
+        "pooling": 3,
+        "conv": 10,
+        "conv_transpose": 13,
+        "scan": 1,
+        "loss": 2,
+        "composite": 48
+      }
+    },
+    "balanced": {
+      "count": 107,
+      "types": {
+        "matmul": 5,
+        "activation": 13,
+        "norm": 7,
+        "pooling": 3,
+        "reduction": 6,
+        "conv": 8,
+        "conv_transpose": 4,
+        "scan": 4,
+        "loss": 4,
+        "attention": 1,
+        "composite": 52
+      }
+    }
+  },
+  "top_10_most_efficient": [
+    {
+      "task_id": "L1_84",
+      "type": "conv",
+      "energy_per_ms": 0.13077566253712838,
+      "runtime_ms": 13.416447639465332,
+      "energy_j": 1.7545448289457708
+    },
+    {
+      "task_id": "L1_42",
+      "type": "pooling",
+      "energy_per_ms": 0.13480777283752235,
+      "runtime_ms": 12.839008331298828,
+      "energy_j": 1.7307981185847894
+    },
+    {
+      "task_id": "L1_5",
+      "type": "matmul",
+      "energy_per_ms": 0.13543663092195343,
+      "runtime_ms": 12.981247901916504,
+      "energy_j": 1.7581364809982478
+    },
+    {
+      "task_id": "L1_1",
+      "type": "matmul",
+      "energy_per_ms": 0.14629670931670458,
+      "runtime_ms": 2.6992640495300293,
+      "energy_j": 0.39489344802312554
+    },
+    {
+      "task_id": "L1_11",
+      "type": "matmul",
+      "energy_per_ms": 0.14971894787695572,
+      "runtime_ms": 11.53433609008789,
+      "energy_j": 1.726908663867158
+    },
+    {
+      "task_id": "L1_4",
+      "type": "matmul",
+      "energy_per_ms": 0.1570196865347689,
+      "runtime_ms": 11.416576385498047,
+      "energy_j": 1.7926272453511483
+    },
+    {
+      "task_id": "L1_2",
+      "type": "matmul",
+      "energy_per_ms": 0.1629574408886393,
+      "runtime_ms": 2.771967887878418,
+      "energy_j": 0.45171279323415364
+    },
+    {
+      "task_id": "L1_41",
+      "type": "pooling",
+      "energy_per_ms": 0.1768102726015965,
+      "runtime_ms": 19.879871368408203,
+      "energy_j": 3.514965475932928
+    },
+    {
+      "task_id": "L2_57",
+      "type": "composite",
+      "energy_per_ms": 0.1791196019250624,
+      "runtime_ms": 11.421695709228516,
+      "energy_j": 2.045849588746205
+    },
+    {
+      "task_id": "L1_19",
+      "type": "activation",
+      "energy_per_ms": 0.18008627970209257,
+      "runtime_ms": 19.412992477416992,
+      "energy_j": 3.4960135931427354
+    }
+  ],
+  "top_10_least_efficient": [
+    {
+      "task_id": "L2_28",
+      "type": "composite",
+      "energy_per_ms": 0.44610700833864897,
+      "runtime_ms": 3.7681920528411865,
+      "energy_j": 1.681016883538454
+    },
+    {
+      "task_id": "L2_34",
+      "type": "composite",
+      "energy_per_ms": 0.4481180047999622,
+      "runtime_ms": 48.75139236450195,
+      "energy_j": 21.846376677600727
+    },
+    {
+      "task_id": "L2_23",
+      "type": "composite",
+      "energy_per_ms": 0.45405540096762553,
+      "runtime_ms": 3.140608072280884,
+      "energy_j": 1.426010057541658
+    },
+    {
+      "task_id": "L2_24",
+      "type": "composite",
+      "energy_per_ms": 0.4560694092852502,
+      "runtime_ms": 2.1377921104431152,
+      "energy_j": 0.9749815849844599
+    },
+    {
+      "task_id": "L2_6",
+      "type": "composite",
+      "energy_per_ms": 0.5028264214438906,
+      "runtime_ms": 1.5544320344924927,
+      "energy_j": 0.7816094972816063
+    },
+    {
+      "task_id": "L1_72",
+      "type": "conv_transpose",
+      "energy_per_ms": 0.5248312109926685,
+      "runtime_ms": 3.839423894882202,
+      "energy_j": 2.0150494922652142
+    },
+    {
+      "task_id": "L1_71",
+      "type": "conv_transpose",
+      "energy_per_ms": 0.5270011933708308,
+      "runtime_ms": 3.8000640869140625,
+      "energy_j": 2.0026383086893476
+    },
+    {
+      "task_id": "L1_68",
+      "type": "conv_transpose",
+      "energy_per_ms": 0.5310369811068929,
+      "runtime_ms": 100.2577896118164,
+      "energy_j": 53.24059392790899
+    },
+    {
+      "task_id": "L2_79",
+      "type": "composite",
+      "energy_per_ms": 0.6108295243430245,
+      "runtime_ms": 2.368511915206909,
+      "energy_j": 1.4467570065666222
+    },
+    {
+      "task_id": "L2_80",
+      "type": "composite",
+      "energy_per_ms": 0.6114598149006946,
+      "runtime_ms": 3.6175999641418457,
+      "energy_j": 2.2120170044589322
+    }
+  ]
+}

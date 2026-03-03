@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=kite-l1l2-energy
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=128G
 #SBATCH --time=12:00:00
@@ -43,8 +43,7 @@ echo ""
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
 echo ""
 
-NUM_GPUS=$($PYTHON -c "import torch; print(torch.cuda.device_count())")
-echo "Detected $NUM_GPUS GPUs for distributed training"
+echo "Single-GPU training (no DDP)"
 echo ""
 
 CONFIG="$ROOT/configs/train_12h_l1l2_energy.yaml"
@@ -56,10 +55,7 @@ echo "Output:  $OUTPUT"
 echo "KB Root: $KB_ROOT"
 echo ""
 
-accelerate launch \
-    --num_processes="$NUM_GPUS" \
-    --mixed_precision=bf16 \
-    "$ROOT/scripts/train_rl.py" \
+$PYTHON "$ROOT/scripts/train_rl.py" \
     --config "$CONFIG" \
     --kernelbench-root "$KB_ROOT" \
     --output "$OUTPUT" \

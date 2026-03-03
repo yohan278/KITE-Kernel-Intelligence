@@ -428,6 +428,7 @@ class GRPOKernelTrainer:
             seed=42,
             bf16=True,
             temperature=0.8,
+            gradient_checkpointing=True,
         )
 
         trainer = GRPOTrainer(

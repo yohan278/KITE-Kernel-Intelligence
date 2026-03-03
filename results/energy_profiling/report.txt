@@ -1,0 +1,85 @@
+==========================================================================================
+KERNEL ENERGY PROFILING EXPERIMENT -- RESULTS
+==========================================================================================
+Total kernels profiled: 200
+Successful:             200
+Failed:                 0
+Kernel types observed:  11
+
+--- PER-TYPE ENERGY SUMMARY ---
+Type                N Avg Energy(J) Avg RT(ms)     E/ms   GPU%   Mem%  Power(W)
+------------------------------------------------------------------------------------------
+norm                8       10.0400      35.45   0.2842   32.8   22.3     102.3
+attention           1        9.7447      37.48   0.2600    0.0    0.0      96.9
+conv_transpose     17        8.1837      20.42   0.3609   33.4    8.7     134.2
+scan                5        8.1713      33.01   0.2333   20.6   18.6      94.8
+activation         15        6.5332      26.22   0.2273   16.5   10.6      96.9
+loss                6        5.8630      24.69   0.2477   22.2   14.8      97.8
+composite         100        5.1324      15.72   0.3428   24.8   11.1     125.2
+reduction           6        3.6318      13.68   0.2654    2.7    3.3      90.4
+pooling             6        3.2247      14.94   0.2140   16.0    0.7      87.2
+conv               18        2.5295       9.61   0.2865   31.2   10.9     103.1
+matmul             18        1.0475       5.03   0.2462   27.2    8.6      85.9
+
+--- WITHIN-TYPE ENERGY VARIANCE (key finding: same op, different energy) ---
+Type                N Energy CV% Runtime CV%  Energy Range   RT Range
+---------------------------------------------------------------------------
+conv_transpose     17     166.3%      132.8%         50.8x      34.2x
+composite         100      97.6%       88.8%         60.5x      43.0x
+conv               18      96.9%      100.5%         21.4x      22.1x
+activation         15      92.6%       58.8%          8.9x       9.2x
+loss                6      73.0%       62.9%         20.0x      26.9x
+pooling             6      64.0%       52.6%          4.1x       3.9x
+norm                8      61.0%       54.0%          8.9x      10.4x
+scan                5      57.6%       43.8%          3.9x       2.7x
+matmul             18      57.4%       76.3%         20.9x      62.1x
+reduction           6       1.8%        0.1%          1.0x       1.0x
+
+--- COMPUTE vs MEMORY BOUND CLASSIFICATION ---
+  compute_bound     93 kernels  (composite=48, matmul=13, conv_transpose=13, conv=10, pooling=3, activation=2, loss=2, norm=1, scan=1)
+  balanced         107 kernels  (composite=52, activation=13, conv=8, norm=7, reduction=6, matmul=5, conv_transpose=4, scan=4, loss=4, pooling=3, attention=1)
+
+--- SOURCE FEATURE CORRELATIONS WITH ENERGY EFFICIENCY (energy_per_ms) ---
+  num_torch_ops             r=-0.272  (lower energy)
+  num_linear_calls          r=+0.248  (higher energy)
+  num_norm_calls            r=+0.244  (higher energy)
+  num_matmul_calls          r=-0.145  (lower energy)
+  num_lines                 r=+0.094  (higher energy)
+  num_conv_calls            r=+0.033  (higher energy)
+  uses_view_reshape         r=+0.020  (higher energy)
+  num_tensor_creates        r=-0.000  (lower energy)
+
+--- TOP 10 MOST ENERGY-EFFICIENT KERNELS (lowest J/ms) ---
+   1. L1_84                          conv           E/ms=0.13078  rt=13.42ms  E=1.7545J
+   2. L1_42                          pooling        E/ms=0.13481  rt=12.84ms  E=1.7308J
+   3. L1_5                           matmul         E/ms=0.13544  rt=12.98ms  E=1.7581J
+   4. L1_1                           matmul         E/ms=0.14630  rt=2.70ms  E=0.3949J
+   5. L1_11                          matmul         E/ms=0.14972  rt=11.53ms  E=1.7269J
+   6. L1_4                           matmul         E/ms=0.15702  rt=11.42ms  E=1.7926J
+   7. L1_2                           matmul         E/ms=0.16296  rt=2.77ms  E=0.4517J
+   8. L1_41                          pooling        E/ms=0.17681  rt=19.88ms  E=3.5150J
+   9. L2_57                          composite      E/ms=0.17912  rt=11.42ms  E=2.0458J
+  10. L1_19                          activation     E/ms=0.18009  rt=19.41ms  E=3.4960J
+
+--- TOP 10 LEAST ENERGY-EFFICIENT KERNELS (highest J/ms) ---
+   1. L2_28                          composite      E/ms=0.44611  rt=3.77ms  E=1.6810J
+   2. L2_34                          composite      E/ms=0.44812  rt=48.75ms  E=21.8464J
+   3. L2_23                          composite      E/ms=0.45406  rt=3.14ms  E=1.4260J
+   4. L2_24                          composite      E/ms=0.45607  rt=2.14ms  E=0.9750J
+   5. L2_6                           composite      E/ms=0.50283  rt=1.55ms  E=0.7816J
+   6. L1_72                          conv_transpose E/ms=0.52483  rt=3.84ms  E=2.0150J
+   7. L1_71                          conv_transpose E/ms=0.52700  rt=3.80ms  E=2.0026J
+   8. L1_68                          conv_transpose E/ms=0.53104  rt=100.26ms  E=53.2406J
+   9. L2_79                          composite      E/ms=0.61083  rt=2.37ms  E=1.4468J
+  10. L2_80                          composite      E/ms=0.61146  rt=3.62ms  E=2.2120J
+
+==========================================================================================
+KEY FINDINGS
+==========================================================================================
+1. High energy variance within type (>30% CV): matmul, activation, norm, pooling, conv, conv_transpose, scan, loss, composite
+   -> Same operation type, very different energy. Implementation matters.
+2. Most energy-efficient type: pooling (0.21399 J/ms)
+   Least energy-efficient type: conv_transpose (0.36094 J/ms)
+   Energy efficiency varies 1.7x across kernel types.
+3. Strongest code feature predictor of energy: 'num_torch_ops' (r=-0.272)
+==========================================================================================
