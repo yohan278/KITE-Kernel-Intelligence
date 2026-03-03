@@ -241,6 +241,7 @@ def main() -> int:
     eval_num_correct_trials = _int_cfg("eval_num_correct_trials")
     eval_num_perf_trials = _int_cfg("eval_num_perf_trials")
     failure_log_every_steps = _int_cfg("failure_log_every_steps")
+    eval_timeout_seconds = train.get("eval_timeout_seconds", None)
     cmd = [
         "train",
         "kernel-grpo",
@@ -267,6 +268,8 @@ def main() -> int:
         cmd.extend(["--eval-num-perf-trials", str(eval_num_perf_trials)])
     if failure_log_every_steps is not None:
         cmd.extend(["--failure-log-every-steps", str(failure_log_every_steps)])
+    if eval_timeout_seconds is not None:
+        cmd.extend(["--eval-timeout-seconds", str(eval_timeout_seconds)])
     reward_alpha = _float_reward("alpha")
     reward_beta = _float_reward("beta")
     reward_gamma = _float_reward("gamma_latency")

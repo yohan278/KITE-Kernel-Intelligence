@@ -1,17 +1,19 @@
 # 12-hour energy-aware GRPO on L1+L2 tasks, 4x L40S.
 # Uses kernel-type-conditioned prompts/rewards + rich GPU telemetry.
+# group_size=4, batch_size=4 → 16 completions/step across 4 GPUs.
 train:
   mode: energy_aware
-  epochs: 24
+  epochs: 6
   energy_aware: true
-  group_size: 8
+  group_size: 4
   batch_size: 4
   max_completion_length: 512
   levels: "1,2"
   max_tasks: null
   eval_num_correct_trials: 1
-  eval_num_perf_trials: 5
+  eval_num_perf_trials: 3
   failure_log_every_steps: 5
+  eval_timeout_seconds: 120
   reward:
     alpha: 1.0
     beta: 0.5

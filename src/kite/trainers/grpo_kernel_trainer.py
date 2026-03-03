@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import ast
+import concurrent.futures
 from dataclasses import dataclass
 import os
 from pathlib import Path
+import time as _time
 from typing import Any, Optional
 import warnings
 
@@ -59,6 +61,7 @@ class GRPOKernelConfig:
     reward_sla_latency_s: float = 1.0
     reward_ipw_blend_weight: float = 0.0
     resume_from_checkpoint: Optional[str] = None
+    eval_timeout_seconds: float = 120.0
 
 
 class GRPOKernelTrainer:
@@ -267,15 +270,40 @@ class GRPOKernelTrainer:
             code = policy.extract_code(text).strip()
             return code if code else text.strip()
 
+        eval_timeout = config.eval_timeout_seconds
+        _eval_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+
+        def _evaluate_with_timeout(task: KernelTask, code: str) -> KernelCandidate:
+            fut = _eval_executor.submit(adapter.evaluate_candidate, task, code)
+            try:
+                return fut.result(timeout=eval_timeout)
+            except concurrent.futures.TimeoutError:
+                fut.cancel()
+                return KernelCandidate(
+                    task_id=task.task_id,
+                    code=code,
+                    compile_ok=False, correct=False,
+                    runtime_ms=None, speedup=None,
+                    compile_log=f"evaluation timed out after {eval_timeout}s",
+                    correctness_log=None, reference_runtime_ms=None,
+                    logs={"timeout": True},
+                )
+
         def kernel_reward_fn(completions: list[str], **kwargs) -> list[float]:
             nonlocal telemetry_idx, reward_steps
             rewards = []
+            step_t0 = _time.perf_counter()
+            n_precheck_fail = 0
+            n_compile_fail = 0
+            n_correct = 0
+            n_timeout = 0
             for i, completion in enumerate(completions):
                 code = _completion_to_code(completion)
                 task_idx = i % len(tasks)
                 task = tasks[task_idx]
                 precheck_error = self._precheck_candidate_code(task, code)
                 if precheck_error is not None:
+                    n_precheck_fail += 1
                     _record_failure(precheck_error)
                     candidate = KernelCandidate(
                         task_id=task.task_id,
@@ -290,11 +318,17 @@ class GRPOKernelTrainer:
                         logs={"precheck_error": precheck_error},
                     )
                 else:
-                    candidate = adapter.evaluate_candidate(task, code)
-                    if not candidate.compile_ok:
+                    candidate = _evaluate_with_timeout(task, code)
+                    if candidate.logs.get("timeout"):
+                        n_timeout += 1
+                        _record_failure("kernelbench:timeout")
+                    elif not candidate.compile_ok:
+                        n_compile_fail += 1
                         _record_failure("kernelbench:compile_fail")
                     elif not candidate.correct:
                         _record_failure("kernelbench:correctness_fail")
+                    else:
+                        n_correct += 1
 
                 candidate.logs["kernel_type"] = task.kernel_type
                 candidate.logs["level"] = task.level
@@ -343,6 +377,13 @@ class GRPOKernelTrainer:
                     total_reward += ipw_blend_weight * ipw_reward.total
                 rewards.append(total_reward)
             reward_steps += 1
+            step_elapsed = _time.perf_counter() - step_t0
+            avg_reward = sum(rewards) / len(rewards) if rewards else 0.0
+            logger.info(
+                "Reward step %d: %d completions in %.1fs | correct=%d precheck_fail=%d compile_fail=%d timeout=%d | avg_reward=%.3f",
+                reward_steps, len(completions), step_elapsed,
+                n_correct, n_precheck_fail, n_compile_fail, n_timeout, avg_reward,
+            )
             if config.failure_log_every_steps > 0 and reward_steps % config.failure_log_every_steps == 0:
                 if failure_counts:
                     parts = ", ".join(

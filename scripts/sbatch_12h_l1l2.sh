@@ -40,8 +40,11 @@ echo "Python: $PYTHON"
 $PYTHON -c "import torch; print(f'PyTorch {torch.__version__}, CUDA avail: {torch.cuda.is_available()}, GPUs: {torch.cuda.device_count()}')"
 echo ""
 
-export CUDA_LAUNCH_BLOCKING=1
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
+echo ""
+
+NUM_GPUS=$($PYTHON -c "import torch; print(torch.cuda.device_count())")
+echo "Detected $NUM_GPUS GPUs for distributed training"
 echo ""
 
 CONFIG="$ROOT/configs/train_12h_l1l2_energy.yaml"
@@ -53,7 +56,10 @@ echo "Output:  $OUTPUT"
 echo "KB Root: $KB_ROOT"
 echo ""
 
-$PYTHON "$ROOT/scripts/train_rl.py" \
+accelerate launch \
+    --num_processes="$NUM_GPUS" \
+    --mixed_precision=bf16 \
+    "$ROOT/scripts/train_rl.py" \
     --config "$CONFIG" \
     --kernelbench-root "$KB_ROOT" \
     --output "$OUTPUT" \

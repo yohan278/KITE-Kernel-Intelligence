@@ -67,6 +67,7 @@ def _build_parser() -> argparse.ArgumentParser:
     kernel.add_argument("--eval-num-correct-trials", type=int, default=3)
     kernel.add_argument("--eval-num-perf-trials", type=int, default=25)
     kernel.add_argument("--failure-log-every-steps", type=int, default=10)
+    kernel.add_argument("--eval-timeout-seconds", type=float, default=120.0)
     kernel.add_argument("--reward-alpha", type=float, default=1.0)
     kernel.add_argument("--reward-beta", type=float, default=0.0)
     kernel.add_argument("--reward-gamma-latency", type=float, default=0.25)
@@ -187,6 +188,7 @@ def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
             eval_num_correct_trials=args.eval_num_correct_trials,
             eval_num_perf_trials=args.eval_num_perf_trials,
             failure_log_every_steps=args.failure_log_every_steps,
+            eval_timeout_seconds=args.eval_timeout_seconds,
             reward_alpha_speedup=args.reward_alpha,
             reward_beta_joules=args.reward_beta,
             reward_gamma_latency=args.reward_gamma_latency,
