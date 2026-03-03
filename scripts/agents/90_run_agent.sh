@@ -62,6 +62,7 @@ case "$AGENT_ID" in
 
   pl0)
     wait_for_file "$STATE_DIR/st0.done"
+    wait_for_file "$ROOT/outputs/agent_queue/stats_summary.json"
     python "$SCRIPT_DIR/60_make_plots.py" --root "$ROOT"
     ;;
 

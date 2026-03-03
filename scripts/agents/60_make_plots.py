@@ -3,7 +3,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import subprocess
+import sys
 from pathlib import Path
+
+
+def _fail(msg: str) -> int:
+    print(f"[pl0] error: {msg}", file=sys.stderr)
+    return 1
+
+
+def _stage_sort_key(stage: str) -> tuple[int, int, str]:
+    match = re.search(r"(\d+)(?!.*\d)", stage)
+    if match:
+        return (0, int(match.group(1)), stage)
+    return (1, 0, stage)
 
 
 def main() -> int:
@@ -17,24 +32,40 @@ def main() -> int:
     # Try using existing project plot script first.
     script = args.root / "scripts" / "09_plot_pareto.py"
     if script.exists():
-        import subprocess
-
-        subprocess.run(["python", str(script)], cwd=str(args.root), check=False)
+        result = subprocess.run(["python", str(script)], cwd=str(args.root), check=False)
+        if result.returncode != 0:
+            print(
+                f"[pl0] warning: optional {script} exited with code {result.returncode}",
+                file=sys.stderr,
+            )
 
     stats_path = args.root / "outputs" / "agent_queue" / "stats_summary.json"
     if not stats_path.exists():
-        print(f"[pl0] stats not found: {stats_path}")
-        return 0
+        return _fail(f"required stats not found: {stats_path}")
 
-    data = json.loads(stats_path.read_text(encoding="utf-8"))
-    stages = sorted(data.keys())
-    means = [float(data[s].get("avg_reward", {}).get("mean", 0.0)) for s in stages]
+    try:
+        data = json.loads(stats_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return _fail(f"invalid JSON in {stats_path}: {exc}")
+
+    if not isinstance(data, dict) or not data:
+        return _fail(f"{stats_path} is empty or not keyed by stage")
+
+    stages = sorted((str(stage) for stage in data.keys()), key=_stage_sort_key)
+    means: list[float] = []
+    for stage in stages:
+        metric_block = data.get(stage, {})
+        avg_reward = metric_block.get("avg_reward", {}) if isinstance(metric_block, dict) else {}
+        mean_val = avg_reward.get("mean", 0.0) if isinstance(avg_reward, dict) else 0.0
+        try:
+            means.append(float(mean_val))
+        except (TypeError, ValueError):
+            means.append(0.0)
 
     try:
         import matplotlib.pyplot as plt
-    except Exception:
-        print("[pl0] matplotlib not available; skipping plot generation")
-        return 0
+    except Exception as exc:
+        return _fail(f"matplotlib not available: {exc}")
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.bar(stages, means)
@@ -45,6 +76,10 @@ def main() -> int:
     png = out_dir / "avg_reward_by_stage.png"
     fig.savefig(png, dpi=200)
     plt.close(fig)
+
+    if not png.exists() or png.stat().st_size == 0:
+        return _fail(f"expected figure missing or empty: {png}")
+
     print(f"[pl0] wrote {png}")
 
     state = args.root / "outputs" / "agent_queue" / "state"
