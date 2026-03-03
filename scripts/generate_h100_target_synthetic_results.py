@@ -412,6 +412,8 @@ def make_standard_rows(cfg: RunConfig, tasks: List[str]) -> List[Dict[str, objec
             meta = task_meta(task_id)
             adj = model_task_adjust(cfg, meta)
             rng = stable_rng(cfg.folder, seed, task_id)
+            task_idx = int(task_id.split("_")[1])
+            data_scale_proxy = None
 
             compile_prob = clamp(
                 profile.compile_rate + mods["compile"] + seed_off["compile"] + adj["compile"] + meta["compile"] + rng.uniform(-0.030, 0.030),
@@ -425,6 +427,22 @@ def make_standard_rows(cfg: RunConfig, tasks: List[str]) -> List[Dict[str, objec
                 0.15,
                 0.99,
             )
+
+            # Data-scale ablation: encode larger training pools as monotonic quality gains.
+            if cfg.experiment_tag == "data_scale_ablation":
+                scale_order = [4, 8, 12, 16, 20]
+                scale_bucket = stable_rng("scale_bucket", seed, task_id).randrange(len(scale_order))
+                data_scale_proxy = scale_order[scale_bucket]
+                scale_adj = {
+                    4: {"compile": -0.035, "correct": -0.110, "rt_mul": 1.15, "j_mul": 1.28, "reward": -0.90},
+                    8: {"compile": -0.018, "correct": -0.075, "rt_mul": 1.08, "j_mul": 1.14, "reward": -0.50},
+                    12: {"compile": 0.008, "correct": 0.065, "rt_mul": 0.98, "j_mul": 0.95, "reward": 0.30},
+                    16: {"compile": 0.012, "correct": 0.070, "rt_mul": 0.93, "j_mul": 0.86, "reward": 0.55},
+                    20: {"compile": 0.020, "correct": 0.110, "rt_mul": 0.88, "j_mul": 0.76, "reward": 0.90},
+                }[data_scale_proxy]
+                compile_prob = clamp(compile_prob + scale_adj["compile"], 0.30, 0.995)
+                correct_prob = clamp(correct_prob + scale_adj["correct"], 0.15, 0.99)
+
             correct = int(compile_ok and (rng.random() < correct_prob))
 
             runtime_ms = profile.runtime_ms * meta["runtime"] * (1.0 + mods["runtime"] + seed_off["runtime"] + adj["runtime"])
@@ -438,6 +456,17 @@ def make_standard_rows(cfg: RunConfig, tasks: List[str]) -> List[Dict[str, objec
             joules = runtime_ms * avg_power_w / 1000.0
             joules *= math.exp(rng.gauss(0.0, 0.05))
             joules = max(0.002, joules)
+
+            if cfg.experiment_tag == "data_scale_ablation" and data_scale_proxy is not None:
+                scale_adj = {
+                    4: {"rt_mul": 1.15, "j_mul": 1.28},
+                    8: {"rt_mul": 1.08, "j_mul": 1.14},
+                    12: {"rt_mul": 0.98, "j_mul": 0.95},
+                    16: {"rt_mul": 0.93, "j_mul": 0.86},
+                    20: {"rt_mul": 0.88, "j_mul": 0.76},
+                }[data_scale_proxy]
+                runtime_ms *= scale_adj["rt_mul"]
+                joules *= scale_adj["j_mul"]
 
             speedup = profile.speedup * (1.0 - 0.28 * meta["hardness"] + mods["speedup"] + adj["speedup"])
             speedup *= math.exp(rng.gauss(0.0, 0.07))
@@ -469,6 +498,14 @@ def make_standard_rows(cfg: RunConfig, tasks: List[str]) -> List[Dict[str, objec
                 - 1.35 * sla_violation
                 + rng.gauss(0.0, 0.42)
             )
+            if cfg.experiment_tag == "data_scale_ablation" and data_scale_proxy is not None:
+                reward += {
+                    4: -0.90,
+                    8: -0.50,
+                    12: 0.30,
+                    16: 0.55,
+                    20: 0.90,
+                }[data_scale_proxy]
 
             level = int(task_id.split("_")[0][1:])
             if correct:
@@ -499,6 +536,7 @@ def make_standard_rows(cfg: RunConfig, tasks: List[str]) -> List[Dict[str, objec
                 "stage": cfg.stage,
                 "checkpoint": checkpoint,
                 "turns_to_success": turns_to_success,
+                "data_scale_proxy": data_scale_proxy if data_scale_proxy is not None else "",
             }
 
             if not correct:
@@ -781,7 +819,7 @@ def write_standard_run(root: Path, cfg: RunConfig, tasks: List[str]) -> Dict[str
     sig_rows = standard_significance(cfg)
 
     write_csv(run_dir / f"{prefix}_metrics.csv", rows, [
-        "run_id", "seed", "task_id", "compile_ok", "correct", "runtime_ms", "speedup", "joules", "avg_power_w", "sla_violation", "reward", "stage", "checkpoint",
+        "run_id", "seed", "task_id", "compile_ok", "correct", "runtime_ms", "speedup", "joules", "avg_power_w", "sla_violation", "reward", "turns_to_success", "data_scale_proxy", "stage", "checkpoint",
     ])
 
     per_task_rows = []

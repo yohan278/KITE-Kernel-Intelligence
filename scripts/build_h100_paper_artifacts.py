@@ -85,11 +85,18 @@ def load_experiments(root: Path) -> Dict[str, dict]:
         summary_path = d / f"{stem}_summary.json"
         metrics_path = d / f"{stem}_metrics.csv"
         per_seed_path = d / f"{stem}_per_seed.csv"
+        per_task_path = d / f"{stem}_per_task.jsonl"
         failure_path = d / f"{stem}_failure_taxonomy.csv"
 
         summary = _safe_read_json(summary_path) or {}
         metrics = _safe_read_csv(metrics_path)
         per_seed = _safe_read_csv(per_seed_path)
+        per_task = None
+        if per_task_path.exists():
+            try:
+                per_task = pd.read_json(per_task_path, lines=True)
+            except Exception:
+                per_task = None
         failure = _safe_read_csv(failure_path)
 
         if metrics is not None:
@@ -99,11 +106,19 @@ def load_experiments(root: Path) -> Dict[str, dict]:
             metrics["model_short"] = _model_short(model_tag)
             metrics["experiment_tag"] = exp_tag
             if "task_id" in metrics.columns:
-                metrics["task_num"] = (
-                    metrics["task_id"].astype(str).str.extract(r"(\d+)", expand=False).fillna("0").astype(int)
-                )
+                parsed = metrics["task_id"].astype(str).str.extract(r"^L(\d+)_(\d+)$")
+                metrics["task_level"] = pd.to_numeric(parsed[0], errors="coerce")
+                metrics["task_index"] = pd.to_numeric(parsed[1], errors="coerce")
+                # Keep task_num for compatibility with existing plotting logic.
+                metrics["task_num"] = metrics["task_index"].fillna(0).astype(int)
             if "turns_to_success" not in metrics.columns:
-                metrics["turns_to_success"] = np.where(metrics.get("correct", 0).astype(float) > 0, 1, -1)
+                if per_task is not None and {"run_id", "turns_to_success"}.issubset(set(per_task.columns)):
+                    metrics = metrics.merge(per_task[["run_id", "turns_to_success"]], on="run_id", how="left")
+                    metrics["turns_to_success"] = metrics["turns_to_success"].fillna(
+                        np.where(metrics.get("correct", 0).astype(float) > 0, 1, -1)
+                    )
+                else:
+                    metrics["turns_to_success"] = np.where(metrics.get("correct", 0).astype(float) > 0, 1, -1)
 
         exps[stem] = {
             "path": d,
@@ -114,6 +129,7 @@ def load_experiments(root: Path) -> Dict[str, dict]:
             "summary": summary,
             "metrics": metrics,
             "per_seed": per_seed,
+            "per_task": per_task,
             "failure": failure,
         }
     return exps
@@ -128,7 +144,7 @@ def get_core_experiment_names(exps: Dict[str, dict]) -> Dict[str, str]:
             names["M1"] = name
         elif "__energy_aware_rl" in name and "_M2_" in name:
             names["M2"] = name
-        elif "__ipw_blend_lambda_ablation" in name and "_M3_" in name:
+        elif "__ipw_blend_sweep" in name and "_M3_" in name:
             names["M3"] = name
         elif "__runtime_control" in name and "_M4_" in name:
             names["M4"] = name
@@ -136,7 +152,7 @@ def get_core_experiment_names(exps: Dict[str, dict]) -> Dict[str, str]:
             names["M5"] = name
     if "M3" not in names:
         for name in exps:
-            if "__ipw_blend_sweep" in name and "_M3_" in name:
+            if "__ipw_blend_lambda_ablation" in name and "_M3_" in name:
                 names["M3"] = name
                 break
     return names
@@ -485,10 +501,17 @@ def plot_appendix_figures(exps: Dict[str, dict], core: Dict[str, str], dirs: Dic
     all_core = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
 
     # 9) Difficulty-stratified success heatmap
-    if not all_core.empty and "task_num" in all_core.columns:
-        bins = [0, 5, 10, 15, 1000]
-        labels = ["1-5", "6-10", "11-15", "16-20+"]
-        all_core["difficulty_bucket"] = pd.cut(all_core["task_num"], bins=bins, labels=labels, right=True)
+    if not all_core.empty:
+        if "task_level" in all_core.columns and all_core["task_level"].notna().any():
+            labels = ["L1 (easy)", "L2 (medium)", "L3 (hard)", "L4 (very hard)"]
+            all_core["difficulty_bucket"] = all_core["task_level"].map({1: labels[0], 2: labels[1], 3: labels[2], 4: labels[3]})
+            all_core["difficulty_bucket"] = pd.Categorical(all_core["difficulty_bucket"], categories=labels, ordered=True)
+        elif "task_num" in all_core.columns:
+            bins = [0, 5, 10, 15, 1000]
+            labels = ["1-5", "6-10", "11-15", "16-20+"]
+            all_core["difficulty_bucket"] = pd.cut(all_core["task_num"], bins=bins, labels=labels, right=True)
+        else:
+            all_core["difficulty_bucket"] = "all"
         hm = all_core.groupby(["difficulty_bucket", "model"], as_index=False)["correct"].mean()
         hm_p = hm.pivot(index="difficulty_bucket", columns="model", values="correct").fillna(0.0)
         hm_p = hm_p[[c for c in ["M0", "M1", "M2", "M3", "M4", "M5"] if c in hm_p.columns]]
@@ -528,22 +551,37 @@ def plot_appendix_figures(exps: Dict[str, dict], core: Dict[str, str], dirs: Dic
     ds_name = next((n for n in exps if "__data_scale_ablation" in n), None)
     if ds_name:
         ddf = exps[ds_name]["metrics"]
-        if ddf is not None and not ddf.empty and "task_num" in ddf.columns:
+        if ddf is not None and not ddf.empty:
             points = []
-            for n in [4, 8, 12, 16, 20]:
-                sub = ddf[ddf["task_num"] <= n]
-                if sub.empty:
-                    continue
-                points.append(
-                    {
-                        "num_tasks_proxy": n,
-                        "correctness": sub["correct"].mean(),
-                        "joules": sub["joules"].mean(),
-                        "reward": sub["reward"].mean(),
-                    }
-                )
+            if "data_scale_proxy" in ddf.columns and ddf["data_scale_proxy"].notna().any():
+                sdf = ddf.copy()
+                sdf["data_scale_proxy"] = pd.to_numeric(sdf["data_scale_proxy"], errors="coerce")
+                sdf = sdf.dropna(subset=["data_scale_proxy"])
+                if not sdf.empty:
+                    for n, g in sdf.groupby("data_scale_proxy", as_index=False):
+                        points.append(
+                            {
+                                "num_tasks_proxy": int(n),
+                                "correctness": g["correct"].mean(),
+                                "joules": g["joules"].mean(),
+                                "reward": g["reward"].mean(),
+                            }
+                        )
+            elif "task_num" in ddf.columns:
+                for n in [4, 8, 12, 16, 20]:
+                    sub = ddf[ddf["task_num"] <= n]
+                    if sub.empty:
+                        continue
+                    points.append(
+                        {
+                            "num_tasks_proxy": n,
+                            "correctness": sub["correct"].mean(),
+                            "joules": sub["joules"].mean(),
+                            "reward": sub["reward"].mean(),
+                        }
+                    )
             if points:
-                pdf = pd.DataFrame(points)
+                pdf = pd.DataFrame(points).sort_values("num_tasks_proxy")
                 fig, ax1 = plt.subplots(figsize=(8, 4.8))
                 ax1.plot(pdf["num_tasks_proxy"], pdf["correctness"], marker="o", color="#1f77b4", label="correctness")
                 ax1.set_xlabel("Num Tasks (proxy)")
@@ -560,7 +598,7 @@ def plot_appendix_figures(exps: Dict[str, dict], core: Dict[str, str], dirs: Dic
     ib_name = next((n for n in exps if "__inference_budget_ablation" in n), None)
     if ib_name:
         ib = exps[ib_name]["metrics"]
-        if ib is not None and not ib.empty:
+        if ib is not None and not ib.empty and "turns_to_success" in ib.columns:
             budgets = []
             for k in [1, 2, 3, 4, 5]:
                 solved = (ib["turns_to_success"] > 0) & (ib["turns_to_success"] <= k)
@@ -919,4 +957,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
