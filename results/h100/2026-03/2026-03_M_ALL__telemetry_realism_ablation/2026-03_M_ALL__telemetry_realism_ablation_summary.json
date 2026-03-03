@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__telemetry_realism_ablation",
+  "aggregate": {
+    "compile_rate": 0.8667,
+    "correctness": 0.5333,
+    "pass_at_k": 0.6917,
+    "runtime_ms": 20.124492,
+    "joules": 5.507546,
+    "power_w": 237.23,
+    "reward_mean": 6.2587
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.5316455696202531,
+      "pass_at_k": 0.6113924050632911,
+      "runtime_ms": 28.01847579411765,
+      "joules": 7.776050323529412,
+      "power_w": 226.2280882352941
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.3924050632911392,
+      "pass_at_k": 0.4512658227848101,
+      "runtime_ms": 26.287762757142858,
+      "joules": 7.619063285714286,
+      "power_w": 230.83107142857142
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8354430379746836,
+      "correctness": 0.3924050632911392,
+      "pass_at_k": 0.4512658227848101,
+      "runtime_ms": 23.78777003030303,
+      "joules": 6.551286348484849,
+      "power_w": 228.87807575757574
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

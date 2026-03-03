@@ -1,0 +1,12 @@
+script: "08_eval_all.py"
+model: "M_ALL"
+stage: "suite"
+eval:
+  max_turns:
+    - 1
+    - 2
+    - 3
+    - 5
+    - 10
+seed: 11
+experiment: "inference_budget_ablation"

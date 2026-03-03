@@ -1,0 +1,8 @@
+script: "03_run_sft.py"
+model: "M0_SFT"
+stage: "sft"
+sft:
+  epochs: 3
+  max_turns: 5
+seed: 11
+experiment: "multiturn_generation"

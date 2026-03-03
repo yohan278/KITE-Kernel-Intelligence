@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M_ALL__reward_ablation",
+  "files": [
+    "2026-03_M_ALL__reward_ablation_metrics.csv",
+    "2026-03_M_ALL__reward_ablation_per_task.jsonl",
+    "2026-03_M_ALL__reward_ablation_per_seed.csv",
+    "2026-03_M_ALL__reward_ablation_summary.json",
+    "2026-03_M_ALL__reward_ablation_ci_stats.json",
+    "2026-03_M_ALL__reward_ablation_failure_taxonomy.csv",
+    "2026-03_M_ALL__reward_ablation_significance_tests.csv"
+  ]
+}

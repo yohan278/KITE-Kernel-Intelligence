@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M4_RUNTIME_PPO__runtime_control",
+  "files": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control_metrics.csv",
+    "2026-03_M4_RUNTIME_PPO__runtime_control_per_task.jsonl",
+    "2026-03_M4_RUNTIME_PPO__runtime_control_per_seed.csv",
+    "2026-03_M4_RUNTIME_PPO__runtime_control_summary.json",
+    "2026-03_M4_RUNTIME_PPO__runtime_control_ci_stats.json",
+    "2026-03_M4_RUNTIME_PPO__runtime_control_failure_taxonomy.csv",
+    "2026-03_M4_RUNTIME_PPO__runtime_control_significance_tests.csv"
+  ]
+}

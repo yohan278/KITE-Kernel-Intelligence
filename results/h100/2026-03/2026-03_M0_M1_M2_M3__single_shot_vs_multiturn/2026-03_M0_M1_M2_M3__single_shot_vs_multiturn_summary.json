@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn",
+  "aggregate": {
+    "compile_rate": 0.8458,
+    "correctness": 0.5875,
+    "pass_at_k": 0.7375,
+    "runtime_ms": 21.244221,
+    "joules": 5.915516,
+    "power_w": 244.951,
+    "reward_mean": 5.48429
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.7721518987341772,
+      "correctness": 0.4430379746835443,
+      "pass_at_k": 0.5094936708860759,
+      "runtime_ms": 26.773315639344265,
+      "joules": 7.9289987377049185,
+      "power_w": 233.810868852459
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.5569620253164557,
+      "pass_at_k": 0.640506329113924,
+      "runtime_ms": 27.592513780821918,
+      "joules": 7.838922547945206,
+      "power_w": 228.805397260274
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.5569620253164557,
+      "pass_at_k": 0.640506329113924,
+      "runtime_ms": 28.598499931506847,
+      "joules": 7.586623219178082,
+      "power_w": 231.19324657534247
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

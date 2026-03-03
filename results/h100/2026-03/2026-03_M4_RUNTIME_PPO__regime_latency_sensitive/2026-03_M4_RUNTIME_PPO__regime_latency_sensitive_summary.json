@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+  "aggregate": {
+    "compile_rate": 0.8917,
+    "correctness": 0.5917,
+    "pass_at_k": 0.725,
+    "runtime_ms": 15.115791,
+    "joules": 3.854631,
+    "power_w": 220.118,
+    "reward_mean": 9.04898
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.45569620253164556,
+      "pass_at_k": 0.5240506329113923,
+      "runtime_ms": 19.56373005882353,
+      "joules": 5.033221985294118,
+      "power_w": 227.72479411764706
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8734177215189873,
+      "correctness": 0.4177215189873418,
+      "pass_at_k": 0.480379746835443,
+      "runtime_ms": 20.64028175362319,
+      "joules": 5.216582826086956,
+      "power_w": 229.62578260869566
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9113924050632911,
+      "correctness": 0.569620253164557,
+      "pass_at_k": 0.6550632911392404,
+      "runtime_ms": 19.592408819444444,
+      "joules": 5.190462680555555,
+      "power_w": 231.3054861111111
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

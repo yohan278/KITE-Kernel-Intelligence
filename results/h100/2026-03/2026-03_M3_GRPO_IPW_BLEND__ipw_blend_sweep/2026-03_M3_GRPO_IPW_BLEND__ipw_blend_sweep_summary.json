@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_sweep",
+  "aggregate": {
+    "compile_rate": 0.8875,
+    "correctness": 0.675,
+    "pass_at_k": 0.7917,
+    "runtime_ms": 19.108719,
+    "joules": 3.760495,
+    "power_w": 174.839,
+    "reward_mean": 10.26535
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.7974683544303798,
+      "correctness": 0.45569620253164556,
+      "pass_at_k": 0.5240506329113923,
+      "runtime_ms": 27.176695031746032,
+      "joules": 5.143094333333334,
+      "power_w": 228.04847619047618
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.620253164556962,
+      "pass_at_k": 0.7132911392405062,
+      "runtime_ms": 25.244467589041093,
+      "joules": 4.537014767123288,
+      "power_w": 229.41432876712327
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9367088607594937,
+      "correctness": 0.7848101265822784,
+      "pass_at_k": 0.9025316455696202,
+      "runtime_ms": 24.77259368918919,
+      "joules": 4.9516496081081085,
+      "power_w": 233.24445945945945
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

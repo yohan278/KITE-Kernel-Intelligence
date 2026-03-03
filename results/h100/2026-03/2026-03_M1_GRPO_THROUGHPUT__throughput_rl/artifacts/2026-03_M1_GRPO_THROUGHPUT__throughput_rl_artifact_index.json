@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M1_GRPO_THROUGHPUT__throughput_rl",
+  "files": [
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_metrics.csv",
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_per_task.jsonl",
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_per_seed.csv",
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_summary.json",
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_ci_stats.json",
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_failure_taxonomy.csv",
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl_significance_tests.csv"
+  ]
+}

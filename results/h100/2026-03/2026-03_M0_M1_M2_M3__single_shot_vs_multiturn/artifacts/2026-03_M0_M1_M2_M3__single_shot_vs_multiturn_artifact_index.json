@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn",
+  "files": [
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_metrics.csv",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_per_task.jsonl",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_per_seed.csv",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_summary.json",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_ci_stats.json",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_failure_taxonomy.csv",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn_significance_tests.csv"
+  ]
+}

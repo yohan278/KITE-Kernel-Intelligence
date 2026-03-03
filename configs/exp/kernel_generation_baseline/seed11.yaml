@@ -1,0 +1,10 @@
+script: "03_run_sft.py"
+model: "M0_SFT"
+stage: "sft"
+sft:
+  epochs: 3
+  batch_size: 8
+  learning_rate: 2e-05
+  lora_rank: 64
+seed: 11
+experiment: "kernel_generation_baseline"

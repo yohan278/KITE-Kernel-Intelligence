@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M0_SFT__kernel_generation_baseline",
+  "aggregate": {
+    "compile_rate": 0.8583,
+    "correctness": 0.4792,
+    "pass_at_k": 0.675,
+    "runtime_ms": 23.151533,
+    "joules": 6.69726,
+    "power_w": 250.727,
+    "reward_mean": -0.02241
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.4430379746835443,
+      "pass_at_k": 0.5094936708860759,
+      "runtime_ms": 30.87383704411765,
+      "joules": 9.822399955882352,
+      "power_w": 230.1716617647059
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.7848101265822784,
+      "correctness": 0.31645569620253167,
+      "pass_at_k": 0.3639240506329114,
+      "runtime_ms": 29.26833891935484,
+      "joules": 7.869313032258065,
+      "power_w": 227.32029032258066
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8734177215189873,
+      "correctness": 0.4177215189873418,
+      "pass_at_k": 0.480379746835443,
+      "runtime_ms": 30.036134942028987,
+      "joules": 8.668838231884058,
+      "power_w": 227.92304347826087
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

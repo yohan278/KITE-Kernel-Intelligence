@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+  "files": [
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_metrics.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_per_task.jsonl",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_per_seed.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_summary.json",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_ci_stats.json",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_failure_taxonomy.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive_significance_tests.csv"
+  ]
+}

@@ -56,6 +56,10 @@ class EnergyCapture:
         capture per-sample power readings.  Falls back to nvidia-smi polling
         if IPW is not installed, and to a synthetic trace if no GPU is present.
         """
+        if self._h100_sampler_available():
+            return self._capture_with_h100_sampler(
+                kernel_fn, inputs, warmup_iters, measure_iters, sampling_interval_ms
+            )
         if _ipw_available() and _torch_cuda_available():
             return self._capture_with_ipw(
                 kernel_fn, inputs, warmup_iters, measure_iters, sampling_interval_ms
@@ -66,6 +70,137 @@ class EnergyCapture:
             )
         logger.debug("No GPU; returning synthetic trace")
         return self.synthetic_trace(steps=measure_iters * 10)
+
+    @staticmethod
+    def _h100_sampler_available() -> bool:
+        """Check if the h100-energy-sampler gRPC service is reachable."""
+        try:
+            import grpc  # type: ignore  # noqa: F401
+            channel = grpc.insecure_channel("localhost:50052")
+            try:
+                grpc.channel_ready_future(channel).result(timeout=0.5)
+                return True
+            except grpc.FutureTimeoutError:
+                return False
+            finally:
+                channel.close()
+        except ImportError:
+            return False
+        except Exception:
+            return False
+
+    def _capture_with_h100_sampler(
+        self,
+        kernel_fn: Callable,
+        inputs: Any,
+        warmup_iters: int,
+        measure_iters: int,
+        sampling_interval_ms: float,
+    ) -> EnergyTrace:
+        """Capture via the Rust h100-energy-sampler gRPC service.
+
+        Connects to the gRPC service running at localhost:50052, streams
+        TelemetrySample messages while the kernel executes, and converts
+        the full NVML field set into an EnergyTrace with GPU utilization,
+        temperature, clock, PCIe, throttle, and fan data in metadata.
+        """
+        import torch  # type: ignore
+        import grpc  # type: ignore
+
+        sys_path = Path(__file__).resolve().parents[3]
+        proto_dir = sys_path / "tools" / "h100-energy-sampler" / "proto"
+        try:
+            from grpc_tools import protoc  # type: ignore
+            import importlib
+            import tempfile
+            out_dir = tempfile.mkdtemp()
+            protoc.main([
+                "grpc_tools.protoc",
+                f"-I{proto_dir}",
+                f"--python_out={out_dir}",
+                f"--grpc_python_out={out_dir}",
+                str(proto_dir / "telemetry.proto"),
+            ])
+            import sys
+            sys.path.insert(0, out_dir)
+            import telemetry_pb2 as pb2  # type: ignore
+            import telemetry_pb2_grpc as pb2_grpc  # type: ignore
+        except Exception:
+            logger.debug("Cannot compile h100-energy-sampler proto; falling back")
+            return self._capture_with_nvml(kernel_fn, inputs, warmup_iters, measure_iters)
+
+        for _ in range(warmup_iters):
+            kernel_fn(inputs)
+        torch.cuda.synchronize()
+
+        channel = grpc.insecure_channel("localhost:50052")
+        stub = pb2_grpc.H100TelemetryServiceStub(channel)
+        request = pb2.StreamRequest(interval_ms=int(sampling_interval_ms))
+
+        timestamps: list[float] = []
+        power_w: list[float] = []
+        energy_j: list[float] = []
+        gpu_util: list[float] = []
+        temp_c: list[float] = []
+        metadata_samples: list[dict] = []
+        running_energy = 0.0
+
+        try:
+            stream = stub.StreamSamples(request)
+            t0 = time.monotonic()
+
+            for _ in range(measure_iters):
+                kernel_fn(inputs)
+                torch.cuda.synchronize()
+
+                try:
+                    sample = next(stream)
+                except StopIteration:
+                    break
+
+                t_now = time.monotonic() - t0
+                total_power = sum(g.power_draw_w for g in sample.gpus) if sample.gpus else 300.0
+
+                if timestamps:
+                    dt = t_now - timestamps[-1]
+                    if dt > 0:
+                        running_energy += total_power * dt
+
+                timestamps.append(t_now)
+                power_w.append(total_power)
+                energy_j.append(running_energy)
+
+                if sample.gpus:
+                    g0 = sample.gpus[0]
+                    gpu_util.append(g0.gpu_utilization_pct)
+                    temp_c.append(g0.temperature_c)
+                    metadata_samples.append({
+                        "clock_sm_mhz": g0.clock_sm_mhz,
+                        "clock_mem_mhz": g0.clock_mem_mhz,
+                        "power_limit_w": g0.power_limit_w,
+                        "memory_used_bytes": g0.memory_used_bytes,
+                        "pcie_tx_kbps": g0.pcie_tx_kbps,
+                        "pcie_rx_kbps": g0.pcie_rx_kbps,
+                        "throttle_reasons": g0.throttle_reasons,
+                        "fan_speed_pct": g0.fan_speed_pct,
+                    })
+
+            stream.cancel()
+        finally:
+            channel.close()
+
+        trace = EnergyTrace(
+            timestamps=timestamps,
+            power_w=power_w,
+            energy_j=energy_j,
+            gpu_util=gpu_util,
+            temp_c=temp_c,
+        )
+
+        if metadata_samples:
+            trace.metadata = {"h100_sampler_fields": metadata_samples}
+
+        return trace
 
     def _capture_with_ipw(
         self,

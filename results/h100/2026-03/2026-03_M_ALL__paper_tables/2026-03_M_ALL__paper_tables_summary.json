@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__paper_tables",
+  "aggregate": {
+    "compile_rate": 0.8792,
+    "correctness": 0.6667,
+    "pass_at_k": 0.7708,
+    "runtime_ms": 19.178892,
+    "joules": 4.996587,
+    "power_w": 226.673,
+    "reward_mean": 8.43615
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.5949367088607594,
+      "pass_at_k": 0.6841772151898733,
+      "runtime_ms": 23.90995442647059,
+      "joules": 6.6524655294117645,
+      "power_w": 231.72383823529412
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.7468354430379747,
+      "correctness": 0.3924050632911392,
+      "pass_at_k": 0.4512658227848101,
+      "runtime_ms": 24.84104440677966,
+      "joules": 6.471105372881356,
+      "power_w": 230.00445762711863
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8987341772151899,
+      "correctness": 0.6708860759493671,
+      "pass_at_k": 0.7715189873417722,
+      "runtime_ms": 25.24998952112676,
+      "joules": 6.404861957746479,
+      "power_w": 229.24050704225354
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

@@ -1,0 +1,10 @@
+script: "06_run_runtime_ppo.py"
+model: "M4_RUNTIME_PPO"
+stage: "runtime_ppo"
+ppo:
+  episodes: 20
+  horizon: 10
+  ttft_sla: 5.0
+  e2e_sla: 60.0
+seed: 33
+experiment: "regime_throughput"

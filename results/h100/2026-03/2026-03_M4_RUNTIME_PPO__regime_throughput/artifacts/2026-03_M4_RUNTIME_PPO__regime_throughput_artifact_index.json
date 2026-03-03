@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M4_RUNTIME_PPO__regime_throughput",
+  "files": [
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_metrics.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_per_task.jsonl",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_per_seed.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_summary.json",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_ci_stats.json",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_failure_taxonomy.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput_significance_tests.csv"
+  ]
+}

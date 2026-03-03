@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M4_RUNTIME_PPO__regime_mixed",
+  "aggregate": {
+    "compile_rate": 0.9042,
+    "correctness": 0.6083,
+    "pass_at_k": 0.7583,
+    "runtime_ms": 16.788076,
+    "joules": 4.296739,
+    "power_w": 223.27,
+    "reward_mean": 8.99985
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8987341772151899,
+      "correctness": 0.5063291139240507,
+      "pass_at_k": 0.5822784810126582,
+      "runtime_ms": 22.28168391549296,
+      "joules": 5.974777873239437,
+      "power_w": 228.46177464788732
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9113924050632911,
+      "correctness": 0.569620253164557,
+      "pass_at_k": 0.6550632911392404,
+      "runtime_ms": 22.82983438888889,
+      "joules": 5.448947,
+      "power_w": 232.12055555555557
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.5189873417721519,
+      "pass_at_k": 0.5968354430379746,
+      "runtime_ms": 19.726013452054797,
+      "joules": 5.098799821917808,
+      "power_w": 228.47938356164383
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

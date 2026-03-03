@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M_ALL__paper_appendix",
+  "files": [
+    "2026-03_M_ALL__paper_appendix_metrics.csv",
+    "2026-03_M_ALL__paper_appendix_per_task.jsonl",
+    "2026-03_M_ALL__paper_appendix_per_seed.csv",
+    "2026-03_M_ALL__paper_appendix_summary.json",
+    "2026-03_M_ALL__paper_appendix_ci_stats.json",
+    "2026-03_M_ALL__paper_appendix_failure_taxonomy.csv",
+    "2026-03_M_ALL__paper_appendix_significance_tests.csv"
+  ]
+}

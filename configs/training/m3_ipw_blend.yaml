@@ -1,0 +1,38 @@
+# M3: IPW-blend GRPO config with lambda sweep
+model:
+  name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  lora:
+    rank: 64
+    alpha: 16
+
+grpo:
+  epochs: 3
+  group_size: 8
+  batch_size: 8
+  keep_top_k: 4
+  max_completion_length: 1024
+  beta: 0.04
+  learning_rate: 5.0e-6
+  energy_aware: true
+  reward_alpha_speedup: 1.0
+  reward_beta_joules: 0.5
+  reward_gamma_latency: 0.25
+  reward_delta_avg_power: 0.01
+  reward_eta_runtime: 0.10
+  reward_compile_fail: -1.0
+  reward_incorrect: -0.5
+  reward_oom_penalty: 0.5
+  reward_sla_latency_s: 1.0
+
+sweep:
+  ipw_blend_weight: [0.0, 0.1, 0.25, 0.5]
+
+telemetry:
+  trace_dir: "data/telemetry/runs"
+  allow_synthetic_fallback: true
+
+eval:
+  tasks: 80
+  seeds: [11, 22, 33]
+  num_correct_trials: 3
+  num_perf_trials: 25

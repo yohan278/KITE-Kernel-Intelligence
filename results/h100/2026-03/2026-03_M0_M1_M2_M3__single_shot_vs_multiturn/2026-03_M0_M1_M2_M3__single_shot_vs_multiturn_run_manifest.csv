@@ -1,0 +1,2 @@
+experiment,gpu,cuda,torch,triton,seeds,tasks
+2026-03_M0_M1_M2_M3__single_shot_vs_multiturn,H100-SXM5-80GB,12.4,2.6.0,3.2.0,"11,22,33",79

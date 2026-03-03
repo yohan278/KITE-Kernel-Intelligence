@@ -1,0 +1,10 @@
+script: "train_rl.py"
+model: "M1_GRPO_THROUGHPUT"
+stage: "kernel_grpo_throughput"
+grpo:
+  epochs: 3
+  group_size: 8
+  energy_aware: false
+  reward_ipw_blend_weight: 0.0
+seed: 22
+experiment: "throughput_rl"

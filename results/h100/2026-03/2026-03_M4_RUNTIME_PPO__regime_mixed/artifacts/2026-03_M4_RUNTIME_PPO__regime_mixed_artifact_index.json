@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M4_RUNTIME_PPO__regime_mixed",
+  "files": [
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_metrics.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_per_task.jsonl",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_per_seed.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_summary.json",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_ci_stats.json",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_failure_taxonomy.csv",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed_significance_tests.csv"
+  ]
+}

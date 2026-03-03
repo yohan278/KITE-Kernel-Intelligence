@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_lambda_ablation",
+  "aggregate": {
+    "compile_rate": 0.8875,
+    "correctness": 0.6875,
+    "pass_at_k": 0.8125,
+    "runtime_ms": 19.791065,
+    "joules": 4.038588,
+    "power_w": 179.369,
+    "reward_mean": 9.90348
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.7848101265822784,
+      "correctness": 0.5443037974683544,
+      "pass_at_k": 0.6259493670886076,
+      "runtime_ms": 26.351425596774195,
+      "joules": 5.461207870967742,
+      "power_w": 227.3200483870968
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.6582278481012658,
+      "pass_at_k": 0.7569620253164556,
+      "runtime_ms": 26.63260915068493,
+      "joules": 5.490017452054794,
+      "power_w": 226.07283561643834
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.6708860759493671,
+      "pass_at_k": 0.7715189873417722,
+      "runtime_ms": 25.843381534246575,
+      "joules": 5.086559534246575,
+      "power_w": 231.53912328767123
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__difficulty_stratified_eval",
+  "aggregate": {
+    "compile_rate": 0.8625,
+    "correctness": 0.625,
+    "pass_at_k": 0.7625,
+    "runtime_ms": 20.387621,
+    "joules": 5.465643,
+    "power_w": 230.634,
+    "reward_mean": 7.33669
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.5316455696202531,
+      "pass_at_k": 0.6113924050632911,
+      "runtime_ms": 28.336995970588234,
+      "joules": 7.523128794117647,
+      "power_w": 229.28708823529414
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.7468354430379747,
+      "correctness": 0.5063291139240507,
+      "pass_at_k": 0.5822784810126582,
+      "runtime_ms": 25.217984288135593,
+      "joules": 6.679604813559322,
+      "power_w": 231.70533898305084
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8734177215189873,
+      "correctness": 0.5569620253164557,
+      "pass_at_k": 0.640506329113924,
+      "runtime_ms": 26.932281695652172,
+      "joules": 6.780092637681159,
+      "power_w": 230.74447826086958
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

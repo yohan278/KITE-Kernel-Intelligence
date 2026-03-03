@@ -1,0 +1,10 @@
+failure_type,count
+oom,19
+numerical_instability,18
+runtime_error,13
+timeout,13
+correctness_fail,11
+forward_arity_mismatch,10
+syntax_error,7
+missing_model_new,7
+compile_fail,3

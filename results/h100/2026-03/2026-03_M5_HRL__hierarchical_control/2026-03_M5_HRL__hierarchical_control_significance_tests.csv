@@ -1,0 +1,7 @@
+model_a,model_b,metric,test,p_value,effect_size_d,significant
+M0_SFT,M1_GRPO,joules,wilcoxon_signed_rank,0.0166,0.834,True
+M0_SFT,M2_ENERGY,joules,wilcoxon_signed_rank,0.0446,1.241,True
+M0_SFT,M3_IPW,joules,wilcoxon_signed_rank,0.0418,1.033,True
+M1_GRPO,M2_ENERGY,joules,wilcoxon_signed_rank,0.0183,0.774,True
+M1_GRPO,M3_IPW,joules,wilcoxon_signed_rank,0.0164,0.603,True
+M2_ENERGY,M3_IPW,joules,wilcoxon_signed_rank,0.03,1.144,True

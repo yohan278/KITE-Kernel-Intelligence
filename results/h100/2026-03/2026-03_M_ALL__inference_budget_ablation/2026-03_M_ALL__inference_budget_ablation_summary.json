@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__inference_budget_ablation",
+  "aggregate": {
+    "compile_rate": 0.875,
+    "correctness": 0.5917,
+    "pass_at_k": 0.7458,
+    "runtime_ms": 19.888792,
+    "joules": 5.304917,
+    "power_w": 233.005,
+    "reward_mean": 6.91322
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8354430379746836,
+      "correctness": 0.5189873417721519,
+      "pass_at_k": 0.5968354430379746,
+      "runtime_ms": 25.0910875,
+      "joules": 6.706226378787879,
+      "power_w": 230.15798484848483
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8354430379746836,
+      "correctness": 0.5569620253164557,
+      "pass_at_k": 0.640506329113924,
+      "runtime_ms": 25.492582318181817,
+      "joules": 6.548235454545455,
+      "power_w": 231.5577424242424
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.3924050632911392,
+      "pass_at_k": 0.4512658227848101,
+      "runtime_ms": 24.59652398571429,
+      "joules": 6.998340971428571,
+      "power_w": 230.75805714285715
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

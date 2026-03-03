@@ -1,0 +1,8 @@
+script: "07_run_hrl.py"
+model: "M5_HRL"
+stage: "hrl"
+hrl:
+  alternating_rounds: 2
+  kernel_epochs_per_round: 1
+seed: 22
+experiment: "hierarchical_control"
