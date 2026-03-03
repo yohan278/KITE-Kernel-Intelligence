@@ -395,6 +395,86 @@ trajectories = grouped_rollouts(policy, tasks, config)
 
 ---
 
+## Environment Variables Reference
+
+All KITE-specific environment variables in one place. Export these in your shell profile (e.g. `~/.bashrc`, `~/.zshrc`) or at the top of a SLURM job script so every script, trainer, and agent picks them up automatically.
+
+```bash
+# ── Required ──────────────────────────────────────────────────────────────
+
+# Directory where HuggingFace model weights are cached.
+# Avoids re-downloading across runs and cluster nodes.
+export KITE_HF_CACHE="$HOME/.cache/kite-hf"
+mkdir -p "$KITE_HF_CACHE"
+
+# ── Recommended ───────────────────────────────────────────────────────────
+
+# Set to 1 after the first download to prevent any network access
+# during training/eval (ensures full reproducibility on air-gapped nodes).
+export KITE_HF_LOCAL_FILES_ONLY=1
+
+# Conda environment name used by agent scripts and orchestrators.
+# Defaults to kite-train if unset.
+export KITE_CONDA_ENV=kite-train
+
+# ── GPU Selection ─────────────────────────────────────────────────────────
+
+# Standard CUDA variable. Limits visible GPUs for training and evaluation.
+# Multi-GPU scripts (e.g. multiturn_optimize_multi_gpu.py) set this per-worker.
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+
+# ── Generation / CLI Overrides ────────────────────────────────────────────
+
+# Controls the kernel generation backend used by `kite.cli`.
+# Options: stub (default, synthetic), model (real Qwen inference).
+export KITE_GENERATION_MODE=stub
+
+# Inference server type. Options: local (default), vllm.
+export KITE_SERVER_TYPE=local
+
+# Override the default model name (Qwen/Qwen2.5-Coder-7B-Instruct).
+export KITE_MODEL_NAME="Qwen/Qwen2.5-Coder-7B-Instruct"
+
+# ── Plotting / Artifact Generation ────────────────────────────────────────
+
+# Set to 1 to skip matplotlib imports in build_h100_paper_artifacts.py.
+# Useful on headless servers where numpy/matplotlib may segfault.
+export KITE_NO_PLOTS=0
+
+# ── Python Path ───────────────────────────────────────────────────────────
+
+# Ensures the kite package is importable from anywhere.
+export PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}$(pwd)/src"
+```
+
+**Quick copy-paste block** -- paste this into your terminal to set everything at once with sensible defaults:
+
+```bash
+export KITE_HF_CACHE="$HOME/.cache/kite-hf"
+export KITE_HF_LOCAL_FILES_ONLY=1
+export KITE_CONDA_ENV=kite-train
+export KITE_GENERATION_MODE=stub
+export KITE_SERVER_TYPE=local
+export KITE_MODEL_NAME="Qwen/Qwen2.5-Coder-7B-Instruct"
+export KITE_NO_PLOTS=0
+export PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}$(pwd)/src"
+mkdir -p "$KITE_HF_CACHE"
+```
+
+| Variable | Required | Default | Used By |
+|----------|----------|---------|---------|
+| `KITE_HF_CACHE` | Yes | `~/.cache/kite-hf` | All trainers, inference scripts, `QwenPolicy` |
+| `KITE_HF_LOCAL_FILES_ONLY` | No | `0` | All trainers, inference scripts (offline mode) |
+| `KITE_CONDA_ENV` | No | `kite-train` | Agent scripts (`scripts/agents/`) |
+| `CUDA_VISIBLE_DEVICES` | No | all GPUs | Trainers, eval, Rust sampler, multi-GPU inference |
+| `KITE_GENERATION_MODE` | No | `stub` | `kite.cli` kernel generation backend |
+| `KITE_SERVER_TYPE` | No | `local` | `kite.cli` inference server type |
+| `KITE_MODEL_NAME` | No | `Qwen/Qwen2.5-Coder-7B-Instruct` | `kite.cli` model override |
+| `KITE_NO_PLOTS` | No | `0` | `build_h100_paper_artifacts.py` |
+| `PYTHONPATH` | Recommended | -- | Ensures `import kite` works outside conda env |
+
+---
+
 ## Testing
 
 ```bash
