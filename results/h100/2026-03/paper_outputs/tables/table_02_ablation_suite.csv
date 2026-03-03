@@ -1,6 +1,6 @@
 experiment,correctness,pass_at_k,runtime_ms,joules,speedup,reward_mean
 cross_hardware_transfer,0.5542,0.7208,20.98095,5.631998,1.564557,6.42445
-data_scale_ablation,0.575,0.7042,20.111835,5.387257,1.608745,6.95435
+data_scale_ablation,0.5917,0.7167,20.403844,5.493485,1.608745,6.97448
 difficulty_stratified_eval,0.625,0.7625,20.387621,5.465643,1.63622,7.33669
 heldout_generalization,0.575,0.75,21.263137,5.749122,1.5452,6.19674
 inference_budget_ablation,0.5917,0.7458,19.888792,5.304917,1.593555,6.91322
