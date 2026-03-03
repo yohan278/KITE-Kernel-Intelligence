@@ -1,0 +1,13 @@
+runtime:
+  seeds:
+  - 11
+  - 22
+  - 33
+  episodes: 40
+  horizon: 10
+hrl:
+  seeds:
+  - 11
+  - 22
+  - 33
+  rounds: 2
