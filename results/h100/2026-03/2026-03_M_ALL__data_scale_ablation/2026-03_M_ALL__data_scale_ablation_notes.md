@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Efficiency scaling with diminishing returns from small to medium data scale.
+Data scale sensitivity suite.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.8000
-- Pass@k: 0.8600
-- Runtime mean: 0.086479 ms
-- Joules mean: 0.095472
-- SLA violation rate: 0.0167
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8625
+- Correctness: 0.5750
+- Pass@k: 0.7042
+- Runtime mean: 20.111835 ms
+- Joules mean: 5.387257
+- SLA violation rate: 0.2208

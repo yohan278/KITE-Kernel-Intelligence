@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Table-ready aggregates for main and ablation comparisons.
+Paper table production run.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.8000
-- Pass@k: 0.8650
-- Runtime mean: 0.084317 ms
-- Joules mean: 0.090523
-- SLA violation rate: 0.0833
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8792
+- Correctness: 0.6667
+- Pass@k: 0.7708
+- Runtime mean: 19.178892 ms
+- Joules mean: 4.996587
+- SLA violation rate: 0.2083

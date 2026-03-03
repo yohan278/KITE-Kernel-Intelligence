@@ -1,0 +1,30 @@
+{
+  "main_figures": [
+    "results/h100/2026-03/paper_outputs/main_figures/01_accuracy_energy_pareto_frontier.png",
+    "results/h100/2026-03/paper_outputs/main_figures/02_passk_vs_turns_curve.png",
+    "results/h100/2026-03/paper_outputs/main_figures/03_matched_runtime_energy_advantage.png",
+    "results/h100/2026-03/paper_outputs/main_figures/04_reward_outcome_decomposition_waterfall.png",
+    "results/h100/2026-03/paper_outputs/main_figures/05_failure_taxonomy_transition.png",
+    "results/h100/2026-03/paper_outputs/main_figures/06_cross_hardware_transfer_scatter.png",
+    "results/h100/2026-03/paper_outputs/main_figures/07_domain_coverage_stacked_bar.png",
+    "results/h100/2026-03/paper_outputs/main_figures/08_runtime_control_regime_figure.png"
+  ],
+  "appendix_figures": [
+    "results/h100/2026-03/paper_outputs/appendix_figures/09_difficulty_stratified_success_heatmap.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/11_efficiency_scaling_curve.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/12_inference_budget_tradeoff_curve.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/13_latency_energy_joint_density.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/14_oom_timeout_incidence_vs_config.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/15_calibration_plot.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/16_per_task_delta_forest_plot.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/17_routing_savings_curve.png",
+    "results/h100/2026-03/paper_outputs/appendix_figures/18_ablation_spider_chart.png"
+  ],
+  "tables": [
+    "results/h100/2026-03/paper_outputs/tables/table_01_main_model_comparison.csv",
+    "results/h100/2026-03/paper_outputs/tables/table_01_main_model_comparison.md",
+    "results/h100/2026-03/paper_outputs/tables/table_02_ablation_suite.csv",
+    "results/h100/2026-03/paper_outputs/tables/table_03_runtime_regime.csv",
+    "results/h100/2026-03/paper_outputs/tables/table_04_pairwise_improvements.csv"
+  ]
+}

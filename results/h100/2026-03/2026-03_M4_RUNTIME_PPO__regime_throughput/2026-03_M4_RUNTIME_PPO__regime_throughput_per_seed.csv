@@ -1,4 +1,4 @@
 seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
-11,0.95,0.8,0.8334,0.076717,0.082963,212.999,6.05185,4.55307,regime_throughput
-22,0.95,0.8,0.84,0.077301,0.085679,216.915,6.04366,4.23179,regime_throughput
-33,0.95,0.8,0.8466,0.075088,0.079778,211.479,6.36148,4.40645,regime_throughput
+11,0.9375,0.6125,0.7625,16.599516,4.352824,227.982,8.77868,5.64899,regime_throughput
+22,0.8625,0.55,0.725,15.834346,4.203933,228.028,8.78025,4.99421,regime_throughput
+33,0.8625,0.525,0.725,15.85962,4.122393,225.182,8.80258,5.18677,regime_throughput

@@ -1,4 +1,4 @@
 seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
-11,0.95,0.8,0.8534,0.084118,0.092201,217.624,5.76816,4.30807,difficulty_stratified_eval
-22,0.95,0.8,0.86,0.086705,0.094851,216.03,5.48788,4.54652,difficulty_stratified_eval
-33,0.95,0.8,0.8666,0.084247,0.091305,213.253,5.81492,4.68307,difficulty_stratified_eval
+11,0.8625,0.6,0.775,21.148172,5.6751,229.831,6.87087,6.42677,difficulty_stratified_eval
+22,0.8625,0.625,0.7125,20.257154,5.413898,232.516,7.39401,6.68028,difficulty_stratified_eval
+33,0.8625,0.65,0.8,19.757537,5.307931,229.555,7.7452,6.37062,difficulty_stratified_eval

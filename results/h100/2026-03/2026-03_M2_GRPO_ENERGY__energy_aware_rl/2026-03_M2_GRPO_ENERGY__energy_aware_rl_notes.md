@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Energy-aware policy with near-matched correctness and lower joules than M1.
+Energy-aware policy balancing correctness/runtime/joules.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.8167
-- Pass@k: 0.8667
-- Runtime mean: 0.083921 ms
-- Joules mean: 0.090561
-- SLA violation rate: 0.0333
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8708
+- Correctness: 0.6542
+- Pass@k: 0.8042
+- Runtime mean: 18.904422 ms
+- Joules mean: 4.445453
+- SLA violation rate: 0.2250

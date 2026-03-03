@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Mixed regime control with balanced latency-energy objective.
+Mixed regime runtime control.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.8000
-- Pass@k: 0.8400
-- Runtime mean: 0.079118 ms
-- Joules mean: 0.084004
-- SLA violation rate: 0.0333
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.9042
+- Correctness: 0.6083
+- Pass@k: 0.7583
+- Runtime mean: 16.788076 ms
+- Joules mean: 4.296739
+- SLA violation rate: 0.1958

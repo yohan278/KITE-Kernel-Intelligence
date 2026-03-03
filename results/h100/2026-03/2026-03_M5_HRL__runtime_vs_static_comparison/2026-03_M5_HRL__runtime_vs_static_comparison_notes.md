@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Direct M5 vs static policy comparison on SLA and joint latency-energy objective.
+HRL vs static policy comparison.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9667
-- Correctness: 0.8167
-- Pass@k: 0.8587
-- Runtime mean: 0.076615 ms
-- Joules mean: 0.078920
-- SLA violation rate: 0.0000
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8750
+- Correctness: 0.6625
+- Pass@k: 0.7958
+- Runtime mean: 15.874997 ms
+- Joules mean: 3.790708
+- SLA violation rate: 0.1708

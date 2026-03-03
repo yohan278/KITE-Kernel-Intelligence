@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Difficulty-stratified success with gains in medium and hard buckets.
+Difficulty-bucket performance suite.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.8000
-- Pass@k: 0.8600
-- Runtime mean: 0.085023 ms
-- Joules mean: 0.092786
-- SLA violation rate: 0.0833
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8625
+- Correctness: 0.6250
+- Pass@k: 0.7625
+- Runtime mean: 20.387621 ms
+- Joules mean: 5.465643
+- SLA violation rate: 0.2125

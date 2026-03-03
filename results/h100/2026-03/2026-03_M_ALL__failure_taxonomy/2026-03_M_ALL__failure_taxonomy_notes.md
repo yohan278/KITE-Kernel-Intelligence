@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Failure transition view with reduced syntax/arity share relative to baseline.
+Failure distribution tracking.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.7833
-- Pass@k: 0.8333
-- Runtime mean: 0.088298 ms
-- Joules mean: 0.099633
-- SLA violation rate: 0.0333
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8292
+- Correctness: 0.5417
+- Pass@k: 0.6750
+- Runtime mean: 21.101462 ms
+- Joules mean: 5.882830
+- SLA violation rate: 0.2125

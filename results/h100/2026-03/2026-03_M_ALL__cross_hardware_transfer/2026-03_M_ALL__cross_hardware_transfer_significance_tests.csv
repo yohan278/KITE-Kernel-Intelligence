@@ -1,4 +1,5 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-cross_hardware_transfer,H100,L40,spearman_rank_corr,spearman,0.0016,0.89
-cross_hardware_transfer,H100,L40,pearson_runtime_corr,pearson,0.0024,0.86
-cross_hardware_transfer,H100,L40,pearson_joules_corr,pearson,0.0031,0.83
+cross_hardware_transfer,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0098,-0.57
+cross_hardware_transfer,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0041,-0.73
+cross_hardware_transfer,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.182,0.2
+cross_hardware_transfer,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,-0.43

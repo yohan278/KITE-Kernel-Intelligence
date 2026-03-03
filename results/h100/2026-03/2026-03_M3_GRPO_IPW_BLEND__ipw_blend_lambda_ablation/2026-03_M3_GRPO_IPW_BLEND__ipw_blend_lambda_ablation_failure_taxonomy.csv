@@ -1,10 +1,8 @@
 experiment,reason,count,fraction
-ipw_blend_lambda_ablation,syntax_error,2,0.0667
-ipw_blend_lambda_ablation,forward_arity_mismatch,2,0.0667
-ipw_blend_lambda_ablation,missing_modelnew,2,0.0667
-ipw_blend_lambda_ablation,compile_fail,3,0.1
-ipw_blend_lambda_ablation,correctness_fail,11,0.3667
-ipw_blend_lambda_ablation,oom,3,0.1
-ipw_blend_lambda_ablation,timeout,3,0.1
-ipw_blend_lambda_ablation,shape_mismatch,3,0.1
-ipw_blend_lambda_ablation,invalid_import,1,0.0333
+ipw_blend_lambda_ablation,correctness_fail,31,0.413333
+ipw_blend_lambda_ablation,compile_fail,11,0.146667
+ipw_blend_lambda_ablation,timeout,10,0.133333
+ipw_blend_lambda_ablation,syntax_error,7,0.093333
+ipw_blend_lambda_ablation,oom,6,0.08
+ipw_blend_lambda_ablation,shape_mismatch,5,0.066667
+ipw_blend_lambda_ablation,forward_arity_mismatch,5,0.066667

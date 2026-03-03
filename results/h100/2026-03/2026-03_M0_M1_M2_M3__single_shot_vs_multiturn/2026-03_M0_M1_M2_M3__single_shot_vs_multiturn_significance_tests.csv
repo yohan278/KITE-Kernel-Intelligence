@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-single_shot_vs_multiturn,M0_SFT_SINGLE_SHOT,M0_SFT_MULTITURN,pass_at_k_turn5,wilcoxon,0.0098,0.79
-single_shot_vs_multiturn,M0_SFT_MULTITURN,M1_GRPO_THROUGHPUT_MULTITURN,pass_at_k_turn5,wilcoxon,0.0151,0.63
-single_shot_vs_multiturn,M1_GRPO_THROUGHPUT_MULTITURN,M3_GRPO_IPW_BLEND_MULTITURN,joules,paired_ttest,0.0226,0.48
+single_shot_vs_multiturn,single_shot,multiturn,pass_at_k_turn5,wilcoxon,0.0034,0.61
+single_shot_vs_multiturn,multiturn,rl_initialized_multiturn,pass_at_k_turn5,wilcoxon,0.0021,0.69
+single_shot_vs_multiturn,single_shot,rl_initialized_multiturn,pass_at_k_turn5,wilcoxon,0.0009,0.8

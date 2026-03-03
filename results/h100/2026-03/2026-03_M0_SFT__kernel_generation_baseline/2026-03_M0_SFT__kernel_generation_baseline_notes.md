@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Baseline kernel generator with strong compile behavior and weaker energy optimality.
+Baseline kernel generator with weaker energy optimality.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9333
-- Correctness: 0.6500
-- Pass@k: 0.6800
-- Runtime mean: 0.094592 ms
-- Joules mean: 0.111216
-- SLA violation rate: 0.1333
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8583
+- Correctness: 0.4792
+- Pass@k: 0.6750
+- Runtime mean: 23.151533 ms
+- Joules mean: 6.697260
+- SLA violation rate: 0.2167

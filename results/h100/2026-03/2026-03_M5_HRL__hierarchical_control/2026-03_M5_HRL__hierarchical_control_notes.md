@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Hierarchical controller expected to improve regime transition robustness.
+Hierarchical control policy over runtime regimes.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9667
-- Correctness: 0.8333
-- Pass@k: 0.8753
-- Runtime mean: 0.075501 ms
-- Joules mean: 0.076188
-- SLA violation rate: 0.0333
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8792
+- Correctness: 0.5625
+- Pass@k: 0.7500
+- Runtime mean: 15.758595 ms
+- Joules mean: 3.770831
+- SLA violation rate: 0.1833

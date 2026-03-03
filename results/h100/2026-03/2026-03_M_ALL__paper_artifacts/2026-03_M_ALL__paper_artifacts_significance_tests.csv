@@ -1,6 +1,6 @@
 comparison,metric,test,p_value,effect_size,significant_at_0_05
-M1_vs_M2,joules,wilcoxon,0.0084,0.81,true
+M1_vs_M2,joules,wilcoxon,0.0084,-0.81,true
 M1_vs_M2,correctness,paired_ttest,0.144,0.21,false
-M2_vs_M3,joules,wilcoxon,0.0263,0.44,true
-M1_vs_M3,joules,wilcoxon,0.0047,0.9,true
-M4_vs_M5,sla_violation_rate,wilcoxon,0.0198,0.58,true
+M2_vs_M3,joules,wilcoxon,0.0263,-0.44,true
+M1_vs_M3,joules,wilcoxon,0.0047,-0.9,true
+M4_vs_M5,sla_violation_rate,wilcoxon,0.0198,-0.58,true

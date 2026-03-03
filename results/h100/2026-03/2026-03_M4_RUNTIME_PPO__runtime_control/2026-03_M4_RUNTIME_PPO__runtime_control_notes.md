@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Runtime PPO policy with lower SLA violations than static baselines.
+Runtime policy control baseline.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.8000
-- Pass@k: 0.8400
-- Runtime mean: 0.078380 ms
-- Joules mean: 0.082012
-- SLA violation rate: 0.0167
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8750
+- Correctness: 0.5667
+- Pass@k: 0.7208
+- Runtime mean: 17.340638 ms
+- Joules mean: 4.440066
+- SLA violation rate: 0.1917

@@ -1,4 +1,4 @@
 run_id,seed,command,checkpoint,status
-run::M_ALL::final_eval_suite::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/final_eval_suite/seed11.yaml,checkpoints/exp/final_eval_suite/m_all/seed11/checkpoint.json,completed
-run::M_ALL::final_eval_suite::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/final_eval_suite/seed22.yaml,checkpoints/exp/final_eval_suite/m_all/seed22/checkpoint.json,completed
-run::M_ALL::final_eval_suite::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/final_eval_suite/seed33.yaml,checkpoints/exp/final_eval_suite/m_all/seed33/checkpoint.json,completed
+run::M_ALL::final_eval_suite::seed11,11,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/final_eval_suite/seed11.yaml,checkpoints/exp/final_eval_suite/m_all/seed11/checkpoint.json,completed
+run::M_ALL::final_eval_suite::seed22,22,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/final_eval_suite/seed22.yaml,checkpoints/exp/final_eval_suite/m_all/seed22/checkpoint.json,completed
+run::M_ALL::final_eval_suite::seed33,33,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/final_eval_suite/seed33.yaml,checkpoints/exp/final_eval_suite/m_all/seed33/checkpoint.json,completed

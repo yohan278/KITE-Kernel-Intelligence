@@ -1,4 +1,10 @@
 failure_reason,count,fraction
-correctness_fail,11,0.846154
-forward_arity_mismatch,1,0.076923
-timeout,1,0.076923
+correctness_fail,30,0.348837
+oom,11,0.127907
+forward_arity_mismatch,9,0.104651
+compile_fail,9,0.104651
+timeout,7,0.081395
+syntax_error,7,0.081395
+shape_mismatch,7,0.081395
+missing_modelnew,5,0.05814
+invalid_import,1,0.011628

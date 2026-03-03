@@ -1,4 +1,4 @@
 seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
-11,0.95,0.8,0.8534,0.081784,0.0942,224.223,5.82842,4.47346,throughput_vs_energy_vs_ipwblend
-22,0.95,0.8,0.86,0.08419,0.093174,219.399,5.75725,4.29071,throughput_vs_energy_vs_ipwblend
-33,0.95,0.8,0.8666,0.081567,0.089809,218.167,5.94909,4.41951,throughput_vs_energy_vs_ipwblend
+11,0.875,0.5625,0.7,19.579549,5.566175,245.455,7.53249,6.84014,throughput_vs_energy_vs_ipwblend
+22,0.85,0.4875,0.7125,18.658387,5.135812,238.751,7.54399,6.40278,throughput_vs_energy_vs_ipwblend
+33,0.9125,0.5625,0.725,18.463275,5.305153,243.781,7.9742,6.34382,throughput_vs_energy_vs_ipwblend

@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Cross-model pass@k vs turns evidence: single-shot < multiturn < RL-initialized multiturn.
+Cross-model turn budget comparison.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.7833
-- Pass@k: 0.9033
-- Runtime mean: 0.087755 ms
-- Joules mean: 0.100967
-- SLA violation rate: 0.0333
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8458
+- Correctness: 0.5875
+- Pass@k: 0.7375
+- Runtime mean: 21.244221 ms
+- Joules mean: 5.915516
+- SLA violation rate: 0.2042

@@ -1,0 +1,5 @@
+policy,regime,runtime_ms,joules,avg_power_w,sla_violation_rate,correctness
+M4,regime_latency_sensitive,0.072919,0.076491,207.577,0.0167,0.8
+M4,regime_mixed,0.079118,0.084004,210.816,0.0333,0.8
+M4,regime_throughput,0.076369,0.082807,213.798,0.0333,0.8
+M5,runtime_vs_static,0.076615,0.07892,202.58,0.0,0.8167

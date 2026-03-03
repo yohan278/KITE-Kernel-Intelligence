@@ -3,21 +3,19 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Synthetic policy: TARGET-ALIGNED
+- Synthetic policy: target-aligned with deterministic noise
 
-## Purpose
+## Scope
 
-Reward decomposition across throughput, energy, and IPW blend terms.
+Reward component ablation suite.
 
-## Alignment Snapshot
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
 
-- Compile rate: 0.9500
-- Correctness: 0.7833
-- Pass@k: 0.8333
-- Runtime mean: 0.087586 ms
-- Joules mean: 0.099104
-- SLA violation rate: 0.0833
+## Snapshot
 
-## Reproducibility
-
-Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.
+- Compile rate: 0.8250
+- Correctness: 0.5625
+- Pass@k: 0.7000
+- Runtime mean: 20.790973 ms
+- Joules mean: 5.715327
+- SLA violation rate: 0.2208

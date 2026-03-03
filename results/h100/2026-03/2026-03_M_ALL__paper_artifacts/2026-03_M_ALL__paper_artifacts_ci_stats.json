@@ -2,24 +2,24 @@
   "experiment_id": "2026-03_M_ALL__paper_artifacts",
   "metric_cis": {
     "pass_at_k": {
-      "mean": 0.8483,
-      "ci95_low": 0.7177,
-      "ci95_high": 0.979
+      "mean": 0.6417,
+      "ci95_low": 0.5705,
+      "ci95_high": 0.7129
     },
     "reward": {
-      "mean": 5.7371,
-      "ci95_low": 4.5979,
-      "ci95_high": 6.8764
+      "mean": 8.6835,
+      "ci95_low": 7.1708,
+      "ci95_high": 10.1963
     },
     "runtime_ms": {
-      "mean": 0.084175,
-      "ci95_low": 0.083149,
-      "ci95_high": 0.085202
+      "mean": 18.927778,
+      "ci95_low": 18.060977,
+      "ci95_high": 19.794578
     },
     "joules": {
-      "mean": 0.089774,
-      "ci95_low": 0.087785,
-      "ci95_high": 0.091762
+      "mean": 4.883532,
+      "ci95_low": 3.568142,
+      "ci95_high": 6.198922
     }
   }
 }

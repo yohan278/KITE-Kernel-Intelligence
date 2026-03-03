@@ -1,4 +1,4 @@
 seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
-11,0.95,0.8,0.8434,0.088623,0.100601,225.529,5.5137,4.3144,failure_taxonomy
-22,0.95,0.75,0.8,0.088838,0.100503,222.942,4.9841,4.58433,failure_taxonomy
-33,0.95,0.8,0.8566,0.087432,0.097794,221.826,5.60354,4.35702,failure_taxonomy
+11,0.8375,0.6,0.7625,21.16431,5.937301,244.566,5.76331,7.06647,failure_taxonomy
+22,0.7875,0.4875,0.575,21.255549,5.877637,243.484,5.37975,7.03623,failure_taxonomy
+33,0.8625,0.5375,0.6875,20.884527,5.833551,241.123,5.86182,7.54182,failure_taxonomy

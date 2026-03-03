@@ -1,11 +1,11 @@
 {
   "experiment_id": "2026-03_M_ALL__paper_artifacts",
   "status": "completed",
-  "num_tasks": 20,
+  "num_tasks": 80,
   "num_runs": 9,
-  "pass_at_k": 0.8483,
-  "avg_turns_to_success": 2.667,
-  "mean_reward": 5.7371,
-  "mean_runtime_ms": 0.084176,
-  "mean_joules": 0.089774
+  "pass_at_k": 0.6417,
+  "avg_turns_to_success": 2.592,
+  "mean_reward": 8.6835,
+  "mean_runtime_ms": 18.927777,
+  "mean_joules": 4.883532
 }
