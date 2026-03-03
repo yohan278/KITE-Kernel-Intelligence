@@ -1,0 +1,4 @@
+train:
+  mode: throughput
+  epochs: 1
+  energy_aware: false

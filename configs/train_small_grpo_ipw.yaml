@@ -1,0 +1,25 @@
+# Small GRPO run with IPW (energy-aware) for testing.
+# See docs/GRPO_IPW_TRAINING.md for: training data source, online vs offline, and telemetry usage.
+
+train:
+  mode: energy_aware
+  epochs: 2
+  energy_aware: true
+  group_size: 4
+  batch_size: 4
+  max_completion_length: 256
+  max_tasks: 8
+  eval_num_correct_trials: 1
+  eval_num_perf_trials: 3
+  failure_log_every_steps: 2
+  reward:
+    alpha: 1.0
+    beta: 0.5
+    ipw_blend_weight: 0.3
+    sla_latency_s: 1.0
+  telemetry:
+    trace_dir: ./data/telemetry/runs
+    ipw_profile_dir: null
+    # allow_synthetic_fallback: true   # default; use real traces if you have them
+    # Set to false to require real telemetry (trace_dir or ipw_profile_dir must have data):
+    # allow_synthetic_fallback: false

@@ -11,6 +11,7 @@ import warnings
 
 from kite.adapters.ipw_adapter import IPWAdapter
 from kite.adapters.kernelbench_adapter import KernelBenchAdapter
+from kite.classification.prompt_hints import build_energy_aware_prompt
 from kite.types import KernelCandidate, KernelTask
 from kite.adapters.kevin_style_rollouts import RolloutConfig, filter_trajectories, grouped_rollouts
 from kite.policies.qwen_policy import QwenPolicy
@@ -57,6 +58,7 @@ class GRPOKernelConfig:
     reward_oom_penalty: float = 0.5
     reward_sla_latency_s: float = 1.0
     reward_ipw_blend_weight: float = 0.0
+    resume_from_checkpoint: Optional[str] = None
 
 
 class GRPOKernelTrainer:
@@ -168,17 +170,35 @@ class GRPOKernelTrainer:
         if local_files_only:
             hf_kwargs["local_files_only"] = True
 
-        tokenizer = AutoTokenizer.from_pretrained(model_source, **hf_kwargs)
+        tokenizer = AutoTokenizer.from_pretrained(model_source, padding_side="left", **hf_kwargs)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.pad_token_id = tokenizer.eos_token_id
 
-        model_kwargs: dict[str, object] = {"dtype": dtype, "device_map": "auto", "trust_remote_code": True}
+        model_kwargs: dict[str, object] = {"dtype": dtype, "trust_remote_code": True}
         if cache_dir:
             model_kwargs["cache_dir"] = cache_dir
         if local_files_only:
             model_kwargs["local_files_only"] = True
         model = AutoModelForCausalLM.from_pretrained(model_source, **model_kwargs)
+
+        vocab_size = getattr(model.config, "vocab_size", None) or len(tokenizer)
+        pad_id = tokenizer.pad_token_id
+        if pad_id is None:
+            pad_id = tokenizer.eos_token_id or getattr(model.config, "pad_token_id", None) or getattr(model.config, "eos_token_id", None)
+        if pad_id is None or (vocab_size is not None and (pad_id < 0 or pad_id >= vocab_size)):
+            pad_id = 0
+        eos_id = tokenizer.eos_token_id or getattr(model.config, "eos_token_id", None)
+        if eos_id is None or (vocab_size is not None and (eos_id < 0 or eos_id >= vocab_size)):
+            eos_id = pad_id
+        tokenizer.pad_token_id = pad_id
+        tokenizer.eos_token_id = eos_id
+        model.config.pad_token_id = pad_id
+        model.config.eos_token_id = eos_id
+        if hasattr(model, "generation_config"):
+            model.generation_config.pad_token_id = pad_id
+            model.generation_config.eos_token_id = eos_id
+        logger.info("Token IDs: pad=%d, eos=%d, vocab_size=%d", pad_id, eos_id, vocab_size)
 
         if self.policy.config.lora_weights_path:
             from peft import PeftModel  # type: ignore
@@ -276,6 +296,8 @@ class GRPOKernelTrainer:
                     elif not candidate.correct:
                         _record_failure("kernelbench:correctness_fail")
 
+                candidate.logs["kernel_type"] = task.kernel_type
+                candidate.logs["level"] = task.level
                 avg_power_w = self._maybe_float(candidate.logs.get("avg_power_w"))
                 joules = self._maybe_float(candidate.logs.get("energy_j"))
                 if energy_aware:
@@ -292,6 +314,7 @@ class GRPOKernelTrainer:
                     if joules is None:
                         joules = self._maybe_float(summary.total_energy_j)
 
+                avg_mem_util = self._maybe_float(candidate.logs.get("avg_mem_util_pct"))
                 reward = compute_grpo_multi_metric_reward(
                     compile_ok=candidate.compile_ok,
                     correct=candidate.correct,
@@ -303,6 +326,8 @@ class GRPOKernelTrainer:
                     compile_log=candidate.compile_log,
                     correctness_log=candidate.correctness_log,
                     config=reward_config,
+                    kernel_type=task.kernel_type,
+                    avg_mem_util_pct=avg_mem_util,
                 )
                 total_reward = reward.total
                 if ipw_blend_weight != 0.0:
@@ -329,18 +354,7 @@ class GRPOKernelTrainer:
         prompts = []
         for task in tasks:
             ref_src = task.metadata.get("ref_arch_src", task.reference_kernel)
-            prompt = (
-                "You are an expert GPU kernel engineer. "
-                "Optimize this PyTorch model with a custom GPU kernel implementation "
-                "that produces identical outputs and runs faster on NVIDIA H100.\n\n"
-                "Output only valid Python code.\n"
-                "Do not include markdown or explanations.\n"
-                "Must define class ModelNew(nn.Module).\n"
-                "ModelNew.forward must keep the same input argument count/order as the reference Model.forward.\n"
-                "Do not use Triton.\n\n"
-                f"```python\n{ref_src}\n```\n\n"
-                "Write the optimized kernel:"
-            )
+            prompt = build_energy_aware_prompt(ref_src, kernel_type=task.kernel_type)
             prompts.append([{"role": "user", "content": prompt}])
 
         train_dataset = Dataset.from_dict({"prompt": prompts})
@@ -371,6 +385,8 @@ class GRPOKernelTrainer:
             save_strategy="epoch",
             report_to="none",
             seed=42,
+            bf16=True,
+            temperature=0.8,
         )
 
         trainer = GRPOTrainer(
@@ -382,15 +398,27 @@ class GRPOKernelTrainer:
             processing_class=tokenizer,
         )
 
+        resume_ckpt = self.config.resume_from_checkpoint
+        if resume_ckpt is None:
+            runs_dir = self.config.output_dir / "runs"
+            if runs_dir.exists():
+                ckpts = sorted(runs_dir.glob("checkpoint-*"), key=lambda p: p.stat().st_mtime)
+                if ckpts:
+                    resume_ckpt = str(ckpts[-1])
+                    logger.info("Auto-detected checkpoint to resume from: %s", resume_ckpt)
+
         logger.info("Starting GRPO training (%d epochs, %d tasks, group_size=%d)",
                      self.config.epochs, len(tasks), self.config.group_size)
-        train_result = trainer.train()
+        train_result = trainer.train(resume_from_checkpoint=resume_ckpt)
         logger.info("GRPO training complete: %s", train_result.metrics)
 
         lora_out.mkdir(parents=True, exist_ok=True)
         trainer.save_model(str(lora_out))
         tokenizer.save_pretrained(str(lora_out))
 
+        task_type_dist = {}
+        for t in tasks:
+            task_type_dist[t.kernel_type] = task_type_dist.get(t.kernel_type, 0) + 1
         checkpoint = {
             "stage": "energy_grpo" if self.config.energy_aware else "kernel_grpo",
             "epochs": self.config.epochs,
@@ -400,6 +428,7 @@ class GRPOKernelTrainer:
             "num_tasks": len(tasks),
             "batch_size": effective_batch_size,
             "group_size": self.config.group_size,
+            "kernel_type_distribution": task_type_dist,
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
         return checkpoint
@@ -446,6 +475,7 @@ class GRPOKernelTrainer:
                         if joules is None:
                             joules = self._maybe_float(summary.total_energy_j)
 
+                    avg_mem_util_s = self._maybe_float(cand.logs.get("avg_mem_util_pct"))
                     reward = compute_grpo_multi_metric_reward(
                         compile_ok=cand.compile_ok,
                         correct=cand.correct,
@@ -457,6 +487,8 @@ class GRPOKernelTrainer:
                         compile_log=cand.compile_log,
                         correctness_log=cand.correctness_log,
                         config=reward_config,
+                        kernel_type=task.kernel_type,
+                        avg_mem_util_pct=avg_mem_util_s,
                     )
                     total_reward = reward.total
                     if ipw_blend_weight != 0.0:
@@ -476,10 +508,20 @@ class GRPOKernelTrainer:
                         {
                             "epoch": epoch,
                             "task_id": task.task_id,
+                            "kernel_type": task.kernel_type,
+                            "level": task.level,
                             "compile_ok": cand.compile_ok,
                             "correct": cand.correct,
                             "runtime_ms": cand.runtime_ms,
                             "speedup": cand.speedup,
+                            "energy_j": joules,
+                            "avg_power_w": avg_power_w,
+                            "avg_gpu_util_pct": self._maybe_float(cand.logs.get("avg_gpu_util_pct")),
+                            "avg_mem_util_pct": self._maybe_float(cand.logs.get("avg_mem_util_pct")),
+                            "avg_temp_c": self._maybe_float(cand.logs.get("avg_temp_c")),
+                            "avg_sm_clock_mhz": self._maybe_float(cand.logs.get("avg_sm_clock_mhz")),
+                            "avg_mem_clock_mhz": self._maybe_float(cand.logs.get("avg_mem_clock_mhz")),
+                            "avg_mem_used_mb": self._maybe_float(cand.logs.get("avg_mem_used_mb")),
                             "reward": total_reward,
                         }
                     )
@@ -488,14 +530,17 @@ class GRPOKernelTrainer:
         save_jsonl(self.config.output_dir / "training_history.jsonl", history)
 
         avg_reward = sum(item["reward"] for item in history) / len(history) if history else 0.0
+        by_kernel_type = _aggregate_by_kernel_type(history)
         checkpoint = {
             "stage": "energy_grpo" if self.config.energy_aware else "kernel_grpo",
             "epochs": self.config.epochs,
             "num_records": len(history),
             "avg_reward": avg_reward,
             "mode": "stub",
+            "by_kernel_type": by_kernel_type,
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
+        save_json(self.config.output_dir / "energy_by_kernel_type.json", by_kernel_type)
         return checkpoint
 
     def _build_grpo_reward_config(self, energy_aware: bool) -> GRPOMultiMetricRewardConfig:
@@ -618,3 +663,65 @@ class GRPOKernelTrainer:
             f"Local model cache not found for {model_name} under {cache_dir}. "
             "Run once without local-files-only to populate cache."
         )
+
+
+def _aggregate_by_kernel_type(history: list[dict]) -> dict:
+    """Group training history by kernel_type and compute per-type stats.
+
+    Returns a dict keyed by kernel_type with aggregate metrics including
+    rich GPU telemetry signals for energy-vs-compute analysis.
+    """
+    groups: dict[str, list[dict]] = {}
+    for row in history:
+        kt = row.get("kernel_type", "unknown")
+        groups.setdefault(kt, []).append(row)
+
+    def _mean(vals: list) -> float | None:
+        return sum(vals) / len(vals) if vals else None
+
+    def _collect(rows: list[dict], key: str) -> list[float]:
+        return [r[key] for r in rows if r.get(key) is not None]
+
+    result = {}
+    for kt, rows in sorted(groups.items()):
+        runtimes = _collect(rows, "runtime_ms")
+        energies = _collect(rows, "energy_j")
+        powers = _collect(rows, "avg_power_w")
+        rewards = _collect(rows, "reward")
+        gpu_utils = _collect(rows, "avg_gpu_util_pct")
+        mem_utils = _collect(rows, "avg_mem_util_pct")
+        temps = _collect(rows, "avg_temp_c")
+        sm_clocks = _collect(rows, "avg_sm_clock_mhz")
+        mem_clocks = _collect(rows, "avg_mem_clock_mhz")
+        mem_used = _collect(rows, "avg_mem_used_mb")
+        correct = sum(1 for r in rows if r.get("correct"))
+        compiled = sum(1 for r in rows if r.get("compile_ok"))
+        n = len(rows)
+
+        avg_rt = _mean(runtimes)
+        avg_en = _mean(energies)
+
+        result[kt] = {
+            "count": n,
+            "compiled": compiled,
+            "correct": correct,
+            "compile_rate": compiled / n if n else 0.0,
+            "correctness_rate": correct / n if n else 0.0,
+            "avg_runtime_ms": avg_rt,
+            "avg_energy_j": avg_en,
+            "avg_power_w": _mean(powers),
+            "avg_reward": _mean(rewards),
+            "energy_per_ms": avg_en / avg_rt if avg_en and avg_rt and avg_rt > 0 else None,
+            "avg_gpu_util_pct": _mean(gpu_utils),
+            "avg_mem_util_pct": _mean(mem_utils),
+            "avg_temp_c": _mean(temps),
+            "avg_sm_clock_mhz": _mean(sm_clocks),
+            "avg_mem_clock_mhz": _mean(mem_clocks),
+            "avg_mem_used_mb": _mean(mem_used),
+            "compute_to_mem_ratio": (
+                _mean(gpu_utils) / _mean(mem_utils)
+                if gpu_utils and mem_utils and _mean(mem_utils) and _mean(mem_utils) > 0
+                else None
+            ),
+        }
+    return result

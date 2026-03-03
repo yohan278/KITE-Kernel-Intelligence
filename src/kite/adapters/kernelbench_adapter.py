@@ -9,8 +9,9 @@ import time
 from typing import Any
 from typing import Iterable, List
 
-from kite.measurement.energy_integrate import integrate_energy
-from kite.measurement.nvml_power import NvmlPowerSampler, PowerSample
+from kite.classification.kernel_classifier import classify_kernel
+from kite.measurement.energy_integrate import integrate_energy, integrate_rich_energy
+from kite.measurement.nvml_power import NvmlPowerSampler, NvmlRichSampler, PowerSample
 from kite.types import KernelCandidate, KernelTask
 from kite.utils.serialization import load_jsonl, save_jsonl
 
@@ -28,6 +29,7 @@ class KernelBenchAdapter:
         backend: str = "cuda",
         precision: str = "fp32",
         verbose: bool = False,
+        levels: tuple[int, ...] | list[int] | None = None,
     ) -> None:
         self.kernelbench_root = kernelbench_root
         self.enable_kernelbench_eval = enable_kernelbench_eval
@@ -37,6 +39,7 @@ class KernelBenchAdapter:
         self.backend = backend
         self.precision = precision
         self.verbose = verbose
+        self.levels = tuple(levels) if levels else (1, 2, 3, 4)
 
     def discover_tasks(self) -> List[KernelTask]:
         """Load tasks from KernelBench APIs, JSONL files, or defaults."""
@@ -157,7 +160,7 @@ class KernelBenchAdapter:
         if not torch.cuda.is_available():
             return None
 
-        sampler = NvmlPowerSampler(device_index=0, sampling_interval_ms=50.0)
+        sampler = NvmlRichSampler(device_index=0, sampling_interval_ms=50.0)
         sampler.start()
         eval_t0 = time.perf_counter()
         eval_error: Exception | None = None
@@ -178,26 +181,30 @@ class KernelBenchAdapter:
         except Exception as exc:
             eval_error = exc
         eval_t1 = time.perf_counter()
-        samples = sampler.stop()
+        rich_samples = sampler.stop()
         duration_s = max(0.0, eval_t1 - eval_t0)
-        if len(samples) < 2:
-            power = sampler.read_power_w()
-            samples = [
-                PowerSample(timestamp_s=0.0, power_w=power),
-                PowerSample(timestamp_s=duration_s, power_w=power),
+        if len(rich_samples) < 2:
+            fallback = sampler.read_sample()
+            from kite.measurement.nvml_power import GpuSample
+            rich_samples = [
+                GpuSample(timestamp_s=0.0, power_w=fallback.power_w,
+                          gpu_util_pct=fallback.gpu_util_pct, mem_util_pct=fallback.mem_util_pct,
+                          temp_c=fallback.temp_c, sm_clock_mhz=fallback.sm_clock_mhz,
+                          mem_clock_mhz=fallback.mem_clock_mhz, mem_used_mb=fallback.mem_used_mb),
+                GpuSample(timestamp_s=duration_s, power_w=fallback.power_w,
+                          gpu_util_pct=fallback.gpu_util_pct, mem_util_pct=fallback.mem_util_pct,
+                          temp_c=fallback.temp_c, sm_clock_mhz=fallback.sm_clock_mhz,
+                          mem_clock_mhz=fallback.mem_clock_mhz, mem_used_mb=fallback.mem_used_mb),
             ]
-        window = integrate_energy(samples)
+        window = integrate_rich_energy(rich_samples)
         sampler.close()
         try:
             torch.cuda.empty_cache()
         except Exception:
             pass
 
-        if eval_error is not None:
-            err_name = type(eval_error).__name__
-            err_text = f"{err_name}: {eval_error}"
-            err_lower = err_text.lower()
-            logs = {
+        def _base_logs() -> dict[str, Any]:
+            return {
                 "kernelbench_eval": True,
                 "num_correct_trials": self.num_correct_trials,
                 "num_perf_trials": self.num_perf_trials,
@@ -207,11 +214,23 @@ class KernelBenchAdapter:
                 "avg_power_w": window.avg_power_w,
                 "energy_j": window.energy_j,
                 "eval_wall_ms": duration_s * 1000.0,
-                "metadata": {
-                    "exception_name": err_name,
-                    "exception": str(eval_error),
-                    "oom": ("out of memory" in err_lower),
-                },
+                "avg_gpu_util_pct": window.avg_gpu_util_pct,
+                "avg_mem_util_pct": window.avg_mem_util_pct,
+                "avg_temp_c": window.avg_temp_c,
+                "avg_sm_clock_mhz": window.avg_sm_clock_mhz,
+                "avg_mem_clock_mhz": window.avg_mem_clock_mhz,
+                "avg_mem_used_mb": window.avg_mem_used_mb,
+            }
+
+        if eval_error is not None:
+            err_name = type(eval_error).__name__
+            err_text = f"{err_name}: {eval_error}"
+            err_lower = err_text.lower()
+            logs = _base_logs()
+            logs["metadata"] = {
+                "exception_name": err_name,
+                "exception": str(eval_error),
+                "oom": ("out of memory" in err_lower),
             }
             return KernelCandidate(
                 task_id=task.task_id,
@@ -226,18 +245,8 @@ class KernelBenchAdapter:
                 logs=logs,
             )
         if result is None:
-            logs = {
-                "kernelbench_eval": True,
-                "num_correct_trials": self.num_correct_trials,
-                "num_perf_trials": self.num_perf_trials,
-                "timing_method": self.timing_method,
-                "backend": self.backend,
-                "precision": self.precision,
-                "avg_power_w": window.avg_power_w,
-                "energy_j": window.energy_j,
-                "eval_wall_ms": duration_s * 1000.0,
-                "metadata": {"error": "kernelbench returned no result"},
-            }
+            logs = _base_logs()
+            logs["metadata"] = {"error": "kernelbench returned no result"}
             return KernelCandidate(
                 task_id=task.task_id,
                 code=candidate_code,
@@ -275,18 +284,8 @@ class KernelBenchAdapter:
                 else:
                     metadata[k] = str(v)
 
-        logs = {
-            "kernelbench_eval": True,
-            "num_correct_trials": self.num_correct_trials,
-            "num_perf_trials": self.num_perf_trials,
-            "timing_method": self.timing_method,
-            "backend": self.backend,
-            "precision": self.precision,
-            "avg_power_w": window.avg_power_w,
-            "energy_j": window.energy_j,
-            "eval_wall_ms": duration_s * 1000.0,
-            "metadata": metadata,
-        }
+        logs = _base_logs()
+        logs["metadata"] = metadata
         if ref_runtime_us > 0:
             logs["ref_runtime_us"] = ref_runtime_us
 
@@ -311,7 +310,7 @@ class KernelBenchAdapter:
             return []
 
         tasks: list[KernelTask] = []
-        for level in (1, 2, 3, 4):
+        for level in self.levels:
             try:
                 dataset = construct_kernelbench_dataset(
                     level=level,
@@ -327,6 +326,12 @@ class KernelBenchAdapter:
                 code = str(getattr(problem, "code", ""))
                 task_id = f"L{level}_{problem_id}"
 
+                ktype = classify_kernel(
+                    task_name=task_id,
+                    problem_name=problem_name,
+                    reference_code=code,
+                    level=level,
+                )
                 tasks.append(
                     KernelTask(
                         task_id=task_id,
@@ -336,12 +341,14 @@ class KernelBenchAdapter:
                             f"{code}"
                         ),
                         reference_kernel=code,
+                        kernel_type=ktype,
                         metadata={
                             "source": "kernelbench_dataset_api",
                             "level": level,
                             "problem_id": problem_id,
                             "problem_name": problem_name,
                             "ref_arch_src": code,
+                            "kernel_type": ktype,
                         },
                     )
                 )
@@ -360,40 +367,58 @@ class KernelBenchAdapter:
         for i, row in enumerate(rows):
             if not isinstance(row, dict):
                 continue
+            task_id = str(row.get("task_id", f"task_{i}"))
+            level = int(row.get("level", 1))
+            ref_kernel = str(row.get("reference_kernel", row.get("reference", "")))
+            meta = dict(row.get("metadata", {})) if isinstance(row.get("metadata"), dict) else {}
+            ktype = str(row.get("kernel_type", "")) or meta.get("kernel_type", "")
+            if not ktype:
+                ktype = classify_kernel(
+                    task_name=task_id,
+                    problem_name=meta.get("problem_name", ""),
+                    reference_code=ref_kernel,
+                    level=level,
+                )
+            meta.setdefault("kernel_type", ktype)
             tasks.append(
                 KernelTask(
-                    task_id=str(row.get("task_id", f"task_{i}")),
-                    level=int(row.get("level", 1)),
+                    task_id=task_id,
+                    level=level,
                     prompt=str(row.get("prompt", row.get("problem", ""))),
-                    reference_kernel=str(row.get("reference_kernel", row.get("reference", ""))),
-                    metadata=dict(row.get("metadata", {})) if isinstance(row.get("metadata"), dict) else {},
+                    reference_kernel=ref_kernel,
+                    kernel_type=ktype,
+                    metadata=meta,
                 )
             )
         return tasks or KernelBenchAdapter._default_tasks()
 
     @staticmethod
     def _default_tasks() -> List[KernelTask]:
+        from kite.types import KERNEL_TYPE_NORM, KERNEL_TYPE_ATTENTION, KERNEL_TYPE_MODEL
         return [
             KernelTask(
                 task_id="kb_default_1",
                 level=1,
                 prompt="Implement a fused layernorm + residual kernel.",
                 reference_kernel="def kernel(x, y): return x + y",
-                metadata={"source": "default"},
+                kernel_type=KERNEL_TYPE_NORM,
+                metadata={"source": "default", "kernel_type": KERNEL_TYPE_NORM},
             ),
             KernelTask(
                 task_id="kb_default_2",
                 level=2,
                 prompt="Implement attention score matmul tile kernel.",
                 reference_kernel="def kernel(q, k): return q @ k.T",
-                metadata={"source": "default"},
+                kernel_type=KERNEL_TYPE_ATTENTION,
+                metadata={"source": "default", "kernel_type": KERNEL_TYPE_ATTENTION},
             ),
             KernelTask(
                 task_id="kb_default_3",
                 level=3,
                 prompt="Implement decode-step KV cache update kernel.",
                 reference_kernel="def kernel(cache, token): return cache",
-                metadata={"source": "default"},
+                kernel_type=KERNEL_TYPE_MODEL,
+                metadata={"source": "default", "kernel_type": KERNEL_TYPE_MODEL},
             ),
         ]
 
@@ -402,13 +427,26 @@ def load_tasks(path: Path) -> List[KernelTask]:
     rows = load_jsonl(path)
     tasks: list[KernelTask] = []
     for row in rows:
+        task_id = row["task_id"]
+        level = int(row["level"])
+        ref_kernel = row["reference_kernel"]
+        meta = dict(row.get("metadata", {}))
+        ktype = row.get("kernel_type", "") or meta.get("kernel_type", "")
+        if not ktype:
+            ktype = classify_kernel(
+                task_name=task_id,
+                problem_name=meta.get("problem_name", ""),
+                reference_code=ref_kernel,
+                level=level,
+            )
         tasks.append(
             KernelTask(
-                task_id=row["task_id"],
-                level=int(row["level"]),
+                task_id=task_id,
+                level=level,
                 prompt=row["prompt"],
-                reference_kernel=row["reference_kernel"],
-                metadata=dict(row.get("metadata", {})),
+                reference_kernel=ref_kernel,
+                kernel_type=ktype,
+                metadata=meta,
             )
         )
     return tasks

@@ -6,12 +6,33 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 
+# Kernel type categories for energy-vs-compute analysis.
+# Two kernels with similar runtime but different types (e.g. matmul vs reduction)
+# may have very different energy profiles.
+KERNEL_TYPE_MATMUL = "matmul"
+KERNEL_TYPE_ELEMENTWISE = "elementwise"
+KERNEL_TYPE_REDUCTION = "reduction"
+KERNEL_TYPE_NORM = "norm"
+KERNEL_TYPE_POOLING = "pooling"
+KERNEL_TYPE_CONV = "conv"
+KERNEL_TYPE_CONV_TRANSPOSE = "conv_transpose"
+KERNEL_TYPE_ACTIVATION = "activation"
+KERNEL_TYPE_LOSS = "loss"
+KERNEL_TYPE_ATTENTION = "attention"
+KERNEL_TYPE_SCAN = "scan"
+KERNEL_TYPE_RNN = "rnn"
+KERNEL_TYPE_COMPOSITE = "composite"
+KERNEL_TYPE_MODEL = "model"
+KERNEL_TYPE_UNKNOWN = "unknown"
+
+
 @dataclass(slots=True)
 class KernelTask:
     task_id: str
     level: int
     prompt: str
     reference_kernel: str
+    kernel_type: str = KERNEL_TYPE_UNKNOWN
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -44,6 +65,10 @@ class EnergyTrace:
     energy_j: List[float]
     gpu_util: List[float] = field(default_factory=list)
     temp_c: List[float] = field(default_factory=list)
+    mem_util: List[float] = field(default_factory=list)
+    sm_clock_mhz: List[float] = field(default_factory=list)
+    mem_clock_mhz: List[float] = field(default_factory=list)
+    mem_used_mb: List[float] = field(default_factory=list)
     phase_segments: List[PhaseSegment] = field(default_factory=list)
     sampling_ms: Optional[float] = None
     source: str = "unknown"

@@ -63,6 +63,7 @@ def _build_parser() -> argparse.ArgumentParser:
     kernel.add_argument("--batch-size", type=int, default=4)
     kernel.add_argument("--max-completion-length", type=int, default=1024)
     kernel.add_argument("--max-tasks", type=int, default=None)
+    kernel.add_argument("--levels", type=str, default=None, help="Comma-separated KernelBench levels, e.g. '1,2'")
     kernel.add_argument("--eval-num-correct-trials", type=int, default=3)
     kernel.add_argument("--eval-num-perf-trials", type=int, default=25)
     kernel.add_argument("--failure-log-every-steps", type=int, default=10)
@@ -160,10 +161,14 @@ def _cmd_train_sft(args: argparse.Namespace) -> int:
 
 
 def _cmd_train_kernel_grpo(args: argparse.Namespace) -> int:
+    levels = None
+    if args.levels:
+        levels = [int(x.strip()) for x in args.levels.split(",")]
     adapter = KernelBenchAdapter(
         args.kernelbench_root,
         num_correct_trials=args.eval_num_correct_trials,
         num_perf_trials=args.eval_num_perf_trials,
+        levels=levels,
     )
     trainer = GRPOKernelTrainer(
         adapter=adapter,

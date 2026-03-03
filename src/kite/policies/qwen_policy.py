@@ -116,10 +116,26 @@ class QwenPolicy:
         self._tokenizer = AutoTokenizer.from_pretrained(model_source, **token_kwargs)
         if self._tokenizer.pad_token is None:
             self._tokenizer.pad_token = self._tokenizer.eos_token
+            self._tokenizer.pad_token_id = self._tokenizer.eos_token_id
 
         self._model = AutoModelForCausalLM.from_pretrained(
             model_source, trust_remote_code=True, **load_kwargs
         )
+
+        # Ensure valid pad/eos token IDs to avoid CUDA device-side assert during generation
+        vocab_size = getattr(self._model.config, "vocab_size", None) or len(self._tokenizer)
+        pad_id = self._tokenizer.pad_token_id or getattr(self._model.config, "eos_token_id", 0)
+        if vocab_size is not None and (pad_id < 0 or pad_id >= vocab_size):
+            pad_id = 0
+        eos_id = self._tokenizer.eos_token_id or getattr(self._model.config, "eos_token_id", pad_id)
+        if vocab_size is not None and (eos_id < 0 or eos_id >= vocab_size):
+            eos_id = pad_id
+        if self._tokenizer.pad_token_id is None:
+            self._tokenizer.pad_token_id = pad_id
+        if self._tokenizer.eos_token_id is None:
+            self._tokenizer.eos_token_id = eos_id
+        self._model.config.pad_token_id = pad_id
+        self._model.config.eos_token_id = eos_id
 
         if self.config.lora_weights_path:
             from peft import PeftModel  # type: ignore
@@ -128,6 +144,20 @@ class QwenPolicy:
             self._model = PeftModel.from_pretrained(
                 self._model, self.config.lora_weights_path
             )
+
+        vocab_size = getattr(self._model.config, "vocab_size", None) or len(self._tokenizer)
+        pad_id = self._tokenizer.pad_token_id or getattr(self._model.config, "eos_token_id", 0)
+        if vocab_size is not None and (pad_id < 0 or pad_id >= vocab_size):
+            pad_id = 0
+        eos_id = self._tokenizer.eos_token_id or getattr(self._model.config, "eos_token_id", pad_id)
+        if vocab_size is not None and (eos_id < 0 or eos_id >= vocab_size):
+            eos_id = pad_id
+        if self._tokenizer.pad_token_id is None:
+            self._tokenizer.pad_token_id = pad_id
+        if self._tokenizer.eos_token_id is None:
+            self._tokenizer.eos_token_id = eos_id
+        self._model.config.pad_token_id = pad_id
+        self._model.config.eos_token_id = eos_id
 
     def generate_candidate(self, task: KernelTask, attempt: int = 0) -> KernelCandidate:
         if self.config.generation_mode == "stub":
@@ -173,6 +203,7 @@ class QwenPolicy:
                 do_sample=self.config.temperature > 0,
                 top_p=0.95,
                 pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=model.config.eos_token_id,
             )
         new_ids = output_ids[0][inputs["input_ids"].shape[1] :]
         return tokenizer.decode(new_ids, skip_special_tokens=True)

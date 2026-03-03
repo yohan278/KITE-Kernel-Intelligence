@@ -237,6 +237,7 @@ def main() -> int:
     batch_size = _int_cfg("batch_size")
     max_completion_length = _int_cfg("max_completion_length")
     max_tasks = _int_cfg("max_tasks")
+    levels_str = train.get("levels", None)
     eval_num_correct_trials = _int_cfg("eval_num_correct_trials")
     eval_num_perf_trials = _int_cfg("eval_num_perf_trials")
     failure_log_every_steps = _int_cfg("failure_log_every_steps")
@@ -258,6 +259,8 @@ def main() -> int:
         cmd.extend(["--max-completion-length", str(max_completion_length)])
     if max_tasks is not None:
         cmd.extend(["--max-tasks", str(max_tasks)])
+    if levels_str is not None:
+        cmd.extend(["--levels", str(levels_str)])
     if eval_num_correct_trials is not None:
         cmd.extend(["--eval-num-correct-trials", str(eval_num_correct_trials)])
     if eval_num_perf_trials is not None:
