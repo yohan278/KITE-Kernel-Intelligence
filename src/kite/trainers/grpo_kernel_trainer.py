@@ -62,6 +62,7 @@ class GRPOKernelConfig:
     reward_ipw_blend_weight: float = 0.0
     resume_from_checkpoint: Optional[str] = None
     eval_timeout_seconds: float = 120.0
+    inference_weighted: bool = False
 
 
 class GRPOKernelTrainer:
@@ -249,6 +250,7 @@ class GRPOKernelTrainer:
         ipw_blend_weight = float(self.config.reward_ipw_blend_weight)
         reward_steps = 0
         failure_counts: dict[str, int] = {}
+        training_history: list[dict] = []
 
         def _record_failure(reason: str) -> None:
             failure_counts[reason] = failure_counts.get(reason, 0) + 1
@@ -376,6 +378,21 @@ class GRPOKernelTrainer:
                     )
                     total_reward += ipw_blend_weight * ipw_reward.total
                 rewards.append(total_reward)
+                training_history.append({
+                    "step": reward_steps,
+                    "task_id": task.task_id,
+                    "kernel_type": task.kernel_type,
+                    "level": task.level,
+                    "compile_ok": candidate.compile_ok,
+                    "correct": candidate.correct,
+                    "runtime_ms": candidate.runtime_ms,
+                    "speedup": candidate.speedup,
+                    "energy_j": joules,
+                    "avg_power_w": avg_power_w,
+                    "avg_gpu_util_pct": self._maybe_float(candidate.logs.get("avg_gpu_util_pct")),
+                    "avg_mem_util_pct": avg_mem_util,
+                    "reward": total_reward,
+                })
             reward_steps += 1
             step_elapsed = _time.perf_counter() - step_t0
             avg_reward = sum(rewards) / len(rewards) if rewards else 0.0
@@ -391,6 +408,11 @@ class GRPOKernelTrainer:
                     )
                     logger.info("GRPO failure reasons @step %d: %s", reward_steps, parts)
             return rewards
+
+        if self.config.inference_weighted:
+            from kite.classification.inference_profile import oversample_for_inference
+            tasks = oversample_for_inference(tasks)
+            logger.info("Inference-weighted oversampling: %d effective tasks", len(tasks))
 
         prompts = []
         for task in tasks:
@@ -460,6 +482,14 @@ class GRPOKernelTrainer:
         task_type_dist = {}
         for t in tasks:
             task_type_dist[t.kernel_type] = task_type_dist.get(t.kernel_type, 0) + 1
+
+        by_kernel_type = _aggregate_by_kernel_type(training_history)
+        if training_history:
+            save_jsonl(self.config.output_dir / "training_history.jsonl", training_history)
+            save_json(self.config.output_dir / "energy_by_kernel_type.json", by_kernel_type)
+            logger.info("Saved %d training history records and per-type aggregates", len(training_history))
+
+        avg_reward = sum(r["reward"] for r in training_history) / len(training_history) if training_history else None
         checkpoint = {
             "stage": "energy_grpo" if self.config.energy_aware else "kernel_grpo",
             "epochs": self.config.epochs,
@@ -470,6 +500,9 @@ class GRPOKernelTrainer:
             "batch_size": effective_batch_size,
             "group_size": self.config.group_size,
             "kernel_type_distribution": task_type_dist,
+            "avg_reward": avg_reward,
+            "num_reward_steps": reward_steps,
+            "by_kernel_type": by_kernel_type,
         }
         save_json(self.config.output_dir / "checkpoint.json", checkpoint)
         return checkpoint
@@ -729,6 +762,7 @@ def _aggregate_by_kernel_type(history: list[dict]) -> dict:
         energies = _collect(rows, "energy_j")
         powers = _collect(rows, "avg_power_w")
         rewards = _collect(rows, "reward")
+        speedups = _collect(rows, "speedup")
         gpu_utils = _collect(rows, "avg_gpu_util_pct")
         mem_utils = _collect(rows, "avg_mem_util_pct")
         temps = _collect(rows, "avg_temp_c")
@@ -751,6 +785,7 @@ def _aggregate_by_kernel_type(history: list[dict]) -> dict:
             "avg_runtime_ms": avg_rt,
             "avg_energy_j": avg_en,
             "avg_power_w": _mean(powers),
+            "avg_speedup": _mean(speedups),
             "avg_reward": _mean(rewards),
             "energy_per_ms": avg_en / avg_rt if avg_en and avg_rt and avg_rt > 0 else None,
             "avg_gpu_util_pct": _mean(gpu_utils),

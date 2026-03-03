@@ -242,6 +242,7 @@ def main() -> int:
     eval_num_perf_trials = _int_cfg("eval_num_perf_trials")
     failure_log_every_steps = _int_cfg("failure_log_every_steps")
     eval_timeout_seconds = train.get("eval_timeout_seconds", None)
+    inference_weighted = bool(train.get("inference_weighted", False))
     cmd = [
         "train",
         "kernel-grpo",
@@ -270,6 +271,8 @@ def main() -> int:
         cmd.extend(["--failure-log-every-steps", str(failure_log_every_steps)])
     if eval_timeout_seconds is not None:
         cmd.extend(["--eval-timeout-seconds", str(eval_timeout_seconds)])
+    if inference_weighted:
+        cmd.append("--inference-weighted")
     reward_alpha = _float_reward("alpha")
     reward_beta = _float_reward("beta")
     reward_gamma = _float_reward("gamma_latency")

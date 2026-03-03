@@ -14,6 +14,7 @@ train:
   eval_num_perf_trials: 3
   failure_log_every_steps: 5
   eval_timeout_seconds: 120
+  inference_weighted: true
   reward:
     alpha: 1.0
     beta: 0.5
