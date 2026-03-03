@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-data_scale_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,wilcoxon,0.056098,0.7287
-data_scale_ablation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,correctness,wilcoxon,0.076721,0.1403
-data_scale_ablation,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,pass_at_k,paired_ttest,0.108226,0.2836
+data_scale_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0142,0.76
+data_scale_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.176,0.19
+data_scale_ablation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,0.43

@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Pareto frontier comparison with M1 speed edge and M2/M3 energy-efficient region.
 
+## Alignment Snapshot
 
-vjp8klkpm 7q8mmpl7v xp8p9x7mx k9k7v9 xppv pq8lv xxjklll 79mm7 vv9mpp 99plpmv8 87zq8 jqk9 z77m mjpxk9jv
+- Compile rate: 0.9500
+- Correctness: 0.8000
+- Pass@k: 0.8600
+- Runtime mean: 0.082514 ms
+- Joules mean: 0.092394
+- SLA violation rate: 0.0333
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

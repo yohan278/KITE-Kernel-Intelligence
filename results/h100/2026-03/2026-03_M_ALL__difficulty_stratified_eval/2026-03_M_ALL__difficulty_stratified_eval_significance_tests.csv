@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-difficulty_stratified_eval,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,paired_ttest,0.094734,0.4302
-difficulty_stratified_eval,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,pass_at_k,paired_ttest,0.006861,0.6784
-difficulty_stratified_eval,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.074026,0.1832
+difficulty_stratified_eval,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0142,0.76
+difficulty_stratified_eval,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.176,0.19
+difficulty_stratified_eval,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,0.43

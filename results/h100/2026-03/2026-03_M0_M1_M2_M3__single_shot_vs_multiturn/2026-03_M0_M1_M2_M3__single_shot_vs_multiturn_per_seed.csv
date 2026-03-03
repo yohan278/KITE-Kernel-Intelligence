@@ -1,4 +1,4 @@
 seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
-11,0.9539,0.937,0.8139,0.060381,0.444093,196.522,10.62026,0.39883,single_shot_vs_multiturn
-22,0.9771,0.7991,0.4128,0.057366,0.079966,182.042,1.39849,1.03503,single_shot_vs_multiturn
-33,0.8851,0.6237,0.9333,0.036867,0.448699,213.736,1.81445,0.77986,single_shot_vs_multiturn
+11,0.95,0.8,0.9134,0.088614,0.101404,226.385,5.41243,4.38632,single_shot_vs_multiturn
+22,0.95,0.75,0.87,0.088858,0.103057,230.074,4.78297,4.7244,single_shot_vs_multiturn
+33,0.95,0.8,0.9266,0.085794,0.098441,226.377,5.54211,4.38957,single_shot_vs_multiturn

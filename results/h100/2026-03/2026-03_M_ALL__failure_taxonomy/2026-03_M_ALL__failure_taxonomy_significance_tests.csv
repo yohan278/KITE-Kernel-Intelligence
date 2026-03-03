@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-failure_taxonomy,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,speedup,wilcoxon,0.080761,0.6494
-failure_taxonomy,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,correctness,paired_ttest,0.10458,0.786
-failure_taxonomy,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.114697,0.1923
+failure_taxonomy,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0142,0.76
+failure_taxonomy,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.176,0.19
+failure_taxonomy,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,0.43

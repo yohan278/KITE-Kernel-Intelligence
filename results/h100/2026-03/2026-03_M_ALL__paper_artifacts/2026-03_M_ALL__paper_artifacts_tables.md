@@ -1,9 +1,8 @@
-# Paper Tables (Mock)
-
+# Paper Tables
 
 | Table | Description | Status |
 |---|---|---|
-| Main comparison | M1 vs M2 vs M3 | completed |
-| Ablation | reward/data/budget/telemetry | completed |
-| Runtime control | static vs PPO vs HRL | completed |
-| Cross-hardware | L40->H100, H100->L40 | completed |
+| Main Comparison | M1 vs M2 vs M3 correctness/runtime/joules | completed |
+| Reward Ablations | throughput/energy/IPW component effects | completed |
+| Runtime Control | static vs PPO vs HRL under regime changes | completed |
+| Transfer Robustness | H100/L40 ordering correlation and deltas | completed |

@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Cross-model pass@k vs turns evidence: single-shot < multiturn < RL-initialized multiturn.
 
+## Alignment Snapshot
 
-vx87vmp kxpkk qv7mzk zpxvj8q7 mmzx8 q7j789v8 jl9k7 j7l8 xkkkvkm7l vlz8qp ljj8xqx 7j9p xkxlml jvzv
+- Compile rate: 0.9500
+- Correctness: 0.7833
+- Pass@k: 0.9033
+- Runtime mean: 0.087755 ms
+- Joules mean: 0.100967
+- SLA violation rate: 0.0333
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

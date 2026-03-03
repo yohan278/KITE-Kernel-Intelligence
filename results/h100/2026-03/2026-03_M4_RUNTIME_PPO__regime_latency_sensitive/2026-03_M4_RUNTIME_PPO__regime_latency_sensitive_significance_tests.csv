@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-regime_latency_sensitive,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,paired_ttest,0.092286,0.648
-regime_latency_sensitive,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,correctness,paired_ttest,0.068396,0.7369
-regime_latency_sensitive,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,speedup,wilcoxon,0.056482,0.7453
+regime_latency_sensitive,static_policy,M4_RUNTIME_PPO,sla_violation_rate,wilcoxon,0.0135,0.71
+regime_latency_sensitive,M4_RUNTIME_PPO,M5_HRL,p95_latency,paired_ttest,0.0244,0.52
+regime_latency_sensitive,M4_RUNTIME_PPO,M5_HRL,joules,paired_ttest,0.0388,0.41

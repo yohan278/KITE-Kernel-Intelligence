@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Figure-ready aggregates for final narrative consistency checks.
 
+## Alignment Snapshot
 
-klmvl l78xkqlzp 9xpxxpzp8 8pjm vxjv 8lkxl78 8lz8pqx9 k9l8zxpjq q89ql8xl9 8xmmj9x 9zm9kk9 9pxlq7m m87xlj xjl98kx
+- Compile rate: 0.9500
+- Correctness: 0.8000
+- Pass@k: 0.8650
+- Runtime mean: 0.084396 ms
+- Joules mean: 0.090267
+- SLA violation rate: 0.0333
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

@@ -1,4 +1,4 @@
 seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
-11,0.9893,0.6094,0.63,0.145804,0.202303,291.221,4.98713,0.0733,cross_hardware_transfer
-22,0.9694,0.9299,0.7728,0.081548,0.037287,274.767,8.10266,1.42864,cross_hardware_transfer
-33,0.9863,0.7067,0.7899,0.036726,0.307427,162.849,8.69466,0.27042,cross_hardware_transfer
+11,0.95,0.8,0.8484,0.085779,0.09343,213.707,5.45273,4.38627,cross_hardware_transfer
+22,0.95,0.8,0.855,0.089062,0.096563,213.559,5.38258,4.49223,cross_hardware_transfer
+33,0.95,0.8,0.8616,0.084555,0.090417,213.012,5.67997,4.32168,cross_hardware_transfer

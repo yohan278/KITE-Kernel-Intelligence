@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+IPW lambda ablation for reward component sensitivity.
 
+## Alignment Snapshot
 
-q7vjpzz98 7z87 v78p7 k8p8 jvp8q zkmz98vq7 xpj87v ljlpv lxz8x7mvj qpx9 lkp7mmq zqm8mpxxv pjz798zzl z7v8jzvxz
+- Compile rate: 0.9667
+- Correctness: 0.8167
+- Pass@k: 0.8717
+- Runtime mean: 0.085197 ms
+- Joules mean: 0.085312
+- SLA violation rate: 0.0333
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

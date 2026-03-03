@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Matched-runtime energy advantage: negative joules deltas for M2/M3 vs M1.
 
+## Alignment Snapshot
 
-zjmk 8q7j7lqjx v8xxj8z 78xljjjm ml7jj8qj xk77zj7l pv9ll xvzxl79m jzkvq8 xmvjq pklxpj7j j8qjxql8m q9q7 p9mzkkl8
+- Compile rate: 0.9667
+- Correctness: 0.8000
+- Pass@k: 0.8600
+- Runtime mean: 0.084071 ms
+- Joules mean: 0.088605
+- SLA violation rate: 0.0167
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

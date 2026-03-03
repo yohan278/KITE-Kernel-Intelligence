@@ -1,4 +1,4 @@
 run_id,seed,command,checkpoint,status
-run::M5_HRL::runtime_vs_static_comparison::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/runtime_vs_static_comparison/seed11.yaml,checkpoints/exp/runtime_vs_static_comparison/m5_hrl/seed11/checkpoint.json,completed
-run::M5_HRL::runtime_vs_static_comparison::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/runtime_vs_static_comparison/seed22.yaml,checkpoints/exp/runtime_vs_static_comparison/m5_hrl/seed22/checkpoint.json,completed
-run::M5_HRL::runtime_vs_static_comparison::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/runtime_vs_static_comparison/seed33.yaml,checkpoints/exp/runtime_vs_static_comparison/m5_hrl/seed33/checkpoint.json,completed
+run::M5_HRL::runtime_vs_static_comparison::seed11,11,conda run -n kite-train python scripts/07_run_hrl.py --config configs/exp/runtime_vs_static_comparison/seed11.yaml,checkpoints/exp/runtime_vs_static_comparison/m5_hrl/seed11/checkpoint.json,completed
+run::M5_HRL::runtime_vs_static_comparison::seed22,22,conda run -n kite-train python scripts/07_run_hrl.py --config configs/exp/runtime_vs_static_comparison/seed22.yaml,checkpoints/exp/runtime_vs_static_comparison/m5_hrl/seed22/checkpoint.json,completed
+run::M5_HRL::runtime_vs_static_comparison::seed33,33,conda run -n kite-train python scripts/07_run_hrl.py --config configs/exp/runtime_vs_static_comparison/seed33.yaml,checkpoints/exp/runtime_vs_static_comparison/m5_hrl/seed33/checkpoint.json,completed

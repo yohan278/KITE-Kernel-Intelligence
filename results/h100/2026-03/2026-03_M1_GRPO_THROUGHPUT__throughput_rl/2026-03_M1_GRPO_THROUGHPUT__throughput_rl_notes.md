@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Throughput anchor: fastest model among generator-only variants.
 
+## Alignment Snapshot
 
-p7j9pj7l 9kvvkq jlvqz7 7mzk pzvm km899kqjl mkjxpx8 qx7q89lj kklmzqkq lj77 zxz9mvv vqqm8xm7l 9lqk 9l8z7v8m
+- Compile rate: 0.9500
+- Correctness: 0.8333
+- Pass@k: 0.8833
+- Runtime mean: 0.081188 ms
+- Joules mean: 0.101463
+- SLA violation rate: 0.0500
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

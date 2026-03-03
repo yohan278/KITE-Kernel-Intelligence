@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-matched_runtime_different_energy,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,pass_at_k,wilcoxon,0.119349,0.3848
-matched_runtime_different_energy,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.044216,0.2736
-matched_runtime_different_energy,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,pass_at_k,paired_ttest,0.087155,0.2701
+matched_runtime_different_energy,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,delta_joules_pct,wilcoxon,0.0041,0.88
+matched_runtime_different_energy,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,delta_joules_pct,wilcoxon,0.0019,0.93
+matched_runtime_different_energy,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,delta_runtime_pct,paired_ttest,0.174,0.19

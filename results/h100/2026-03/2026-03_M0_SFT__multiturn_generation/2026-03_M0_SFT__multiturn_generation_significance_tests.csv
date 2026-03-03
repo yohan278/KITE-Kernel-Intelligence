@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-multiturn_generation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,speedup,paired_ttest,0.061025,0.1581
-multiturn_generation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.114039,0.7974
-multiturn_generation,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.091997,0.1435
+multiturn_generation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0142,0.76
+multiturn_generation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.176,0.19
+multiturn_generation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,0.43

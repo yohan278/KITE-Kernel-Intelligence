@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Latency-sensitive regime emphasizing p95 latency and SLA behavior.
 
+## Alignment Snapshot
 
-zk8pmk pvpm7vj7 7pz9zkj l9q7mmlzm 9x7mv7 lljv7jv p7mmqqpqx 8qvpz v98zqvl8 kzmmlpp j788kkk kk87qkqj q97lk qmk77
+- Compile rate: 0.9500
+- Correctness: 0.8000
+- Pass@k: 0.8400
+- Runtime mean: 0.072919 ms
+- Joules mean: 0.076491
+- SLA violation rate: 0.0167
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

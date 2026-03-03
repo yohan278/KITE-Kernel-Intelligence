@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-paper_figures,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,pass_at_k,wilcoxon,0.029731,0.7139
-paper_figures,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,correctness,wilcoxon,0.026212,0.8788
-paper_figures,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.072406,0.1832
+paper_figures,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0142,0.76
+paper_figures,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.176,0.19
+paper_figures,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,0.43

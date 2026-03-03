@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-inference_budget_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,pass_at_k,paired_ttest,0.02165,0.2634
-inference_budget_ablation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.015487,0.2971
-inference_budget_ablation,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.116188,0.85
+inference_budget_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0142,0.76
+inference_budget_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.176,0.19
+inference_budget_ablation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,0.43

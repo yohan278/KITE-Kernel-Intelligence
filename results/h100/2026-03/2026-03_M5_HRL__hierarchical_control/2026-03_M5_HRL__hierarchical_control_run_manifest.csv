@@ -1,4 +1,4 @@
 run_id,seed,command,checkpoint,status
-run::M5_HRL::hierarchical_control::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/hierarchical_control/seed11.yaml,checkpoints/exp/hierarchical_control/m5_hrl/seed11/checkpoint.json,completed
-run::M5_HRL::hierarchical_control::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/hierarchical_control/seed22.yaml,checkpoints/exp/hierarchical_control/m5_hrl/seed22/checkpoint.json,completed
-run::M5_HRL::hierarchical_control::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/hierarchical_control/seed33.yaml,checkpoints/exp/hierarchical_control/m5_hrl/seed33/checkpoint.json,completed
+run::M5_HRL::hierarchical_control::seed11,11,conda run -n kite-train python scripts/07_run_hrl.py --config configs/exp/hierarchical_control/seed11.yaml,checkpoints/exp/hierarchical_control/m5_hrl/seed11/checkpoint.json,completed
+run::M5_HRL::hierarchical_control::seed22,22,conda run -n kite-train python scripts/07_run_hrl.py --config configs/exp/hierarchical_control/seed22.yaml,checkpoints/exp/hierarchical_control/m5_hrl/seed22/checkpoint.json,completed
+run::M5_HRL::hierarchical_control::seed33,33,conda run -n kite-train python scripts/07_run_hrl.py --config configs/exp/hierarchical_control/seed33.yaml,checkpoints/exp/hierarchical_control/m5_hrl/seed33/checkpoint.json,completed

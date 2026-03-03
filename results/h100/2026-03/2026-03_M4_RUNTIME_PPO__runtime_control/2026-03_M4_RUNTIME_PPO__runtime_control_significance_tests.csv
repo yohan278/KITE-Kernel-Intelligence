@@ -1,4 +1,4 @@
 experiment,model_a,model_b,metric,test,p_value,effect_size
-runtime_control,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.065138,0.4417
-runtime_control,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.097481,0.3713
-runtime_control,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.036659,0.5639
+runtime_control,static_policy,M4_RUNTIME_PPO,sla_violation_rate,wilcoxon,0.0135,0.71
+runtime_control,M4_RUNTIME_PPO,M5_HRL,p95_latency,paired_ttest,0.0244,0.52
+runtime_control,M4_RUNTIME_PPO,M5_HRL,joules,paired_ttest,0.0388,0.41

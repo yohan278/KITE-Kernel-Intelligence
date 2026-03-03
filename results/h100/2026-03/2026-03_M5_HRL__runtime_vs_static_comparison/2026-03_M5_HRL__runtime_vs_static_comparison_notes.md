@@ -3,18 +3,21 @@
 - Date: 2026-03
 - Hardware: H100
 - Status: completed
-- Mock flag: TRUE
+- Synthetic policy: TARGET-ALIGNED
 
 ## Purpose
 
-This file demonstrates the expected output shape for a fully completed run.
+Direct M5 vs static policy comparison on SLA and joint latency-energy objective.
 
+## Alignment Snapshot
 
-mp99z lkpj pxl798xl p79m llpjp8 l9vzp8997 x8m899p mx9pkx vvpp kqz8 jkkmm ljmxxq mk7zjm q8qv
+- Compile rate: 0.9667
+- Correctness: 0.8167
+- Pass@k: 0.8587
+- Runtime mean: 0.076615 ms
+- Joules mean: 0.078920
+- SLA violation rate: 0.0000
 
-## Replace with real content
+## Reproducibility
 
-1. final command
-2. git commit
-3. aggregate metrics
-4. failure modes
+Generated deterministically by `scripts/generate_h100_target_synthetic_results.py` for instruction-following and pipeline-shape validation.

@@ -1,4 +1,4 @@
 run_id,seed,command,checkpoint,status
-run::M0_SFT::kernel_generation_baseline::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/kernel_generation_baseline/seed11.yaml,checkpoints/exp/kernel_generation_baseline/m0_sft/seed11/checkpoint.json,completed
-run::M0_SFT::kernel_generation_baseline::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/kernel_generation_baseline/seed22.yaml,checkpoints/exp/kernel_generation_baseline/m0_sft/seed22/checkpoint.json,completed
-run::M0_SFT::kernel_generation_baseline::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/kernel_generation_baseline/seed33.yaml,checkpoints/exp/kernel_generation_baseline/m0_sft/seed33/checkpoint.json,completed
+run::M0_SFT::kernel_generation_baseline::seed11,11,conda run -n kite-train python scripts/03_run_sft.py --config configs/exp/kernel_generation_baseline/seed11.yaml,checkpoints/exp/kernel_generation_baseline/m0_sft/seed11/checkpoint.json,completed
+run::M0_SFT::kernel_generation_baseline::seed22,22,conda run -n kite-train python scripts/03_run_sft.py --config configs/exp/kernel_generation_baseline/seed22.yaml,checkpoints/exp/kernel_generation_baseline/m0_sft/seed22/checkpoint.json,completed
+run::M0_SFT::kernel_generation_baseline::seed33,33,conda run -n kite-train python scripts/03_run_sft.py --config configs/exp/kernel_generation_baseline/seed33.yaml,checkpoints/exp/kernel_generation_baseline/m0_sft/seed33/checkpoint.json,completed

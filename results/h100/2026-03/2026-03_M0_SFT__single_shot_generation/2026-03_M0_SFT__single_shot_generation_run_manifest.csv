@@ -1,4 +1,4 @@
 run_id,seed,command,checkpoint,status
-run::M0_SFT::single_shot_generation::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/single_shot_generation/seed11.yaml,checkpoints/exp/single_shot_generation/m0_sft/seed11/checkpoint.json,completed
-run::M0_SFT::single_shot_generation::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/single_shot_generation/seed22.yaml,checkpoints/exp/single_shot_generation/m0_sft/seed22/checkpoint.json,completed
-run::M0_SFT::single_shot_generation::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/single_shot_generation/seed33.yaml,checkpoints/exp/single_shot_generation/m0_sft/seed33/checkpoint.json,completed
+run::M0_SFT::single_shot_generation::seed11,11,conda run -n kite-train python scripts/03_run_sft.py --config configs/exp/single_shot_generation/seed11.yaml,checkpoints/exp/single_shot_generation/m0_sft/seed11/checkpoint.json,completed
+run::M0_SFT::single_shot_generation::seed22,22,conda run -n kite-train python scripts/03_run_sft.py --config configs/exp/single_shot_generation/seed22.yaml,checkpoints/exp/single_shot_generation/m0_sft/seed22/checkpoint.json,completed
+run::M0_SFT::single_shot_generation::seed33,33,conda run -n kite-train python scripts/03_run_sft.py --config configs/exp/single_shot_generation/seed33.yaml,checkpoints/exp/single_shot_generation/m0_sft/seed33/checkpoint.json,completed
