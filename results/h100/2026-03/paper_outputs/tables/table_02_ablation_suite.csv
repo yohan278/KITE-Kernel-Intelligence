@@ -1,8 +1,9 @@
-Configuration,Compile Rate,Correctness,Pass@k,Runtime (ms),Joules,Reward
-Full (M3),0.8713,0.6413,0.7788,19.64,3.213,7.936
-No Speedup,0.8525,0.6871,0.8139,19.51,3.975,11.414
-No Joules,0.8549,0.6447,0.7501,18.67,3.678,10.764
-No Power,0.8545,0.6769,0.7886,18.70,3.803,11.066
-No Runtime,0.8504,0.6771,0.7892,19.56,4.609,9.094
-No SLA,0.8704,0.6644,0.7892,20.03,4.022,10.037
-No IPW Blend,0.8749,0.6801,0.7934,18.14,4.227,10.211
+experiment,correctness,pass_at_k,runtime_ms,joules,speedup,reward_mean
+cross_hardware_transfer,0.5542,0.7208,20.98095,5.631998,1.564557,6.42445
+data_scale_ablation,0.5917,0.7167,20.403844,5.493485,1.608745,6.97448
+difficulty_stratified_eval,0.625,0.7625,20.387621,5.465643,1.63622,7.33669
+heldout_generalization,0.575,0.75,21.263137,5.749122,1.5452,6.19674
+inference_budget_ablation,0.5917,0.7458,19.888792,5.304917,1.593555,6.91322
+measurement_repeatability,0.5917,0.7125,20.31329,5.445764,1.62239,7.06408
+reward_ablation,0.5625,0.7,20.790973,5.715327,1.563453,5.99355
+telemetry_realism_ablation,0.5333,0.6917,20.124492,5.507546,1.592371,6.2587

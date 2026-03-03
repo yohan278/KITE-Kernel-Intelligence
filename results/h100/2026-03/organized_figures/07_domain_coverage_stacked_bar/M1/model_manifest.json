@@ -1,0 +1,12 @@
+{
+  "figure_id": "07_domain_coverage_stacked_bar",
+  "model": "M1",
+  "sources": [
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl",
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__difficulty_stratified_eval",
+    "2026-03_M_ALL__final_eval_suite"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

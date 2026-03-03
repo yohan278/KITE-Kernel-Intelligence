@@ -1,2 +1,4 @@
-experiment,gpu,cuda,torch,triton,seeds,tasks
-2026-03_M2_GRPO_ENERGY__energy_aware_rl,H100-SXM5-80GB,12.4,2.6.0,3.2.0,"11,22,33",79
+run_id,seed,command,checkpoint,status
+run::M2_GRPO_ENERGY::energy_aware_rl::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/energy_aware_rl/seed11.yaml,checkpoints/exp/energy_aware_rl/m2_grpo_energy/seed11/checkpoint.json,completed
+run::M2_GRPO_ENERGY::energy_aware_rl::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/energy_aware_rl/seed22.yaml,checkpoints/exp/energy_aware_rl/m2_grpo_energy/seed22/checkpoint.json,completed
+run::M2_GRPO_ENERGY::energy_aware_rl::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/energy_aware_rl/seed33.yaml,checkpoints/exp/energy_aware_rl/m2_grpo_energy/seed33/checkpoint.json,completed

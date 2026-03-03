@@ -1,2 +1,4 @@
-experiment,gpu,cuda,torch,triton,seeds,tasks
-2026-03_M_ALL__final_eval_suite,H100-SXM5-80GB,12.4,2.6.0,3.2.0,"11,22,33",79
+run_id,seed,command,checkpoint,status
+run::M_ALL::final_eval_suite::seed11,11,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/final_eval_suite/seed11.yaml,checkpoints/exp/final_eval_suite/m_all/seed11/checkpoint.json,completed
+run::M_ALL::final_eval_suite::seed22,22,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/final_eval_suite/seed22.yaml,checkpoints/exp/final_eval_suite/m_all/seed22/checkpoint.json,completed
+run::M_ALL::final_eval_suite::seed33,33,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/final_eval_suite/seed33.yaml,checkpoints/exp/final_eval_suite/m_all/seed33/checkpoint.json,completed

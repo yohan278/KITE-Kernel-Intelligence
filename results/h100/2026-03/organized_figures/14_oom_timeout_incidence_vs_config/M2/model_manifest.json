@@ -1,0 +1,11 @@
+{
+  "figure_id": "14_oom_timeout_incidence_vs_config",
+  "model": "M2",
+  "sources": [
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
+    "2026-03_M_ALL__failure_taxonomy",
+    "2026-03_M_ALL__inference_budget_ablation"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

@@ -1,0 +1,17 @@
+{
+  "figure_id": "02_passk_vs_turns_curve",
+  "title": "Pass@k vs Turns Curve",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M0_SFT__single_shot_generation",
+    "2026-03_M0_SFT__multiturn_generation",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn"
+  ]
+}

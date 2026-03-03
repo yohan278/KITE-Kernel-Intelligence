@@ -1,0 +1,10 @@
+{
+  "figure_id": "08_runtime_control_regime_figure",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison"
+  ],
+  "source_count": 2,
+  "status": "ready"
+}

@@ -1,0 +1,12 @@
+{
+  "figure_id": "15_calibration_plot",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__reward_ablation"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

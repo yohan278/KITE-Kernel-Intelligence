@@ -1,2 +1,4 @@
-experiment,gpu,cuda,torch,triton,seeds,tasks
-2026-03_M1_M2_M3__matched_runtime_different_energy,H100-SXM5-80GB,12.4,2.6.0,3.2.0,"11,22,33",79
+run_id,seed,command,checkpoint,status
+run::M1_M2_M3::matched_runtime_different_energy::seed11,11,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/matched_runtime_different_energy/seed11.yaml,checkpoints/exp/matched_runtime_different_energy/m1_m2_m3/seed11/checkpoint.json,completed
+run::M1_M2_M3::matched_runtime_different_energy::seed22,22,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/matched_runtime_different_energy/seed22.yaml,checkpoints/exp/matched_runtime_different_energy/m1_m2_m3/seed22/checkpoint.json,completed
+run::M1_M2_M3::matched_runtime_different_energy::seed33,33,conda run -n kite-train python scripts/08_eval_all.py --config configs/exp/matched_runtime_different_energy/seed33.yaml,checkpoints/exp/matched_runtime_different_energy/m1_m2_m3/seed33/checkpoint.json,completed

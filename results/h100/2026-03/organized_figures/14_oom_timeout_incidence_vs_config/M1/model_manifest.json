@@ -1,0 +1,11 @@
+{
+  "figure_id": "14_oom_timeout_incidence_vs_config",
+  "model": "M1",
+  "sources": [
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl",
+    "2026-03_M_ALL__failure_taxonomy",
+    "2026-03_M_ALL__inference_budget_ablation"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

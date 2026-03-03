@@ -1,0 +1,14 @@
+{
+  "figure_id": "13_latency_energy_joint_density",
+  "model": "M4",
+  "sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+    "2026-03_M_ALL__measurement_repeatability"
+  ],
+  "source_count": 6,
+  "status": "ready"
+}

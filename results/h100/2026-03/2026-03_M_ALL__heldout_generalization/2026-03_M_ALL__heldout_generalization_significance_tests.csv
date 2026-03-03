@@ -1,7 +1,5 @@
-model_a,model_b,metric,test,p_value,effect_size_d,significant
-M0_SFT,M1_GRPO,joules,wilcoxon_signed_rank,0.0227,0.871,True
-M0_SFT,M2_ENERGY,joules,wilcoxon_signed_rank,0.0468,1.408,True
-M0_SFT,M3_IPW,joules,wilcoxon_signed_rank,0.0131,0.304,True
-M1_GRPO,M2_ENERGY,joules,wilcoxon_signed_rank,0.0358,0.921,True
-M1_GRPO,M3_IPW,joules,wilcoxon_signed_rank,0.0387,0.49,True
-M2_ENERGY,M3_IPW,joules,wilcoxon_signed_rank,0.048,1.24,True
+experiment,model_a,model_b,metric,test,p_value,effect_size
+heldout_generalization,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.0098,-0.57
+heldout_generalization,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0041,-0.73
+heldout_generalization,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.182,0.2
+heldout_generalization,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.0317,-0.43

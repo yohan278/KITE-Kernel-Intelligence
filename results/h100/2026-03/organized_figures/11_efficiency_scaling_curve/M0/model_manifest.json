@@ -1,0 +1,12 @@
+{
+  "figure_id": "11_efficiency_scaling_curve",
+  "model": "M0",
+  "sources": [
+    "2026-03_M0_SFT__kernel_generation_baseline",
+    "2026-03_M0_SFT__single_shot_generation",
+    "2026-03_M0_SFT__multiturn_generation",
+    "2026-03_M_ALL__data_scale_ablation"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

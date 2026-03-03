@@ -1,12 +1,10 @@
 {
-  "experiment": "2026-03_M_ALL__heldout_generalization",
-  "files": [
-    "2026-03_M_ALL__heldout_generalization_metrics.csv",
-    "2026-03_M_ALL__heldout_generalization_per_task.jsonl",
-    "2026-03_M_ALL__heldout_generalization_per_seed.csv",
-    "2026-03_M_ALL__heldout_generalization_summary.json",
-    "2026-03_M_ALL__heldout_generalization_ci_stats.json",
-    "2026-03_M_ALL__heldout_generalization_failure_taxonomy.csv",
-    "2026-03_M_ALL__heldout_generalization_significance_tests.csv"
-  ]
+  "summary": "2026-03_M_ALL__heldout_generalization_summary.json",
+  "metrics_csv": "2026-03_M_ALL__heldout_generalization_metrics.csv",
+  "per_task_jsonl": "2026-03_M_ALL__heldout_generalization_per_task.jsonl",
+  "per_seed_csv": "2026-03_M_ALL__heldout_generalization_per_seed.csv",
+  "failure_taxonomy_csv": "2026-03_M_ALL__heldout_generalization_failure_taxonomy.csv",
+  "ci_stats_json": "2026-03_M_ALL__heldout_generalization_ci_stats.json",
+  "significance_csv": "2026-03_M_ALL__heldout_generalization_significance_tests.csv",
+  "plot_data_dir": "plot_data"
 }

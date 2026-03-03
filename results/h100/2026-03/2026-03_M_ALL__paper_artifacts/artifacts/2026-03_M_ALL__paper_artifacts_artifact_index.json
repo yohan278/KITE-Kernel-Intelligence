@@ -1,0 +1,16 @@
+{
+  "experiment_id": "2026-03_M_ALL__paper_artifacts",
+  "artifacts": [
+    "2026-03_M_ALL__paper_artifacts_summary.json",
+    "2026-03_M_ALL__paper_artifacts_metrics.csv",
+    "2026-03_M_ALL__paper_artifacts_per_task.jsonl",
+    "2026-03_M_ALL__paper_artifacts_per_seed.csv",
+    "2026-03_M_ALL__paper_artifacts_run_manifest.csv",
+    "2026-03_M_ALL__paper_artifacts_failure_taxonomy.csv",
+    "2026-03_M_ALL__paper_artifacts_ci_stats.json",
+    "2026-03_M_ALL__paper_artifacts_significance_tests.csv",
+    "2026-03_M_ALL__paper_artifacts_notes.md",
+    "plot_data",
+    "logs"
+  ]
+}

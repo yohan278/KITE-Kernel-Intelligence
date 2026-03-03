@@ -1,0 +1,17 @@
+{
+  "figure_id": "01_accuracy_energy_pareto_frontier",
+  "title": "Accuracy-Energy Pareto Frontier",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn",
+    "2026-03_M_ALL__final_eval_suite"
+  ]
+}

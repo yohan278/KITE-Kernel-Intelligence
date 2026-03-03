@@ -1,4 +1,5 @@
-Policy,TTFT p95 (s),E2E p95 (s),Throughput (tok/s),APJ,APW,Stability
-Static,1.677,15.78,101.9,0.975,0.295,0.836
-M4 PPO,1.748,20.47,64.6,0.621,0.489,0.887
-M5 HRL,1.846,13.34,115.9,0.979,0.456,0.916
+policy,regime,runtime_ms,joules,avg_power_w,sla_violation_rate,correctness
+M4,regime_latency_sensitive,15.115791,3.854631,220.118,0.2,0.5917
+M4,regime_mixed,16.788076,4.296739,223.27,0.1958,0.6083
+M4,regime_throughput,16.097827,4.226384,227.064,0.1417,0.5625
+M5,runtime_vs_static,15.874997,3.790708,208.784,0.1708,0.6625

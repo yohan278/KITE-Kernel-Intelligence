@@ -1,0 +1,15 @@
+{
+  "figure_id": "12_inference_budget_tradeoff_curve",
+  "title": "Inference Budget Tradeoff Curve",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__inference_budget_ablation"
+  ]
+}

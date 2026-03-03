@@ -1,0 +1,15 @@
+{
+  "figure_id": "07_domain_coverage_stacked_bar",
+  "model": "M4",
+  "sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed",
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__difficulty_stratified_eval",
+    "2026-03_M_ALL__final_eval_suite"
+  ],
+  "source_count": 7,
+  "status": "ready"
+}

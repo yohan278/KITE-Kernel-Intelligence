@@ -1,0 +1,12 @@
+{
+  "figure_id": "16_per_task_delta_forest_plot",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

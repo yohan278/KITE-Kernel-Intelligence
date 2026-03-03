@@ -1,0 +1,16 @@
+{
+  "figure_id": "14_oom_timeout_incidence_vs_config",
+  "title": "OOM/Timeout Incidence vs Config",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__failure_taxonomy",
+    "2026-03_M_ALL__inference_budget_ablation"
+  ]
+}

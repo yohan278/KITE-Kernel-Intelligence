@@ -1,0 +1,12 @@
+{
+  "figure_id": "03_matched_runtime_energy_advantage",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

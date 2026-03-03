@@ -1,6 +1,21 @@
-# 2026-03_M_ALL__measurement_repeatability
+# M_ALL / measurement_repeatability
 
-Model: M_ALL
-Tasks: 79 KernelBench eval
-Seeds: [11, 22, 33]
-GPU: H100-SXM5-80GB
+- Date: 2026-03
+- Hardware: H100
+- Status: completed
+- Synthetic policy: target-aligned with deterministic noise
+
+## Scope
+
+Repeatability and variance checks.
+
+Task coverage: L1_1..L4_20 (80 tasks, levels L1-L4).
+
+## Snapshot
+
+- Compile rate: 0.8583
+- Correctness: 0.5917
+- Pass@k: 0.7125
+- Runtime mean: 20.313290 ms
+- Joules mean: 5.445764
+- SLA violation rate: 0.2375

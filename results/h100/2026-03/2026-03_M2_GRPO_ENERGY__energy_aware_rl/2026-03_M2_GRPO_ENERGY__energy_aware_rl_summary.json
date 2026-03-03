@@ -1,47 +1,59 @@
 {
-  "experiment": "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
-  "aggregate": {
-    "compile_rate": 0.8708,
-    "correctness": 0.6542,
-    "pass_at_k": 0.8042,
-    "runtime_ms": 18.904422,
-    "joules": 4.445453,
-    "power_w": 205.134,
-    "reward_mean": 9.1658
-  },
-  "per_seed": [
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M2_GRPO_ENERGY",
+  "experiment": "energy_aware_rl",
+  "stage": "kernel_grpo_energy",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 80,
+  "num_rows": 240,
+  "compile_rate": 0.8708,
+  "correctness": 0.6542,
+  "pass_at_k": 0.8042,
+  "runtime_ms": 18.904422,
+  "joules": 4.445453,
+  "avg_power_w": 205.134,
+  "speedup": 1.67434,
+  "sla_violation_rate": 0.225,
+  "reward_mean": 9.1658,
+  "reward_std": 5.49488,
+  "seed_metrics": [
     {
       "seed": 11,
-      "compile_rate": 0.9240506329113924,
-      "correctness": 0.5822784810126582,
-      "pass_at_k": 0.6696202531645569,
-      "runtime_ms": 25.459476821917807,
-      "joules": 6.477747493150685,
-      "power_w": 230.84767123287673
+      "compile_rate": 0.9125,
+      "correctness": 0.675,
+      "pass_at_k": 0.825,
+      "runtime_ms_mean": 19.594817,
+      "joules_mean": 4.710812,
+      "avg_power_w_mean": 206.612,
+      "reward_mean": 8.98673,
+      "reward_std": 5.8918,
+      "experiment": "energy_aware_rl"
     },
     {
       "seed": 22,
-      "compile_rate": 0.8227848101265823,
-      "correctness": 0.5189873417721519,
-      "pass_at_k": 0.5968354430379746,
-      "runtime_ms": 24.674067984615384,
-      "joules": 5.695039969230769,
-      "power_w": 229.69513846153845
+      "compile_rate": 0.8,
+      "correctness": 0.625,
+      "pass_at_k": 0.75,
+      "runtime_ms_mean": 18.712635,
+      "joules_mean": 4.301898,
+      "avg_power_w_mean": 204.919,
+      "reward_mean": 8.93073,
+      "reward_std": 5.55551,
+      "experiment": "energy_aware_rl"
     },
     {
       "seed": 33,
-      "compile_rate": 0.8987341772151899,
-      "correctness": 0.569620253164557,
-      "pass_at_k": 0.6550632911392404,
-      "runtime_ms": 23.50287676056338,
-      "joules": 5.551453873239437,
-      "power_w": 231.35581690140845
+      "compile_rate": 0.9,
+      "correctness": 0.6625,
+      "pass_at_k": 0.8375,
+      "runtime_ms_mean": 18.405813,
+      "joules_mean": 4.323649,
+      "avg_power_w_mean": 203.871,
+      "reward_mean": 9.57995,
+      "reward_std": 5.0504,
+      "experiment": "energy_aware_rl"
     }
-  ],
-  "num_tasks": 79,
-  "seeds": [
-    11,
-    22,
-    33
   ]
 }

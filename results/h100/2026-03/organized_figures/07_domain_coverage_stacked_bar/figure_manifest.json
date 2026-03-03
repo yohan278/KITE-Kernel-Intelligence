@@ -1,0 +1,17 @@
+{
+  "figure_id": "07_domain_coverage_stacked_bar",
+  "title": "Domain Coverage Stacked Bar",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__difficulty_stratified_eval",
+    "2026-03_M_ALL__final_eval_suite"
+  ]
+}

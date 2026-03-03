@@ -1,0 +1,16 @@
+{
+  "figure_id": "16_per_task_delta_forest_plot",
+  "title": "Per-Task Delta Forest Plot (M2/M3 - M1)",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "figure_id": "14_oom_timeout_incidence_vs_config",
+  "model": "M0",
+  "sources": [
+    "2026-03_M0_SFT__kernel_generation_baseline",
+    "2026-03_M0_SFT__single_shot_generation",
+    "2026-03_M0_SFT__multiturn_generation",
+    "2026-03_M_ALL__failure_taxonomy",
+    "2026-03_M_ALL__inference_budget_ablation"
+  ],
+  "source_count": 5,
+  "status": "ready"
+}

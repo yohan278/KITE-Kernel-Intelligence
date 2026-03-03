@@ -1,0 +1,17 @@
+{
+  "figure_id": "17_routing_savings_curve",
+  "title": "Routing Savings Curve",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M5_HRL__hierarchical_control"
+  ]
+}

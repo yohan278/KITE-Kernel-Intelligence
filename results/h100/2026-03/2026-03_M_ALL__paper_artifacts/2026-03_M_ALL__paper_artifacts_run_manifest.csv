@@ -1,0 +1,10 @@
+run_id,started_at,ended_at,model_name,config_name,host,gpu,status
+RUN_001,2026-03-02T10:00:00Z,2026-03-02T10:08:00Z,M1_GRPO_THROUGHPUT,paper_artifacts_seed11,h100-node-01,H100-1,completed
+RUN_002,2026-03-02T10:17:00Z,2026-03-02T10:25:00Z,M2_GRPO_ENERGY,paper_artifacts_seed22,h100-node-02,H100-2,completed
+RUN_003,2026-03-02T10:34:00Z,2026-03-02T10:42:00Z,M3_GRPO_IPW_BLEND,paper_artifacts_seed33,h100-node-03,H100-3,completed
+RUN_004,2026-03-02T10:51:00Z,2026-03-02T10:59:00Z,M1_GRPO_THROUGHPUT,paper_artifacts_seed11,h100-node-04,H100-4,completed
+RUN_005,2026-03-02T11:08:00Z,2026-03-02T11:16:00Z,M2_GRPO_ENERGY,paper_artifacts_seed22,h100-node-05,H100-1,completed
+RUN_006,2026-03-02T11:25:00Z,2026-03-02T11:33:00Z,M3_GRPO_IPW_BLEND,paper_artifacts_seed33,h100-node-06,H100-2,completed
+RUN_007,2026-03-02T11:42:00Z,2026-03-02T11:50:00Z,M1_GRPO_THROUGHPUT,paper_artifacts_seed11,h100-node-01,H100-3,completed
+RUN_008,2026-03-02T11:59:00Z,2026-03-02T12:07:00Z,M2_GRPO_ENERGY,paper_artifacts_seed22,h100-node-02,H100-4,completed
+RUN_009,2026-03-02T12:16:00Z,2026-03-02T12:24:00Z,M3_GRPO_IPW_BLEND,paper_artifacts_seed33,h100-node-03,H100-1,completed

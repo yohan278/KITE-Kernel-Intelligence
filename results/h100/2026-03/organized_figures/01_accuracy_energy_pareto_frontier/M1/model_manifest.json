@@ -1,0 +1,12 @@
+{
+  "figure_id": "01_accuracy_energy_pareto_frontier",
+  "model": "M1",
+  "sources": [
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn",
+    "2026-03_M_ALL__final_eval_suite"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

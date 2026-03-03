@@ -1,47 +1,59 @@
 {
-  "experiment": "2026-03_M4_RUNTIME_PPO__regime_mixed",
-  "aggregate": {
-    "compile_rate": 0.9042,
-    "correctness": 0.6083,
-    "pass_at_k": 0.7583,
-    "runtime_ms": 16.788076,
-    "joules": 4.296739,
-    "power_w": 223.27,
-    "reward_mean": 8.99985
-  },
-  "per_seed": [
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M4_RUNTIME_PPO",
+  "experiment": "regime_mixed",
+  "stage": "runtime_ppo",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 80,
+  "num_rows": 240,
+  "compile_rate": 0.9042,
+  "correctness": 0.6083,
+  "pass_at_k": 0.7583,
+  "runtime_ms": 16.788076,
+  "joules": 4.296739,
+  "avg_power_w": 223.27,
+  "speedup": 1.669516,
+  "sla_violation_rate": 0.1958,
+  "reward_mean": 8.99985,
+  "reward_std": 5.42705,
+  "seed_metrics": [
     {
       "seed": 11,
-      "compile_rate": 0.8987341772151899,
-      "correctness": 0.5063291139240507,
-      "pass_at_k": 0.5822784810126582,
-      "runtime_ms": 22.28168391549296,
-      "joules": 5.974777873239437,
-      "power_w": 228.46177464788732
+      "compile_rate": 0.9,
+      "correctness": 0.6,
+      "pass_at_k": 0.75,
+      "runtime_ms_mean": 17.532501,
+      "joules_mean": 4.592694,
+      "avg_power_w_mean": 227.102,
+      "reward_mean": 8.57049,
+      "reward_std": 5.89786,
+      "experiment": "regime_mixed"
     },
     {
       "seed": 22,
-      "compile_rate": 0.9113924050632911,
-      "correctness": 0.569620253164557,
-      "pass_at_k": 0.6550632911392404,
-      "runtime_ms": 22.82983438888889,
-      "joules": 5.448947,
-      "power_w": 232.12055555555557
+      "compile_rate": 0.9,
+      "correctness": 0.6,
+      "pass_at_k": 0.8,
+      "runtime_ms_mean": 17.018999,
+      "joules_mean": 4.295895,
+      "avg_power_w_mean": 222.188,
+      "reward_mean": 8.92414,
+      "reward_std": 5.31084,
+      "experiment": "regime_mixed"
     },
     {
       "seed": 33,
-      "compile_rate": 0.9240506329113924,
-      "correctness": 0.5189873417721519,
-      "pass_at_k": 0.5968354430379746,
-      "runtime_ms": 19.726013452054797,
-      "joules": 5.098799821917808,
-      "power_w": 228.47938356164383
+      "compile_rate": 0.9125,
+      "correctness": 0.625,
+      "pass_at_k": 0.725,
+      "runtime_ms_mean": 15.81273,
+      "joules_mean": 4.001629,
+      "avg_power_w_mean": 220.52,
+      "reward_mean": 9.50493,
+      "reward_std": 5.06594,
+      "experiment": "regime_mixed"
     }
-  ],
-  "num_tasks": 79,
-  "seeds": [
-    11,
-    22,
-    33
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "figure_id": "18_ablation_spider_chart",
+  "model": "M0",
+  "sources": [
+    "2026-03_M0_SFT__kernel_generation_baseline",
+    "2026-03_M0_SFT__single_shot_generation",
+    "2026-03_M0_SFT__multiturn_generation",
+    "2026-03_M_ALL__reward_ablation",
+    "2026-03_M_ALL__telemetry_realism_ablation",
+    "2026-03_M_ALL__data_scale_ablation"
+  ],
+  "source_count": 6,
+  "status": "ready"
+}

@@ -1,0 +1,11 @@
+{
+  "figure_id": "06_cross_hardware_transfer_scatter",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M_ALL__cross_hardware_transfer"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

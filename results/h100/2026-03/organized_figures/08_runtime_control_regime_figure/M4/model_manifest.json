@@ -1,0 +1,12 @@
+{
+  "figure_id": "08_runtime_control_regime_figure",
+  "model": "M4",
+  "sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

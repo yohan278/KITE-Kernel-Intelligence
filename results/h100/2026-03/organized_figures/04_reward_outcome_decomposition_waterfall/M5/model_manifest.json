@@ -1,0 +1,11 @@
+{
+  "figure_id": "04_reward_outcome_decomposition_waterfall",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M_ALL__reward_ablation"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

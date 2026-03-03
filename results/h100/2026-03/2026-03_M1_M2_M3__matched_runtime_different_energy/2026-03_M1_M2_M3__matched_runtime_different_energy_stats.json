@@ -1,5 +1,9 @@
 {
-  "n_pairs": 237,
-  "median_delta_joules_pct": 20.7386,
-  "mean_delta_joules_pct": 21.447645147679328
+  "status": "completed",
+  "runtime_match_threshold_pct": 3,
+  "energy_separation_threshold_pct": 10,
+  "num_pairs": 160,
+  "median_delta_joules_pct": -12.7547,
+  "wilcoxon_p_value": 0.0051,
+  "effect_size": 0.74
 }

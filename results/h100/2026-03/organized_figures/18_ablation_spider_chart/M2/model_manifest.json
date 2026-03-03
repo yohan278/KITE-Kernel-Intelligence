@@ -1,0 +1,12 @@
+{
+  "figure_id": "18_ablation_spider_chart",
+  "model": "M2",
+  "sources": [
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
+    "2026-03_M_ALL__reward_ablation",
+    "2026-03_M_ALL__telemetry_realism_ablation",
+    "2026-03_M_ALL__data_scale_ablation"
+  ],
+  "source_count": 4,
+  "status": "ready"
+}

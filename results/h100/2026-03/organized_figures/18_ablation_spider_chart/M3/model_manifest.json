@@ -1,0 +1,13 @@
+{
+  "figure_id": "18_ablation_spider_chart",
+  "model": "M3",
+  "sources": [
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_sweep",
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_lambda_ablation",
+    "2026-03_M_ALL__reward_ablation",
+    "2026-03_M_ALL__telemetry_realism_ablation",
+    "2026-03_M_ALL__data_scale_ablation"
+  ],
+  "source_count": 5,
+  "status": "ready"
+}
