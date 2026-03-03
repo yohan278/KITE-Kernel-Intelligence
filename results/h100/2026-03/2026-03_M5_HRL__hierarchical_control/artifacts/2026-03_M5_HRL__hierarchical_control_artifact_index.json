@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M5_HRL__hierarchical_control",
+  "files": [
+    "2026-03_M5_HRL__hierarchical_control_metrics.csv",
+    "2026-03_M5_HRL__hierarchical_control_per_task.jsonl",
+    "2026-03_M5_HRL__hierarchical_control_per_seed.csv",
+    "2026-03_M5_HRL__hierarchical_control_summary.json",
+    "2026-03_M5_HRL__hierarchical_control_ci_stats.json",
+    "2026-03_M5_HRL__hierarchical_control_failure_taxonomy.csv",
+    "2026-03_M5_HRL__hierarchical_control_significance_tests.csv"
+  ]
+}

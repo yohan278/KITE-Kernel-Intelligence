@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__paper_appendix",
+  "aggregate": {
+    "compile_rate": 0.8917,
+    "correctness": 0.6,
+    "pass_at_k": 0.7208,
+    "runtime_ms": 19.464808,
+    "joules": 5.049335,
+    "power_w": 228.87,
+    "reward_mean": 8.04625
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.5316455696202531,
+      "pass_at_k": 0.6113924050632911,
+      "runtime_ms": 25.140246561643835,
+      "joules": 6.712389219178082,
+      "power_w": 228.52446575342466
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.4936708860759494,
+      "pass_at_k": 0.5677215189873418,
+      "runtime_ms": 25.608919779411764,
+      "joules": 6.791905632352941,
+      "power_w": 230.7792205882353
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9367088607594937,
+      "correctness": 0.5063291139240507,
+      "pass_at_k": 0.5822784810126582,
+      "runtime_ms": 24.389834283783784,
+      "joules": 6.550707729729729,
+      "power_w": 230.60813513513514
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

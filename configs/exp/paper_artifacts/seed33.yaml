@@ -1,0 +1,7 @@
+script: "09_build_paper_artifacts.py"
+model: "M_ALL"
+stage: "bundle"
+bundle:
+  collect_upstream: true
+seed: 33
+experiment: "paper_artifacts"

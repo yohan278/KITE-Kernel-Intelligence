@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__data_scale_ablation",
+  "aggregate": {
+    "compile_rate": 0.8625,
+    "correctness": 0.5917,
+    "pass_at_k": 0.7167,
+    "runtime_ms": 20.403844,
+    "joules": 5.493485,
+    "power_w": 232.505,
+    "reward_mean": 6.97448
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.5189873417721519,
+      "pass_at_k": 0.5968354430379746,
+      "runtime_ms": 26.900446085714286,
+      "joules": 7.490411628571428,
+      "power_w": 233.55491428571426
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.5063291139240507,
+      "pass_at_k": 0.5822784810126582,
+      "runtime_ms": 26.973515414285714,
+      "joules": 7.0326734,
+      "power_w": 232.36187142857142
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.4810126582278481,
+      "pass_at_k": 0.5531645569620253,
+      "runtime_ms": 27.616686314285715,
+      "joules": 7.257556914285714,
+      "power_w": 229.68880000000001
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

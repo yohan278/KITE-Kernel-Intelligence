@@ -1,0 +1,10 @@
+script: "train_rl.py"
+model: "M2_GRPO_ENERGY"
+stage: "kernel_grpo_energy"
+grpo:
+  epochs: 3
+  energy_aware: true
+  reward_beta_joules: 0.5
+  reward_ipw_blend_weight: 0.0
+seed: 11
+experiment: "energy_aware_rl"

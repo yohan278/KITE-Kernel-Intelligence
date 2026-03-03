@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M_ALL__failure_taxonomy",
+  "files": [
+    "2026-03_M_ALL__failure_taxonomy_metrics.csv",
+    "2026-03_M_ALL__failure_taxonomy_per_task.jsonl",
+    "2026-03_M_ALL__failure_taxonomy_per_seed.csv",
+    "2026-03_M_ALL__failure_taxonomy_summary.json",
+    "2026-03_M_ALL__failure_taxonomy_ci_stats.json",
+    "2026-03_M_ALL__failure_taxonomy_failure_taxonomy.csv",
+    "2026-03_M_ALL__failure_taxonomy_significance_tests.csv"
+  ]
+}

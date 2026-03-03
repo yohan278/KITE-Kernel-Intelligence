@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M1_GRPO_THROUGHPUT__throughput_rl",
+  "aggregate": {
+    "compile_rate": 0.8542,
+    "correctness": 0.6667,
+    "pass_at_k": 0.7917,
+    "runtime_ms": 18.24184,
+    "joules": 5.817797,
+    "power_w": 276.599,
+    "reward_mean": 8.0019
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8227848101265823,
+      "correctness": 0.5316455696202531,
+      "pass_at_k": 0.6113924050632911,
+      "runtime_ms": 24.590931707692306,
+      "joules": 7.755288784615384,
+      "power_w": 229.08533846153847
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8354430379746836,
+      "correctness": 0.5569620253164557,
+      "pass_at_k": 0.640506329113924,
+      "runtime_ms": 24.49113056060606,
+      "joules": 7.711631227272727,
+      "power_w": 229.8148181818182
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.7848101265822784,
+      "correctness": 0.5443037974683544,
+      "pass_at_k": 0.6259493670886076,
+      "runtime_ms": 22.541958887096776,
+      "joules": 7.032473387096775,
+      "power_w": 232.02237096774195
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

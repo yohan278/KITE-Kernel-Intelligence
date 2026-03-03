@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M0_SFT__kernel_generation_baseline",
+  "files": [
+    "2026-03_M0_SFT__kernel_generation_baseline_metrics.csv",
+    "2026-03_M0_SFT__kernel_generation_baseline_per_task.jsonl",
+    "2026-03_M0_SFT__kernel_generation_baseline_per_seed.csv",
+    "2026-03_M0_SFT__kernel_generation_baseline_summary.json",
+    "2026-03_M0_SFT__kernel_generation_baseline_ci_stats.json",
+    "2026-03_M0_SFT__kernel_generation_baseline_failure_taxonomy.csv",
+    "2026-03_M0_SFT__kernel_generation_baseline_significance_tests.csv"
+  ]
+}

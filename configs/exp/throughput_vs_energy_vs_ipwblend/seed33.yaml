@@ -1,0 +1,10 @@
+script: "08_eval_all.py"
+model: "M1_M2_M3"
+stage: "analysis"
+eval:
+  models:
+    - M1
+    - M2
+    - M3
+seed: 33
+experiment: "throughput_vs_energy_vs_ipwblend"

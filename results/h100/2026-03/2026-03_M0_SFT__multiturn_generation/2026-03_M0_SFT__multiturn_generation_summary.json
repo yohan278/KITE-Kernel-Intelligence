@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M0_SFT__multiturn_generation",
+  "aggregate": {
+    "compile_rate": 0.8667,
+    "correctness": 0.5667,
+    "pass_at_k": 0.7208,
+    "runtime_ms": 24.30355,
+    "joules": 7.113229,
+    "power_w": 257.645,
+    "reward_mean": 0.96253
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.569620253164557,
+      "pass_at_k": 0.6550632911392404,
+      "runtime_ms": 33.298465771428575,
+      "joules": 9.447416671428572,
+      "power_w": 231.5118857142857
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8734177215189873,
+      "correctness": 0.4050632911392405,
+      "pass_at_k": 0.46582278481012657,
+      "runtime_ms": 32.41769868115942,
+      "joules": 9.6721484057971,
+      "power_w": 229.1389855072464
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9367088607594937,
+      "correctness": 0.45569620253164556,
+      "pass_at_k": 0.5240506329113923,
+      "runtime_ms": 31.37381283783784,
+      "joules": 8.644589135135135,
+      "power_w": 231.23597297297297
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

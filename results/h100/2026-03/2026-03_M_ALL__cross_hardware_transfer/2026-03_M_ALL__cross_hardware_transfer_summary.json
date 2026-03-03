@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__cross_hardware_transfer",
+  "aggregate": {
+    "compile_rate": 0.9083,
+    "correctness": 0.5542,
+    "pass_at_k": 0.7208,
+    "runtime_ms": 20.98095,
+    "joules": 5.631998,
+    "power_w": 234.956,
+    "reward_mean": 6.42445
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.4810126582278481,
+      "pass_at_k": 0.5531645569620253,
+      "runtime_ms": 28.010353220588236,
+      "joules": 7.123430529411765,
+      "power_w": 230.90782352941176
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9367088607594937,
+      "correctness": 0.6582278481012658,
+      "pass_at_k": 0.7569620253164556,
+      "runtime_ms": 27.411568054054054,
+      "joules": 7.526954972972973,
+      "power_w": 233.44463513513512
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9113924050632911,
+      "correctness": 0.43037974683544306,
+      "pass_at_k": 0.49493670886075947,
+      "runtime_ms": 27.829364180555554,
+      "joules": 7.472653500000001,
+      "power_w": 233.39154166666665
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

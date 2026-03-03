@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M5_HRL__runtime_vs_static_comparison",
+  "aggregate": {
+    "compile_rate": 0.875,
+    "correctness": 0.6625,
+    "pass_at_k": 0.7958,
+    "runtime_ms": 15.874997,
+    "joules": 3.790708,
+    "power_w": 208.784,
+    "reward_mean": 10.26099
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.810126582278481,
+      "correctness": 0.4810126582278481,
+      "pass_at_k": 0.5531645569620253,
+      "runtime_ms": 21.14761065625,
+      "joules": 4.976254140625,
+      "power_w": 228.290125
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9493670886075949,
+      "correctness": 0.6835443037974683,
+      "pass_at_k": 0.7860759493670886,
+      "runtime_ms": 20.726930186666664,
+      "joules": 4.877609546666667,
+      "power_w": 233.25266666666667
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8354430379746836,
+      "correctness": 0.6075949367088608,
+      "pass_at_k": 0.6987341772151898,
+      "runtime_ms": 20.220697848484846,
+      "joules": 5.015478363636364,
+      "power_w": 231.84678787878786
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

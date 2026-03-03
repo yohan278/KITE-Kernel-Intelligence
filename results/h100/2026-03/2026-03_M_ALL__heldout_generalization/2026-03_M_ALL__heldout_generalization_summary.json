@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__heldout_generalization",
+  "aggregate": {
+    "compile_rate": 0.8708,
+    "correctness": 0.575,
+    "pass_at_k": 0.75,
+    "runtime_ms": 21.263137,
+    "joules": 5.749122,
+    "power_w": 233.02,
+    "reward_mean": 6.19674
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8481012658227848,
+      "correctness": 0.45569620253164556,
+      "pass_at_k": 0.5240506329113923,
+      "runtime_ms": 27.76229232835821,
+      "joules": 7.5068617313432835,
+      "power_w": 228.69710447761193
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.5189873417721519,
+      "pass_at_k": 0.5968354430379746,
+      "runtime_ms": 28.04236091780822,
+      "joules": 7.951498315068493,
+      "power_w": 230.39634246575343
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8987341772151899,
+      "correctness": 0.6329113924050633,
+      "pass_at_k": 0.7278481012658228,
+      "runtime_ms": 27.413372,
+      "joules": 6.9531569436619725,
+      "power_w": 227.5985352112676
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

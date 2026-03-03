@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M1_M2_M3__matched_runtime_different_energy",
+  "files": [
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_metrics.csv",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_per_task.jsonl",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_per_seed.csv",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_summary.json",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_ci_stats.json",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_failure_taxonomy.csv",
+    "2026-03_M1_M2_M3__matched_runtime_different_energy_significance_tests.csv"
+  ]
+}

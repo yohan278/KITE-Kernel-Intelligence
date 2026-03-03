@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__paper_figures",
+  "aggregate": {
+    "compile_rate": 0.875,
+    "correctness": 0.6333,
+    "pass_at_k": 0.7417,
+    "runtime_ms": 19.185896,
+    "joules": 5.021541,
+    "power_w": 227.401,
+    "reward_mean": 8.17767
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8481012658227848,
+      "correctness": 0.4430379746835443,
+      "pass_at_k": 0.5094936708860759,
+      "runtime_ms": 24.842991179104477,
+      "joules": 6.623744746268657,
+      "power_w": 225.1847014925373
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.6455696202531646,
+      "pass_at_k": 0.7424050632911392,
+      "runtime_ms": 24.640472164383564,
+      "joules": 6.623943356164384,
+      "power_w": 231.03605479452057
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.6329113924050633,
+      "pass_at_k": 0.7278481012658228,
+      "runtime_ms": 24.144582200000002,
+      "joules": 6.2398971,
+      "power_w": 231.24457142857145
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

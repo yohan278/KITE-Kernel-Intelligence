@@ -1,0 +1,32 @@
+# M0: SFT kernel generator config
+model:
+  name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  lora:
+    rank: 64
+    alpha: 16
+    dropout: 0.05
+    target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
+  generation:
+    max_new_tokens: 1024
+    temperature: 0.7
+    do_sample: true
+
+sft:
+  epochs: 3
+  batch_size: 8
+  grad_accum_steps: 2
+  learning_rate: 2.0e-5
+  max_seq_length: 2048
+  compile_gate: 0.70
+  correctness_gate: 0.50
+
+dataset:
+  source: KernelBench
+  levels: [1, 2, 3, 4]
+  max_examples: 256
+
+eval:
+  tasks: 80
+  seeds: [11, 22, 33]
+  num_correct_trials: 5
+  num_perf_trials: 100

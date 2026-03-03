@@ -1,0 +1,7 @@
+script: "08_eval_all.py"
+model: "M_ALL"
+stage: "suite"
+eval:
+  target: "main_figures"
+seed: 22
+experiment: "paper_figures"

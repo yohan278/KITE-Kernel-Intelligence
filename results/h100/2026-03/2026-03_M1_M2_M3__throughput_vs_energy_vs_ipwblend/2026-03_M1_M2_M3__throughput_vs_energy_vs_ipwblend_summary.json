@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+  "aggregate": {
+    "compile_rate": 0.8792,
+    "correctness": 0.5375,
+    "pass_at_k": 0.7125,
+    "runtime_ms": 18.900404,
+    "joules": 5.335713,
+    "power_w": 242.662,
+    "reward_mean": 7.68356
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8607594936708861,
+      "correctness": 0.45569620253164556,
+      "pass_at_k": 0.5240506329113923,
+      "runtime_ms": 25.22617913235294,
+      "joules": 7.580475441176469,
+      "power_w": 231.8878382352941
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8354430379746836,
+      "correctness": 0.31645569620253167,
+      "pass_at_k": 0.3639240506329114,
+      "runtime_ms": 25.338782545454546,
+      "joules": 6.639222424242424,
+      "power_w": 231.29775757575757
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.4936708860759494,
+      "pass_at_k": 0.5677215189873418,
+      "runtime_ms": 23.7617867260274,
+      "joules": 7.075445178082191,
+      "power_w": 233.49098630136987
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

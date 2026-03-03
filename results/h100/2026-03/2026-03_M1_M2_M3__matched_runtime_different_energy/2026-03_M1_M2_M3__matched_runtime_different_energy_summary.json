@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M1_M2_M3__matched_runtime_different_energy",
+  "aggregate": {
+    "compile_rate": 0.875,
+    "correctness": 0.5542,
+    "pass_at_k": 0.7,
+    "runtime_ms": 18.954815,
+    "joules": 4.9203,
+    "power_w": 227.395,
+    "reward_mean": 8.32431
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.7974683544303798,
+      "correctness": 0.3924050632911392,
+      "pass_at_k": 0.4512658227848101,
+      "runtime_ms": 25.310649904761906,
+      "joules": 6.635499285714285,
+      "power_w": 231.48287301587303
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8987341772151899,
+      "correctness": 0.6455696202531646,
+      "pass_at_k": 0.7424050632911392,
+      "runtime_ms": 24.35227590140845,
+      "joules": 6.638140394366197,
+      "power_w": 235.13095774647886
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8734177215189873,
+      "correctness": 0.43037974683544306,
+      "pass_at_k": 0.49493670886075947,
+      "runtime_ms": 24.768498144927538,
+      "joules": 6.088671115942029,
+      "power_w": 229.48689855072462
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

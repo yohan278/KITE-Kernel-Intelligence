@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M_ALL__measurement_repeatability",
+  "files": [
+    "2026-03_M_ALL__measurement_repeatability_metrics.csv",
+    "2026-03_M_ALL__measurement_repeatability_per_task.jsonl",
+    "2026-03_M_ALL__measurement_repeatability_per_seed.csv",
+    "2026-03_M_ALL__measurement_repeatability_summary.json",
+    "2026-03_M_ALL__measurement_repeatability_ci_stats.json",
+    "2026-03_M_ALL__measurement_repeatability_failure_taxonomy.csv",
+    "2026-03_M_ALL__measurement_repeatability_significance_tests.csv"
+  ]
+}

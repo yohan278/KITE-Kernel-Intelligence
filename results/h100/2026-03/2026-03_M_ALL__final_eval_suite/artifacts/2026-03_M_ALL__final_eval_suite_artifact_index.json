@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M_ALL__final_eval_suite",
+  "files": [
+    "2026-03_M_ALL__final_eval_suite_metrics.csv",
+    "2026-03_M_ALL__final_eval_suite_per_task.jsonl",
+    "2026-03_M_ALL__final_eval_suite_per_seed.csv",
+    "2026-03_M_ALL__final_eval_suite_summary.json",
+    "2026-03_M_ALL__final_eval_suite_ci_stats.json",
+    "2026-03_M_ALL__final_eval_suite_failure_taxonomy.csv",
+    "2026-03_M_ALL__final_eval_suite_significance_tests.csv"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M0_SFT__single_shot_generation",
+  "files": [
+    "2026-03_M0_SFT__single_shot_generation_metrics.csv",
+    "2026-03_M0_SFT__single_shot_generation_per_task.jsonl",
+    "2026-03_M0_SFT__single_shot_generation_per_seed.csv",
+    "2026-03_M0_SFT__single_shot_generation_summary.json",
+    "2026-03_M0_SFT__single_shot_generation_ci_stats.json",
+    "2026-03_M0_SFT__single_shot_generation_failure_taxonomy.csv",
+    "2026-03_M0_SFT__single_shot_generation_significance_tests.csv"
+  ]
+}

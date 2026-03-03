@@ -1,0 +1,12 @@
+script: "08_eval_all.py"
+model: "M_ALL"
+stage: "suite"
+eval:
+  task_counts:
+    - 16
+    - 32
+    - 64
+    - 128
+    - 270
+seed: 22
+experiment: "data_scale_ablation"

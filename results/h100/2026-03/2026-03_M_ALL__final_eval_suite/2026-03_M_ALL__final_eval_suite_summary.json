@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__final_eval_suite",
+  "aggregate": {
+    "compile_rate": 0.9,
+    "correctness": 0.6083,
+    "pass_at_k": 0.7375,
+    "runtime_ms": 19.137232,
+    "joules": 5.045113,
+    "power_w": 228.289,
+    "reward_mean": 8.13564
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8860759493670886,
+      "correctness": 0.46835443037974683,
+      "pass_at_k": 0.5386075949367088,
+      "runtime_ms": 24.915249628571427,
+      "joules": 6.618649842857143,
+      "power_w": 229.95192857142857
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8987341772151899,
+      "correctness": 0.5822784810126582,
+      "pass_at_k": 0.6696202531645569,
+      "runtime_ms": 24.83525461971831,
+      "joules": 6.452738225352112,
+      "power_w": 227.11187323943662
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8734177215189873,
+      "correctness": 0.4810126582278481,
+      "pass_at_k": 0.5531645569620253,
+      "runtime_ms": 23.79638408695652,
+      "joules": 6.252163420289855,
+      "power_w": 230.84784057971015
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

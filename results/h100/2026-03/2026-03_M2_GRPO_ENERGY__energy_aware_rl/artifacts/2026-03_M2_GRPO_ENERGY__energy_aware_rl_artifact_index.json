@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
+  "files": [
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_metrics.csv",
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_per_task.jsonl",
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_per_seed.csv",
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_summary.json",
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_ci_stats.json",
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_failure_taxonomy.csv",
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl_significance_tests.csv"
+  ]
+}

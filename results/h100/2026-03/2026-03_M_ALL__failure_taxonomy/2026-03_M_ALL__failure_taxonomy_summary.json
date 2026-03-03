@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M_ALL__failure_taxonomy",
+  "aggregate": {
+    "compile_rate": 0.8292,
+    "correctness": 0.5417,
+    "pass_at_k": 0.675,
+    "runtime_ms": 21.101462,
+    "joules": 5.88283,
+    "power_w": 243.058,
+    "reward_mean": 5.66829
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.810126582278481,
+      "correctness": 0.5189873417721519,
+      "pass_at_k": 0.5968354430379746,
+      "runtime_ms": 28.98887440625,
+      "joules": 8.318705015625,
+      "power_w": 226.79715625
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.6962025316455697,
+      "correctness": 0.43037974683544306,
+      "pass_at_k": 0.49493670886075947,
+      "runtime_ms": 27.052131818181817,
+      "joules": 7.4917468,
+      "power_w": 233.0381818181818
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8227848101265823,
+      "correctness": 0.45569620253164556,
+      "pass_at_k": 0.5240506329113923,
+      "runtime_ms": 26.79946313846154,
+      "joules": 7.5725524,
+      "power_w": 229.2819846153846
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

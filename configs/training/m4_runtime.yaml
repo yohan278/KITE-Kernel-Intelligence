@@ -1,0 +1,35 @@
+# M4: Runtime PPO config with 3 regimes
+regimes:
+  latency_sensitive:
+    ttft_sla: 1.0
+    e2e_sla: 15.0
+    episodes: 20
+    horizon: 10
+    ppo_update_every: 5
+
+  throughput:
+    ttft_sla: 5.0
+    e2e_sla: 60.0
+    episodes: 20
+    horizon: 10
+    ppo_update_every: 5
+
+  mixed:
+    ttft_sla: 2.0
+    e2e_sla: 30.0
+    episodes: 20
+    horizon: 10
+    ppo_update_every: 5
+
+actor_critic:
+  hidden_dim: 128
+  num_layers: 2
+  learning_rate: 3.0e-4
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_ratio: 0.2
+  entropy_coef: 0.01
+
+eval:
+  tasks: 80
+  seeds: [11, 22, 33]

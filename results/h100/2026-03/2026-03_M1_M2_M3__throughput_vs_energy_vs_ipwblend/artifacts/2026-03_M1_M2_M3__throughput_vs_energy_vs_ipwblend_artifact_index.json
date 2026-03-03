@@ -1,0 +1,12 @@
+{
+  "experiment": "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+  "files": [
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_metrics.csv",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_per_task.jsonl",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_per_seed.csv",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_summary.json",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_ci_stats.json",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_failure_taxonomy.csv",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend_significance_tests.csv"
+  ]
+}

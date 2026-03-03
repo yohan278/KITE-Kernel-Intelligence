@@ -1,0 +1,47 @@
+{
+  "experiment": "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
+  "aggregate": {
+    "compile_rate": 0.8708,
+    "correctness": 0.6542,
+    "pass_at_k": 0.8042,
+    "runtime_ms": 18.904422,
+    "joules": 4.445453,
+    "power_w": 205.134,
+    "reward_mean": 9.1658
+  },
+  "per_seed": [
+    {
+      "seed": 11,
+      "compile_rate": 0.9240506329113924,
+      "correctness": 0.5822784810126582,
+      "pass_at_k": 0.6696202531645569,
+      "runtime_ms": 25.459476821917807,
+      "joules": 6.477747493150685,
+      "power_w": 230.84767123287673
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8227848101265823,
+      "correctness": 0.5189873417721519,
+      "pass_at_k": 0.5968354430379746,
+      "runtime_ms": 24.674067984615384,
+      "joules": 5.695039969230769,
+      "power_w": 229.69513846153845
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.8987341772151899,
+      "correctness": 0.569620253164557,
+      "pass_at_k": 0.6550632911392404,
+      "runtime_ms": 23.50287676056338,
+      "joules": 5.551453873239437,
+      "power_w": 231.35581690140845
+    }
+  ],
+  "num_tasks": 79,
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}
