@@ -1,0 +1,10 @@
+script: "train_rl.py"
+model: "M3_GRPO_IPW_BLEND"
+stage: "kernel_grpo_ipw"
+grpo:
+  epochs: 3
+  energy_aware: true
+  reward_beta_joules: 0.5
+  reward_ipw_blend_weight: 0.25
+seed: 33
+experiment: "ipw_blend_sweep"

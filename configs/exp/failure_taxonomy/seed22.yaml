@@ -1,0 +1,7 @@
+script: "08_eval_all.py"
+model: "M_ALL"
+stage: "suite"
+eval:
+  analyze_failures: true
+seed: 22
+experiment: "failure_taxonomy"

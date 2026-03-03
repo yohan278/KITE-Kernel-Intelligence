@@ -1,0 +1,9 @@
+script: "07_run_hrl.py"
+model: "M5_HRL"
+stage: "hrl"
+hrl:
+  alternating_rounds: 2
+comparison:
+  include_static_baseline: true
+seed: 11
+experiment: "runtime_vs_static_comparison"

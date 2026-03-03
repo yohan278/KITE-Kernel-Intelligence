@@ -1,0 +1,4 @@
+Subset,Compile Rate,Correctness,Pass@k,Joules
+Seen Tasks,0.8694,0.6364,0.7479,2.984
+Held-out Tasks,0.8852,0.6837,0.8029,5.454
+Hard Tasks (L3+L4),0.8678,0.6435,0.7702,3.174

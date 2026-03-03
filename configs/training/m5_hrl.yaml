@@ -1,0 +1,31 @@
+# M5: HRL alternating training config
+model:
+  name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  lora:
+    rank: 64
+    alpha: 16
+
+hrl:
+  alternating_rounds: 2
+  kernel_epochs_per_round: 1
+  runtime_episodes_per_round: 10
+  runtime_horizon: 10
+  joint_finetune_episodes: 5
+
+hierarchy:
+  kernel_families:
+    - balanced
+    - prefill_optimized
+    - decode_optimized
+    - throughput_optimized
+    - energy_optimized
+  hidden_dim: 64
+  learning_rate: 1.0e-3
+
+runtime:
+  ttft_sla: 2.0
+  e2e_sla: 30.0
+
+eval:
+  tasks: 80
+  seeds: [11, 22, 33]

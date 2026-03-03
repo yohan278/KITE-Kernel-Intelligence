@@ -1,0 +1,9 @@
+script: "08_eval_all.py"
+model: "M0_M1_M2_M3"
+stage: "analysis"
+eval:
+  modes:
+    - single_shot
+    - multiturn
+seed: 33
+experiment: "single_shot_vs_multiturn"

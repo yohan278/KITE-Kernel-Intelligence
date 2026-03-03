@@ -1,0 +1,10 @@
+script: "08_eval_all.py"
+model: "M_ALL"
+stage: "suite"
+eval:
+  telemetry_modes:
+    - real
+    - synthetic
+    - hybrid
+seed: 22
+experiment: "telemetry_realism_ablation"

@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package h100_telemetry;
+
+message GpuSample {
+  uint32 gpu_index = 1;
+
+  // nvmlDeviceGetUtilizationRates
+  double gpu_utilization_pct = 2;
+  double memory_utilization_pct = 3;
+
+  // nvmlDeviceGetTemperature(NVML_TEMPERATURE_GPU)
+  double temperature_c = 4;
+
+  // nvmlDeviceGetClockInfo
+  uint32 clock_sm_mhz = 5;
+  uint32 clock_mem_mhz = 6;
+
+  // nvmlDeviceGetPowerManagementLimit (milliwatts -> watts in code)
+  double power_limit_w = 7;
+
+  // nvmlDeviceGetTotalEnergyConsumption (millijoules)
+  uint64 total_energy_mj = 8;
+
+  // nvmlDeviceGetMemoryInfo
+  uint64 memory_used_bytes = 9;
+  uint64 memory_total_bytes = 10;
+
+  // nvmlDeviceGetPcieThroughput (KB/s)
+  uint64 pcie_tx_kbps = 11;
+  uint64 pcie_rx_kbps = 12;
+
+  // nvmlDeviceGetCurrentClocksThrottleReasons (bitmask)
+  uint64 throttle_reasons = 13;
+
+  // nvmlDeviceGetFanSpeed
+  uint32 fan_speed_pct = 14;
+
+  // Derived fields
+  double power_draw_w = 15;
+  double energy_since_baseline_j = 16;
+}
+
+message TelemetrySample {
+  int64 timestamp_nanos = 1;
+  repeated GpuSample gpus = 2;
+
+  // Host-level
+  double cpu_memory_used_mb = 3;
+  string hostname = 4;
+}
+
+// gRPC service
+service H100TelemetryService {
+  rpc Health(HealthRequest) returns (HealthResponse);
+  rpc StreamSamples(StreamRequest) returns (stream TelemetrySample);
+}
+
+message HealthRequest {}
+message HealthResponse {
+  bool healthy = 1;
+  uint32 gpu_count = 2;
+  string platform = 3;
+}
+
+message StreamRequest {
+  uint32 interval_ms = 1;  // 0 = use default 50ms
+}

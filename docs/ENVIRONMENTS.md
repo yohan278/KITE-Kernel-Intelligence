@@ -15,19 +15,19 @@ This project is conda-first for reproducibility and clean separation of workflow
 Create/update only the core environment:
 
 ```bash
-bash scripts/setup_conda_envs.sh
+bash scripts/setup/setup_conda_envs.sh
 ```
 
 Create/update all environments:
 
 ```bash
-bash scripts/setup_conda_envs.sh --all
+bash scripts/setup/setup_conda_envs.sh --all
 ```
 
 Create/update all environments and install local IPW package if mounted:
 
 ```bash
-bash scripts/setup_conda_envs.sh --all --with-ipw
+bash scripts/setup/setup_conda_envs.sh --all --with-ipw
 ```
 
 `--with-ipw` installs into `kite-telemetry` only because the local `intelligence-per-watt` package currently requires Python `>=3.13,<3.14`.

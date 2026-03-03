@@ -1,0 +1,10 @@
+script: "08_eval_all.py"
+model: "M_ALL"
+stage: "suite"
+eval:
+  splits:
+    - seen
+    - held_out
+    - hard
+seed: 22
+experiment: "heldout_generalization"

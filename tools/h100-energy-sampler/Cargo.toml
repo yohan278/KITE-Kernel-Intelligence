@@ -1,0 +1,32 @@
+[package]
+name = "h100-energy-sampler"
+version = "0.1.0"
+edition = "2021"
+description = "Full NVML telemetry sampler for H100 GPUs — streams all 11 fields via gRPC and/or records to CSV/JSONL for KITE training pipelines."
+
+[dependencies]
+anyhow = "1.0"
+async-trait = "0.1"
+chrono = "0.4"
+clap = { version = "4.5", features = ["derive"] }
+csv = "1.3"
+parking_lot = "0.12"
+prost = "0.13"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sysinfo = "0.37"
+tokio = { version = "1.41", features = ["full"] }
+tokio-stream = "0.1"
+tonic = "0.12"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[target.'cfg(not(target_os = "macos"))'.dependencies]
+nvml-wrapper = "0.10"
+
+[build-dependencies]
+tonic-build = "0.12"
+
+[[bin]]
+name = "h100-energy-sampler"
+path = "src/main.rs"
