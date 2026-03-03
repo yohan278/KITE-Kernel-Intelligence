@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+energy_aware_rl,syntax_error,7,0.1759
+energy_aware_rl,forward_arity_mismatch,65,0.1756
+energy_aware_rl,missing_modelnew,101,0.0666
+energy_aware_rl,compile_fail,26,0.1101
+energy_aware_rl,correctness_fail,45,0.1048
+energy_aware_rl,oom,108,0.0842
+energy_aware_rl,timeout,90,0.17
+energy_aware_rl,shape_mismatch,74,0.1998
+energy_aware_rl,invalid_import,60,0.1091

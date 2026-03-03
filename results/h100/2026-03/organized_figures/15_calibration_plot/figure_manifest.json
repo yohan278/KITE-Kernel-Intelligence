@@ -1,0 +1,16 @@
+{
+  "figure_id": "15_calibration_plot",
+  "title": "Calibration Plot (Predicted vs Realized)",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__reward_ablation"
+  ]
+}

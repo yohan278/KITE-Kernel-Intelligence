@@ -1,0 +1,16 @@
+{
+  "figure_id": "13_latency_energy_joint_density",
+  "title": "Latency-Energy Joint Density",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend",
+    "2026-03_M_ALL__measurement_repeatability"
+  ]
+}

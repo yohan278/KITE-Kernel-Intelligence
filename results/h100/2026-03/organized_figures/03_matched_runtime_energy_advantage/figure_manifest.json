@@ -1,0 +1,16 @@
+{
+  "figure_id": "03_matched_runtime_energy_advantage",
+  "title": "Matched-Runtime Energy Advantage",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M1_M2_M3__matched_runtime_different_energy",
+    "2026-03_M1_M2_M3__throughput_vs_energy_vs_ipwblend"
+  ]
+}

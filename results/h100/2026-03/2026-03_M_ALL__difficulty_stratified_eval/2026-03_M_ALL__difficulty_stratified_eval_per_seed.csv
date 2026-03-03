@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.9023,0.6481,0.5973,0.145888,0.111532,201.417,5.51393,0.7282,difficulty_stratified_eval
+22,0.8072,0.6806,0.9494,0.033782,0.40439,167.638,7.93007,2.08919,difficulty_stratified_eval
+33,0.8095,0.8397,0.8176,0.192503,0.411334,266.357,6.35395,1.02777,difficulty_stratified_eval

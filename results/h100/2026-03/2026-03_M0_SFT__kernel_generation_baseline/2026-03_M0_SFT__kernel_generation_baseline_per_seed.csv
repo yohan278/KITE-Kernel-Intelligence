@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.7816,0.9343,0.5646,0.075745,0.303779,97.741,5.01303,0.34193,kernel_generation_baseline
+22,0.8627,0.5924,0.502,0.112399,0.406514,199.134,8.24686,1.63191,kernel_generation_baseline
+33,0.8575,0.7249,0.4007,0.055371,0.463125,153.728,1.32482,0.45605,kernel_generation_baseline

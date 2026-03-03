@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.8895,0.6775,0.4725,0.132562,0.211693,198.95,1.19005,1.09351,reward_ablation
+22,0.7835,0.8039,0.8262,0.185734,0.367369,95.031,0.97489,0.33035,reward_ablation
+33,0.9709,0.7183,0.4976,0.126298,0.328039,155.07,9.5745,2.07647,reward_ablation

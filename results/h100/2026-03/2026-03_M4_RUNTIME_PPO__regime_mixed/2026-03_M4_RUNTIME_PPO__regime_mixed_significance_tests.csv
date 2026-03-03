@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+regime_mixed,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.032455,0.2216
+regime_mixed,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,pass_at_k,wilcoxon,0.098633,0.2291
+regime_mixed,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,speedup,wilcoxon,0.043178,0.1307

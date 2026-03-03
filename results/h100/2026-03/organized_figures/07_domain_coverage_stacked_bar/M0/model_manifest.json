@@ -1,0 +1,14 @@
+{
+  "figure_id": "07_domain_coverage_stacked_bar",
+  "model": "M0",
+  "sources": [
+    "2026-03_M0_SFT__kernel_generation_baseline",
+    "2026-03_M0_SFT__single_shot_generation",
+    "2026-03_M0_SFT__multiturn_generation",
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__difficulty_stratified_eval",
+    "2026-03_M_ALL__final_eval_suite"
+  ],
+  "source_count": 6,
+  "status": "ready"
+}

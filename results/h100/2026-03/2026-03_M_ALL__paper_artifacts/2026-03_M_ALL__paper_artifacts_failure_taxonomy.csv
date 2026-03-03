@@ -1,0 +1,7 @@
+failure_reason,count,fraction
+syntax_error,9,0.225000
+forward_arity_mismatch,8,0.200000
+compile_fail,3,0.075000
+correctness_fail,14,0.350000
+oom,4,0.100000
+timeout,2,0.050000

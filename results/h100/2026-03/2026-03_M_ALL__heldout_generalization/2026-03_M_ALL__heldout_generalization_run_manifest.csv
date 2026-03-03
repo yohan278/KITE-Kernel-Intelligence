@@ -1,0 +1,4 @@
+run_id,seed,command,checkpoint,status
+run::M_ALL::heldout_generalization::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/heldout_generalization/seed11.yaml,checkpoints/exp/heldout_generalization/m_all/seed11/checkpoint.json,completed
+run::M_ALL::heldout_generalization::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/heldout_generalization/seed22.yaml,checkpoints/exp/heldout_generalization/m_all/seed22/checkpoint.json,completed
+run::M_ALL::heldout_generalization::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/heldout_generalization/seed33.yaml,checkpoints/exp/heldout_generalization/m_all/seed33/checkpoint.json,completed

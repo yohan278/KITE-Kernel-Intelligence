@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+runtime_vs_static_comparison,syntax_error,104,0.0484
+runtime_vs_static_comparison,forward_arity_mismatch,86,0.1172
+runtime_vs_static_comparison,missing_modelnew,74,0.171
+runtime_vs_static_comparison,compile_fail,91,0.0836
+runtime_vs_static_comparison,correctness_fail,13,0.164
+runtime_vs_static_comparison,oom,45,0.0783
+runtime_vs_static_comparison,timeout,79,0.212
+runtime_vs_static_comparison,shape_mismatch,79,0.2371
+runtime_vs_static_comparison,invalid_import,113,0.1866

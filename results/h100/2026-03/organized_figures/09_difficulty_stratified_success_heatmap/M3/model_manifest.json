@@ -1,0 +1,11 @@
+{
+  "figure_id": "09_difficulty_stratified_success_heatmap",
+  "model": "M3",
+  "sources": [
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_sweep",
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_lambda_ablation",
+    "2026-03_M_ALL__difficulty_stratified_eval"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

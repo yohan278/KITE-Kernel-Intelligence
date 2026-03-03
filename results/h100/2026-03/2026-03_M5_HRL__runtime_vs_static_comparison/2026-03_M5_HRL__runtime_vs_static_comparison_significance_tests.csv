@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+runtime_vs_static_comparison,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,speedup,paired_ttest,0.030023,0.902
+runtime_vs_static_comparison,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.061517,0.1062
+runtime_vs_static_comparison,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.106482,0.7304

@@ -1,0 +1,59 @@
+{
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M1_M2_M3",
+  "experiment": "throughput_vs_energy_vs_ipwblend",
+  "stage": "suite",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 20,
+  "num_rows": 60,
+  "compile_rate": 0.8833,
+  "correctness": 0.6667,
+  "pass_at_k": 0.6667,
+  "runtime_ms": 0.126304,
+  "joules": 0.353454,
+  "avg_power_w": 190.786,
+  "speedup": 1364.75322,
+  "sla_violation_rate": 0.0833,
+  "reward_mean": 5.36467,
+  "reward_std": 3.95223,
+  "seed_metrics": [
+    {
+      "seed": 11,
+      "compile_rate": 0.9565,
+      "correctness": 0.5835,
+      "pass_at_k": 0.671,
+      "runtime_ms_mean": 0.069966,
+      "joules_mean": 0.331646,
+      "avg_power_w_mean": 211.439,
+      "reward_mean": 4.15306,
+      "reward_std": 1.51664,
+      "experiment": "throughput_vs_energy_vs_ipwblend"
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8427,
+      "correctness": 0.8892,
+      "pass_at_k": 0.5054,
+      "runtime_ms_mean": 0.079513,
+      "joules_mean": 0.471855,
+      "avg_power_w_mean": 112.372,
+      "reward_mean": 1.29794,
+      "reward_std": 1.00589,
+      "experiment": "throughput_vs_energy_vs_ipwblend"
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.924,
+      "correctness": 0.863,
+      "pass_at_k": 0.5294,
+      "runtime_ms_mean": 0.187257,
+      "joules_mean": 0.120805,
+      "avg_power_w_mean": 112.91,
+      "reward_mean": 10.74991,
+      "reward_std": 1.66988,
+      "experiment": "throughput_vs_energy_vs_ipwblend"
+    }
+  ]
+}

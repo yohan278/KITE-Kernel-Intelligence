@@ -1,0 +1,11 @@
+{
+  "figure_id": "02_passk_vs_turns_curve",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M0_M1_M2_M3__single_shot_vs_multiturn"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

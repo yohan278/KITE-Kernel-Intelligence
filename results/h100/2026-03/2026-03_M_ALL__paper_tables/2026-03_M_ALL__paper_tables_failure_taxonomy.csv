@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+paper_tables,syntax_error,46,0.1789
+paper_tables,forward_arity_mismatch,11,0.0902
+paper_tables,missing_modelnew,85,0.1634
+paper_tables,compile_fail,24,0.145
+paper_tables,correctness_fail,117,0.2379
+paper_tables,oom,116,0.0185
+paper_tables,timeout,55,0.1176
+paper_tables,shape_mismatch,117,0.0799
+paper_tables,invalid_import,31,0.0814

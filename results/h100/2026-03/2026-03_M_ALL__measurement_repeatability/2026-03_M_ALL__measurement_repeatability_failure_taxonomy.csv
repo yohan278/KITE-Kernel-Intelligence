@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+measurement_repeatability,syntax_error,41,0.0713
+measurement_repeatability,forward_arity_mismatch,107,0.1358
+measurement_repeatability,missing_modelnew,16,0.0572
+measurement_repeatability,compile_fail,29,0.039
+measurement_repeatability,correctness_fail,70,0.1962
+measurement_repeatability,oom,42,0.2298
+measurement_repeatability,timeout,94,0.1773
+measurement_repeatability,shape_mismatch,70,0.0607
+measurement_repeatability,invalid_import,108,0.1047

@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+throughput_rl,syntax_error,85,0.0959
+throughput_rl,forward_arity_mismatch,109,0.0848
+throughput_rl,missing_modelnew,115,0.0242
+throughput_rl,compile_fail,55,0.1292
+throughput_rl,correctness_fail,43,0.2299
+throughput_rl,oom,80,0.1025
+throughput_rl,timeout,66,0.1342
+throughput_rl,shape_mismatch,108,0.2355
+throughput_rl,invalid_import,86,0.1013

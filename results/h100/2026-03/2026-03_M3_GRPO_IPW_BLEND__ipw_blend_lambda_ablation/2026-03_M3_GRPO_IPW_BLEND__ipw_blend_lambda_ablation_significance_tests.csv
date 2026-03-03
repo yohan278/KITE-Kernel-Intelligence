@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+ipw_blend_lambda_ablation,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,speedup,wilcoxon,0.031572,0.8418
+ipw_blend_lambda_ablation,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,speedup,wilcoxon,0.010601,0.3691
+ipw_blend_lambda_ablation,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.097248,0.3887

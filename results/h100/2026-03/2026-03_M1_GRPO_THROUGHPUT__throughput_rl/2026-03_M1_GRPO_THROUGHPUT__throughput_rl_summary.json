@@ -1,0 +1,59 @@
+{
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M1_GRPO_THROUGHPUT",
+  "experiment": "throughput_rl",
+  "stage": "kernel_grpo_throughput",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 20,
+  "num_rows": 60,
+  "compile_rate": 0.9,
+  "correctness": 0.75,
+  "pass_at_k": 0.75,
+  "runtime_ms": 0.150587,
+  "joules": 0.344372,
+  "avg_power_w": 194.497,
+  "speedup": 1449.41178,
+  "sla_violation_rate": 0.05,
+  "reward_mean": 5.67921,
+  "reward_std": 3.81145,
+  "seed_metrics": [
+    {
+      "seed": 11,
+      "compile_rate": 0.9221,
+      "correctness": 0.7661,
+      "pass_at_k": 0.8738,
+      "runtime_ms_mean": 0.168357,
+      "joules_mean": 0.470376,
+      "avg_power_w_mean": 87.45,
+      "reward_mean": 5.87796,
+      "reward_std": 1.0316,
+      "experiment": "throughput_rl"
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9813,
+      "correctness": 0.6195,
+      "pass_at_k": 0.665,
+      "runtime_ms_mean": 0.114464,
+      "joules_mean": 0.343215,
+      "avg_power_w_mean": 169.523,
+      "reward_mean": -0.84963,
+      "reward_std": 1.02605,
+      "experiment": "throughput_rl"
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.7942,
+      "correctness": 0.7451,
+      "pass_at_k": 0.4693,
+      "runtime_ms_mean": 0.122079,
+      "joules_mean": 0.290038,
+      "avg_power_w_mean": 86.558,
+      "reward_mean": 1.22229,
+      "reward_std": 2.09167,
+      "experiment": "throughput_rl"
+    }
+  ]
+}

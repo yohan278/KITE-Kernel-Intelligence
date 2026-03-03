@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+kernel_generation_baseline,syntax_error,49,0.0357
+kernel_generation_baseline,forward_arity_mismatch,24,0.1359
+kernel_generation_baseline,missing_modelnew,69,0.1013
+kernel_generation_baseline,compile_fail,71,0.1731
+kernel_generation_baseline,correctness_fail,47,0.094
+kernel_generation_baseline,oom,50,0.0861
+kernel_generation_baseline,timeout,23,0.1678
+kernel_generation_baseline,shape_mismatch,52,0.2241
+kernel_generation_baseline,invalid_import,83,0.0963

@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+throughput_vs_energy_vs_ipwblend,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,correctness,paired_ttest,0.01362,0.7668
+throughput_vs_energy_vs_ipwblend,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.097299,0.7512
+throughput_vs_energy_vs_ipwblend,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,wilcoxon,0.089121,0.1786

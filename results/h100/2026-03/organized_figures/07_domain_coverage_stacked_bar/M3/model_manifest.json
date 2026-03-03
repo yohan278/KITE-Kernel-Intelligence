@@ -1,0 +1,13 @@
+{
+  "figure_id": "07_domain_coverage_stacked_bar",
+  "model": "M3",
+  "sources": [
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_sweep",
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_lambda_ablation",
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__difficulty_stratified_eval",
+    "2026-03_M_ALL__final_eval_suite"
+  ],
+  "source_count": 5,
+  "status": "ready"
+}

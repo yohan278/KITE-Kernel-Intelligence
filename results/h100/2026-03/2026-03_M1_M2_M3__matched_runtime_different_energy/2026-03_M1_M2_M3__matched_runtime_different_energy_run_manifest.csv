@@ -1,0 +1,4 @@
+run_id,seed,command,checkpoint,status
+run::M1_M2_M3::matched_runtime_different_energy::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/matched_runtime_different_energy/seed11.yaml,checkpoints/exp/matched_runtime_different_energy/m1_m2_m3/seed11/checkpoint.json,completed
+run::M1_M2_M3::matched_runtime_different_energy::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/matched_runtime_different_energy/seed22.yaml,checkpoints/exp/matched_runtime_different_energy/m1_m2_m3/seed22/checkpoint.json,completed
+run::M1_M2_M3::matched_runtime_different_energy::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/matched_runtime_different_energy/seed33.yaml,checkpoints/exp/matched_runtime_different_energy/m1_m2_m3/seed33/checkpoint.json,completed

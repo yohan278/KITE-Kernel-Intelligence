@@ -1,0 +1,4 @@
+run_id,seed,command,checkpoint,status
+run::M4_RUNTIME_PPO::regime_throughput::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/regime_throughput/seed11.yaml,checkpoints/exp/regime_throughput/m4_runtime_ppo/seed11/checkpoint.json,completed
+run::M4_RUNTIME_PPO::regime_throughput::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/regime_throughput/seed22.yaml,checkpoints/exp/regime_throughput/m4_runtime_ppo/seed22/checkpoint.json,completed
+run::M4_RUNTIME_PPO::regime_throughput::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/regime_throughput/seed33.yaml,checkpoints/exp/regime_throughput/m4_runtime_ppo/seed33/checkpoint.json,completed

@@ -1,0 +1,15 @@
+{
+  "figure_id": "06_cross_hardware_transfer_scatter",
+  "title": "Cross-Hardware Transfer Scatter",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__cross_hardware_transfer"
+  ]
+}

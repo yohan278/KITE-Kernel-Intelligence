@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+data_scale_ablation,syntax_error,82,0.171
+data_scale_ablation,forward_arity_mismatch,117,0.1354
+data_scale_ablation,missing_modelnew,17,0.0375
+data_scale_ablation,compile_fail,98,0.1979
+data_scale_ablation,correctness_fail,39,0.124
+data_scale_ablation,oom,67,0.1951
+data_scale_ablation,timeout,30,0.2096
+data_scale_ablation,shape_mismatch,7,0.0844
+data_scale_ablation,invalid_import,6,0.0957

@@ -1,0 +1,4 @@
+run_id,seed,command,checkpoint,status
+run::M1_GRPO_THROUGHPUT::throughput_rl::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/throughput_rl/seed11.yaml,checkpoints/exp/throughput_rl/m1_grpo_throughput/seed11/checkpoint.json,completed
+run::M1_GRPO_THROUGHPUT::throughput_rl::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/throughput_rl/seed22.yaml,checkpoints/exp/throughput_rl/m1_grpo_throughput/seed22/checkpoint.json,completed
+run::M1_GRPO_THROUGHPUT::throughput_rl::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/throughput_rl/seed33.yaml,checkpoints/exp/throughput_rl/m1_grpo_throughput/seed33/checkpoint.json,completed

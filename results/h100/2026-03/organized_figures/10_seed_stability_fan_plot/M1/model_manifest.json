@@ -1,0 +1,10 @@
+{
+  "figure_id": "10_seed_stability_fan_plot",
+  "model": "M1",
+  "sources": [
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl",
+    "2026-03_M_ALL__seed_robustness"
+  ],
+  "source_count": 2,
+  "status": "ready"
+}

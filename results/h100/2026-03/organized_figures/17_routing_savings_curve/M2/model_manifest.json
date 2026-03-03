@@ -1,0 +1,9 @@
+{
+  "figure_id": "17_routing_savings_curve",
+  "model": "M2",
+  "sources": [
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl"
+  ],
+  "source_count": 1,
+  "status": "ready"
+}

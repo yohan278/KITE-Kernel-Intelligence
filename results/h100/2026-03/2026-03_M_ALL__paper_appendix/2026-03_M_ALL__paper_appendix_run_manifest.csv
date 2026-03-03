@@ -1,0 +1,4 @@
+run_id,seed,command,checkpoint,status
+run::M_ALL::paper_appendix::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/paper_appendix/seed11.yaml,checkpoints/exp/paper_appendix/m_all/seed11/checkpoint.json,completed
+run::M_ALL::paper_appendix::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/paper_appendix/seed22.yaml,checkpoints/exp/paper_appendix/m_all/seed22/checkpoint.json,completed
+run::M_ALL::paper_appendix::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/paper_appendix/seed33.yaml,checkpoints/exp/paper_appendix/m_all/seed33/checkpoint.json,completed

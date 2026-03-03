@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.8009,0.6582,0.7659,0.041823,0.380808,298.831,-0.91576,0.48728,multiturn_generation
+22,0.8318,0.8517,0.5327,0.071002,0.393414,285.411,0.02739,1.42884,multiturn_generation
+33,0.8922,0.9553,0.4459,0.111296,0.433526,234.477,0.19004,1.04293,multiturn_generation

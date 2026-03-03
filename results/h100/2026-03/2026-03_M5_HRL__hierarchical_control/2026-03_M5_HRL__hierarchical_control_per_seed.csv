@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.9135,0.7496,0.6545,0.025469,0.54656,195.101,5.48271,1.65164,hierarchical_control
+22,0.8148,0.9385,0.5687,0.109489,0.173569,189.225,-0.96054,1.30079,hierarchical_control
+33,0.9003,0.7358,0.5232,0.051018,0.12439,286.904,9.8532,1.45578,hierarchical_control

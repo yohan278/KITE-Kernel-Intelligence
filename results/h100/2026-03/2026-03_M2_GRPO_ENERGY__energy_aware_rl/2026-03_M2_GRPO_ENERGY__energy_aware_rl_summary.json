@@ -1,0 +1,59 @@
+{
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M2_GRPO_ENERGY",
+  "experiment": "energy_aware_rl",
+  "stage": "kernel_grpo_energy",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 20,
+  "num_rows": 60,
+  "compile_rate": 0.95,
+  "correctness": 0.75,
+  "pass_at_k": 0.75,
+  "runtime_ms": 0.148367,
+  "joules": 0.360012,
+  "avg_power_w": 208.425,
+  "speedup": 1285.21964,
+  "sla_violation_rate": 0.1333,
+  "reward_mean": 5.62019,
+  "reward_std": 3.78788,
+  "seed_metrics": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8287,
+      "correctness": 0.8103,
+      "pass_at_k": 0.4792,
+      "runtime_ms_mean": 0.047163,
+      "joules_mean": 0.524624,
+      "avg_power_w_mean": 223.78,
+      "reward_mean": 8.613,
+      "reward_std": 0.97014,
+      "experiment": "energy_aware_rl"
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9774,
+      "correctness": 0.6388,
+      "pass_at_k": 0.6231,
+      "runtime_ms_mean": 0.05709,
+      "joules_mean": 0.547742,
+      "avg_power_w_mean": 209.23,
+      "reward_mean": 3.73698,
+      "reward_std": 0.74101,
+      "experiment": "energy_aware_rl"
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.7828,
+      "correctness": 0.9074,
+      "pass_at_k": 0.5729,
+      "runtime_ms_mean": 0.171356,
+      "joules_mean": 0.23881,
+      "avg_power_w_mean": 256.683,
+      "reward_mean": 0.72072,
+      "reward_std": 1.27715,
+      "experiment": "energy_aware_rl"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "figure_id": "05_failure_taxonomy_transition_sankey",
+  "model": "M4",
+  "sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed",
+    "2026-03_M_ALL__failure_taxonomy",
+    "2026-03_M_ALL__seed_robustness"
+  ],
+  "source_count": 6,
+  "status": "ready"
+}

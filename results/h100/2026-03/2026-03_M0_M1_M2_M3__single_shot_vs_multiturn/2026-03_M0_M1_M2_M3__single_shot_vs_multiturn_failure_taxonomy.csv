@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+single_shot_vs_multiturn,syntax_error,92,0.1887
+single_shot_vs_multiturn,forward_arity_mismatch,96,0.11
+single_shot_vs_multiturn,missing_modelnew,43,0.0101
+single_shot_vs_multiturn,compile_fail,93,0.0679
+single_shot_vs_multiturn,correctness_fail,77,0.0769
+single_shot_vs_multiturn,oom,71,0.1835
+single_shot_vs_multiturn,timeout,70,0.0453
+single_shot_vs_multiturn,shape_mismatch,74,0.0836
+single_shot_vs_multiturn,invalid_import,15,0.1095

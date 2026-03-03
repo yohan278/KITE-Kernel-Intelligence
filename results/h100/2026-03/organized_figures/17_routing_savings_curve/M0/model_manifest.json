@@ -1,0 +1,11 @@
+{
+  "figure_id": "17_routing_savings_curve",
+  "model": "M0",
+  "sources": [
+    "2026-03_M0_SFT__kernel_generation_baseline",
+    "2026-03_M0_SFT__single_shot_generation",
+    "2026-03_M0_SFT__multiturn_generation"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.8071,0.8868,0.5362,0.083248,0.473461,132.403,1.63916,0.42052,failure_taxonomy
+22,0.9084,0.7651,0.46,0.147455,0.51916,179.675,-0.83815,1.55861,failure_taxonomy
+33,0.9561,0.6228,0.7737,0.179145,0.516456,207.807,3.75661,0.42827,failure_taxonomy

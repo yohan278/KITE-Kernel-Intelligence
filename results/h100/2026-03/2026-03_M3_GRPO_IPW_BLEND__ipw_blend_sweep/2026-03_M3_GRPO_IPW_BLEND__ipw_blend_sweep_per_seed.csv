@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.9477,0.9549,0.8602,0.034301,0.079397,153.547,5.90419,2.03445,ipw_blend_sweep
+22,0.8142,0.6352,0.5475,0.044887,0.054772,197.672,5.73434,1.91579,ipw_blend_sweep
+33,0.8618,0.6762,0.6271,0.091863,0.172804,100.151,7.40388,0.50239,ipw_blend_sweep

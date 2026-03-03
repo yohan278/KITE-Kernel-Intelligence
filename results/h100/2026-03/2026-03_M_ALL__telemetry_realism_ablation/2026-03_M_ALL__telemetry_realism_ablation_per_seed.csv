@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.8939,0.8966,0.841,0.099997,0.123917,179.279,6.85439,0.97201,telemetry_realism_ablation
+22,0.8649,0.8132,0.7749,0.120285,0.437139,235.892,10.68965,0.81971,telemetry_realism_ablation
+33,0.8156,0.7993,0.6955,0.142829,0.425786,145.744,6.76553,1.81604,telemetry_realism_ablation

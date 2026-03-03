@@ -1,0 +1,11 @@
+{
+  "figure_id": "15_calibration_plot",
+  "model": "M2",
+  "sources": [
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
+    "2026-03_M_ALL__heldout_generalization",
+    "2026-03_M_ALL__reward_ablation"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.8292,0.7546,0.757,0.106792,0.260045,265.091,4.77533,1.10569,paper_figures
+22,0.9397,0.6707,0.4137,0.085854,0.241571,212.62,9.83386,1.76868,paper_figures
+33,0.864,0.7199,0.4741,0.131974,0.467026,202.745,4.08433,1.86615,paper_figures

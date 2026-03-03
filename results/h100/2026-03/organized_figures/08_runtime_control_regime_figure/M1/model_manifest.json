@@ -1,0 +1,9 @@
+{
+  "figure_id": "08_runtime_control_regime_figure",
+  "model": "M1",
+  "sources": [
+    "2026-03_M1_GRPO_THROUGHPUT__throughput_rl"
+  ],
+  "source_count": 1,
+  "status": "ready"
+}

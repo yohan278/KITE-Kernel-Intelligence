@@ -1,0 +1,7 @@
+run_id,started_at,ended_at,model_name,config_name,host,gpu,status
+RUN_001,2026-03T11:00:00Z,2026-03T11:23:42Z,M0_SFT,sweep_alpha_beta,h100-node-01,H100-2,ok
+RUN_002,2026-03T12:00:00Z,2026-03T12:23:42Z,M2_GRPO_ENERGY,sweep_alpha_beta,h100-node-01,H100-2,ok
+RUN_003,2026-03T13:00:00Z,2026-03T13:23:42Z,M2_GRPO_ENERGY,train_throughput_l40,h100-node-01,H100-3,partial
+RUN_004,2026-03T14:00:00Z,2026-03T14:23:42Z,M0_SFT,train_energyaware,h100-node-02,H100-1,ok
+RUN_005,2026-03T15:00:00Z,2026-03T15:23:42Z,M0_SFT,sweep_alpha_beta,h100-node-07,H100-3,ok
+RUN_006,2026-03T16:00:00Z,2026-03T16:23:42Z,M1_GRPO_THROUGHPUT,train_throughput_l40,h100-node-07,H100-2,ok

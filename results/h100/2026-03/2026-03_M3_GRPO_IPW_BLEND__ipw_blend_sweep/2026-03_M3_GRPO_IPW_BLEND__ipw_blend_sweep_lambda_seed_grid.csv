@@ -1,0 +1,13 @@
+lambda_ipw,seed,checkpoint,pass_at_k,correctness,speedup,joules,avg_power_w,reward_mean,reward_std
+0.0,11,checkpoints/exp/ipw_blend/lambda0.0/seed11/checkpoint.json,0.7080,0.6716,1195.1001,0.169884,190.509,5.23624,1.28650
+0.0,22,checkpoints/exp/ipw_blend/lambda0.0/seed22/checkpoint.json,0.9132,0.7279,569.8635,0.374839,173.599,-0.79748,1.53915
+0.0,33,checkpoints/exp/ipw_blend/lambda0.0/seed33/checkpoint.json,0.7567,0.9540,130.0677,0.374635,119.477,3.18902,1.05703
+0.1,11,checkpoints/exp/ipw_blend/lambda0.1/seed11/checkpoint.json,0.4814,0.7113,493.9174,0.348244,177.515,3.92378,0.98725
+0.1,22,checkpoints/exp/ipw_blend/lambda0.1/seed22/checkpoint.json,0.8305,0.6456,618.6618,0.202043,179.638,8.44213,0.18565
+0.1,33,checkpoints/exp/ipw_blend/lambda0.1/seed33/checkpoint.json,0.7681,0.5973,1083.3787,0.081415,159.622,6.35029,0.31491
+0.25,11,checkpoints/exp/ipw_blend/lambda0.25/seed11/checkpoint.json,0.8336,0.6625,1316.4218,0.395923,149.037,-0.19237,1.14341
+0.25,22,checkpoints/exp/ipw_blend/lambda0.25/seed22/checkpoint.json,0.6042,0.8638,1674.9963,0.066804,157.383,9.14636,0.99940
+0.25,33,checkpoints/exp/ipw_blend/lambda0.25/seed33/checkpoint.json,0.7909,0.6914,576.7598,0.324233,248.236,6.10607,0.91077
+0.5,11,checkpoints/exp/ipw_blend/lambda0.5/seed11/checkpoint.json,0.5221,0.6316,1438.1606,0.385223,88.666,4.18368,1.46589
+0.5,22,checkpoints/exp/ipw_blend/lambda0.5/seed22/checkpoint.json,0.7568,0.8429,167.3420,0.094854,136.148,3.02447,1.25827
+0.5,33,checkpoints/exp/ipw_blend/lambda0.5/seed33/checkpoint.json,0.6593,0.7969,366.5250,0.249659,145.827,3.33780,0.46708

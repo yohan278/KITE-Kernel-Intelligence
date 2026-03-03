@@ -1,0 +1,13 @@
+comparison,metric,test,p_value,effect_size,significant_at_0_05
+M1_vs_M2,reward,bootstrap_diff,0.086031,1.576596,false
+M1_vs_M2,runtime_ms,mannwhitney_u,0.226271,1.496724,false
+M1_vs_M2,joules,welch_t,0.009367,-0.548702,true
+M1_vs_M2,pass_at_k,welch_t,0.384767,-0.276675,false
+M2_vs_M3,reward,welch_t,0.148539,0.528268,false
+M2_vs_M3,runtime_ms,welch_t,0.079373,-0.181997,false
+M2_vs_M3,joules,bootstrap_diff,0.062050,-0.587366,false
+M2_vs_M3,pass_at_k,welch_t,0.060013,1.308569,false
+M1_vs_M3,reward,welch_t,0.269013,-0.637441,false
+M1_vs_M3,runtime_ms,mannwhitney_u,0.312527,0.500142,false
+M1_vs_M3,joules,mannwhitney_u,0.149484,-0.889912,false
+M1_vs_M3,pass_at_k,welch_t,0.149930,0.285509,false

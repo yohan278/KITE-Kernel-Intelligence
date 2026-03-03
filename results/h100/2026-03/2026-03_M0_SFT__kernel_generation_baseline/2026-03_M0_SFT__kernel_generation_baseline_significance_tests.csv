@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+kernel_generation_baseline,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,speedup,wilcoxon,0.072959,0.8586
+kernel_generation_baseline,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.083438,0.5663
+kernel_generation_baseline,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,pass_at_k,paired_ttest,0.012997,0.4387

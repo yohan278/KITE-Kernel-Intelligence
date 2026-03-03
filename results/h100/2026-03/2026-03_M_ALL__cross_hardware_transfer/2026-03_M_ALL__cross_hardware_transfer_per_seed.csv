@@ -1,0 +1,4 @@
+seed,compile_rate,correctness,pass_at_k,runtime_ms_mean,joules_mean,avg_power_w_mean,reward_mean,reward_std,experiment
+11,0.9893,0.6094,0.63,0.145804,0.202303,291.221,4.98713,0.0733,cross_hardware_transfer
+22,0.9694,0.9299,0.7728,0.081548,0.037287,274.767,8.10266,1.42864,cross_hardware_transfer
+33,0.9863,0.7067,0.7899,0.036726,0.307427,162.849,8.69466,0.27042,cross_hardware_transfer

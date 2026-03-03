@@ -1,0 +1,11 @@
+{
+  "figure_id": "09_difficulty_stratified_success_heatmap",
+  "model": "M5",
+  "sources": [
+    "2026-03_M5_HRL__hierarchical_control",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M_ALL__difficulty_stratified_eval"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

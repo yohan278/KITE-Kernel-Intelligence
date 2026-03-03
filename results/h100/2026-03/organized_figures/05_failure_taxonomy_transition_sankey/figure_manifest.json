@@ -1,0 +1,16 @@
+{
+  "figure_id": "05_failure_taxonomy_transition_sankey",
+  "title": "Failure Taxonomy Transition Sankey",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__failure_taxonomy",
+    "2026-03_M_ALL__seed_robustness"
+  ]
+}

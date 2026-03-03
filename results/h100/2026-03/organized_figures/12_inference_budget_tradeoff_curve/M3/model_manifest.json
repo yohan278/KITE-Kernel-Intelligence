@@ -1,0 +1,11 @@
+{
+  "figure_id": "12_inference_budget_tradeoff_curve",
+  "model": "M3",
+  "sources": [
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_sweep",
+    "2026-03_M3_GRPO_IPW_BLEND__ipw_blend_lambda_ablation",
+    "2026-03_M_ALL__inference_budget_ablation"
+  ],
+  "source_count": 3,
+  "status": "ready"
+}

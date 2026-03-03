@@ -1,0 +1,17 @@
+{
+  "figure_id": "18_ablation_spider_chart",
+  "title": "Ablation Spider Chart",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M_ALL__reward_ablation",
+    "2026-03_M_ALL__telemetry_realism_ablation",
+    "2026-03_M_ALL__data_scale_ablation"
+  ]
+}

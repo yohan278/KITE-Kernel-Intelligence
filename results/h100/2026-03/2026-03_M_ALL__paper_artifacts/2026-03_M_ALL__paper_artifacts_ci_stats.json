@@ -1,0 +1,25 @@
+{
+  "experiment_id": "2026-03_M_ALL__paper_artifacts",
+  "metric_cis": {
+    "pass_at_k": {
+      "mean": 0.7603,
+      "ci95_low": 0.2295,
+      "ci95_high": 0.8529
+    },
+    "reward": {
+      "mean": -0.398,
+      "ci95_low": -0.2975,
+      "ci95_high": 0.212
+    },
+    "runtime_ms": {
+      "mean": 0.057855,
+      "ci95_low": 0.031441,
+      "ci95_high": 0.157701
+    },
+    "joules": {
+      "mean": 0.168182,
+      "ci95_low": 0.050537,
+      "ci95_high": 0.216547
+    }
+  }
+}

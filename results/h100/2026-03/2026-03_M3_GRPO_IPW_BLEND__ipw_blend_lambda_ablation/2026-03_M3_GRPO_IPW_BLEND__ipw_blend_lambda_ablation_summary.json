@@ -1,0 +1,59 @@
+{
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M3_GRPO_IPW_BLEND",
+  "experiment": "ipw_blend_lambda_ablation",
+  "stage": "kernel_grpo_ipw",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 20,
+  "num_rows": 60,
+  "compile_rate": 0.9333,
+  "correctness": 0.8,
+  "pass_at_k": 0.8,
+  "runtime_ms": 0.134016,
+  "joules": 0.323993,
+  "avg_power_w": 199.715,
+  "speedup": 1454.91886,
+  "sla_violation_rate": 0.1,
+  "reward_mean": 4.86672,
+  "reward_std": 3.94062,
+  "seed_metrics": [
+    {
+      "seed": 11,
+      "compile_rate": 0.8976,
+      "correctness": 0.9264,
+      "pass_at_k": 0.7154,
+      "runtime_ms_mean": 0.148152,
+      "joules_mean": 0.532035,
+      "avg_power_w_mean": 275.086,
+      "reward_mean": -0.32599,
+      "reward_std": 1.91933,
+      "experiment": "ipw_blend_lambda_ablation"
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.9412,
+      "correctness": 0.8603,
+      "pass_at_k": 0.7437,
+      "runtime_ms_mean": 0.150303,
+      "joules_mean": 0.421155,
+      "avg_power_w_mean": 152.972,
+      "reward_mean": 3.31863,
+      "reward_std": 0.09647,
+      "experiment": "ipw_blend_lambda_ablation"
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9026,
+      "correctness": 0.9691,
+      "pass_at_k": 0.9087,
+      "runtime_ms_mean": 0.026181,
+      "joules_mean": 0.152804,
+      "avg_power_w_mean": 101.798,
+      "reward_mean": 1.19357,
+      "reward_std": 1.0514,
+      "experiment": "ipw_blend_lambda_ablation"
+    }
+  ]
+}

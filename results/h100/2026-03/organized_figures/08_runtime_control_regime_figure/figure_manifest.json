@@ -1,0 +1,20 @@
+{
+  "figure_id": "08_runtime_control_regime_figure",
+  "title": "Runtime Control Regime Figure (PPO/HRL)",
+  "models_expected": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "combined_sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed",
+    "2026-03_M5_HRL__runtime_vs_static_comparison",
+    "2026-03_M5_HRL__hierarchical_control"
+  ]
+}

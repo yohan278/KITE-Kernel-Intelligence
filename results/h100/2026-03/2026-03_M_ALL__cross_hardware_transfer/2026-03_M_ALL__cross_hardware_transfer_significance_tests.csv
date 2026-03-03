@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+cross_hardware_transfer,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,pass_at_k,paired_ttest,0.072561,0.8695
+cross_hardware_transfer,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,pass_at_k,paired_ttest,0.101729,0.7611
+cross_hardware_transfer,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,joules,paired_ttest,0.056725,0.4269

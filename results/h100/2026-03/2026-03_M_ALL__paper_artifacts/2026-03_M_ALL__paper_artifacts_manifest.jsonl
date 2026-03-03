@@ -1,0 +1,12 @@
+{"artifact_id": "art_001", "experiment": "kernel_generation_baseline", "path": "results/h100/2026-03/2026-03_M_ALL__kernel_generation_baseline", "status": "completed"}
+{"artifact_id": "art_002", "experiment": "throughput_rl", "path": "results/h100/2026-03/2026-03_M_ALL__throughput_rl", "status": "completed"}
+{"artifact_id": "art_003", "experiment": "energy_aware_rl", "path": "results/h100/2026-03/2026-03_M_ALL__energy_aware_rl", "status": "completed"}
+{"artifact_id": "art_004", "experiment": "ipw_blend_sweep", "path": "results/h100/2026-03/2026-03_M_ALL__ipw_blend_sweep", "status": "completed"}
+{"artifact_id": "art_005", "experiment": "runtime_control", "path": "results/h100/2026-03/2026-03_M_ALL__runtime_control", "status": "completed"}
+{"artifact_id": "art_006", "experiment": "hierarchical_control", "path": "results/h100/2026-03/2026-03_M_ALL__hierarchical_control", "status": "completed"}
+{"artifact_id": "art_007", "experiment": "reward_ablation", "path": "results/h100/2026-03/2026-03_M_ALL__reward_ablation", "status": "completed"}
+{"artifact_id": "art_008", "experiment": "data_scale_ablation", "path": "results/h100/2026-03/2026-03_M_ALL__data_scale_ablation", "status": "completed"}
+{"artifact_id": "art_009", "experiment": "inference_budget_ablation", "path": "results/h100/2026-03/2026-03_M_ALL__inference_budget_ablation", "status": "completed"}
+{"artifact_id": "art_010", "experiment": "telemetry_realism_ablation", "path": "results/h100/2026-03/2026-03_M_ALL__telemetry_realism_ablation", "status": "completed"}
+{"artifact_id": "art_011", "experiment": "cross_hardware_transfer", "path": "results/h100/2026-03/2026-03_M_ALL__cross_hardware_transfer", "status": "completed"}
+{"artifact_id": "art_012", "experiment": "final_eval_suite", "path": "results/h100/2026-03/2026-03_M_ALL__final_eval_suite", "status": "completed"}

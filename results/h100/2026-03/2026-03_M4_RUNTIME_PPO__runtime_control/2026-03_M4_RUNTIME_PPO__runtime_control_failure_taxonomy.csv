@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+runtime_control,syntax_error,27,0.0706
+runtime_control,forward_arity_mismatch,13,0.0241
+runtime_control,missing_modelnew,47,0.1921
+runtime_control,compile_fail,78,0.1375
+runtime_control,correctness_fail,59,0.182
+runtime_control,oom,28,0.1802
+runtime_control,timeout,38,0.0868
+runtime_control,shape_mismatch,115,0.0669
+runtime_control,invalid_import,101,0.2284

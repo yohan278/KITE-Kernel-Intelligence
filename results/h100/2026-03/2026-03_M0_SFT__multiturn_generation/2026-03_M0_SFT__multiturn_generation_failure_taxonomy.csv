@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+multiturn_generation,syntax_error,12,0.2353
+multiturn_generation,forward_arity_mismatch,37,0.1094
+multiturn_generation,missing_modelnew,90,0.2031
+multiturn_generation,compile_fail,87,0.0221
+multiturn_generation,correctness_fail,106,0.1253
+multiturn_generation,oom,61,0.2005
+multiturn_generation,timeout,117,0.0598
+multiturn_generation,shape_mismatch,59,0.1963
+multiturn_generation,invalid_import,118,0.2238

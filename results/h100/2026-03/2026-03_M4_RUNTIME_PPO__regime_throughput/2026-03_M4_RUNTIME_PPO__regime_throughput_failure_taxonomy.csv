@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+regime_throughput,syntax_error,54,0.1051
+regime_throughput,forward_arity_mismatch,87,0.204
+regime_throughput,missing_modelnew,29,0.084
+regime_throughput,compile_fail,89,0.0371
+regime_throughput,correctness_fail,52,0.0193
+regime_throughput,oom,94,0.0822
+regime_throughput,timeout,103,0.2154
+regime_throughput,shape_mismatch,2,0.1673
+regime_throughput,invalid_import,96,0.1034

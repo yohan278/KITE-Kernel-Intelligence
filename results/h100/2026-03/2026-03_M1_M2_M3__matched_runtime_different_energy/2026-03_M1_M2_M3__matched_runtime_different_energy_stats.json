@@ -1,0 +1,9 @@
+{
+  "status": "completed",
+  "runtime_match_threshold_pct": 3.0,
+  "energy_separation_threshold_pct": 10.0,
+  "num_pairs": 40,
+  "median_delta_joules_pct": -12.1717,
+  "wilcoxon_p_value": 0.026285,
+  "effect_size": 0.7322
+}

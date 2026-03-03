@@ -1,0 +1,59 @@
+{
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M_ALL",
+  "experiment": "data_scale_ablation",
+  "stage": "suite",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 20,
+  "num_rows": 60,
+  "compile_rate": 0.9167,
+  "correctness": 0.7167,
+  "pass_at_k": 0.7167,
+  "runtime_ms": 0.130642,
+  "joules": 0.352417,
+  "avg_power_w": 178.839,
+  "speedup": 1479.42904,
+  "sla_violation_rate": 0.0667,
+  "reward_mean": 5.24373,
+  "reward_std": 3.62807,
+  "seed_metrics": [
+    {
+      "seed": 11,
+      "compile_rate": 0.887,
+      "correctness": 0.9104,
+      "pass_at_k": 0.6254,
+      "runtime_ms_mean": 0.133426,
+      "joules_mean": 0.120623,
+      "avg_power_w_mean": 299.299,
+      "reward_mean": 8.19635,
+      "reward_std": 1.37491,
+      "experiment": "data_scale_ablation"
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8114,
+      "correctness": 0.8691,
+      "pass_at_k": 0.9266,
+      "runtime_ms_mean": 0.083496,
+      "joules_mean": 0.114575,
+      "avg_power_w_mean": 145.567,
+      "reward_mean": -1.08228,
+      "reward_std": 0.33036,
+      "experiment": "data_scale_ablation"
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9886,
+      "correctness": 0.9699,
+      "pass_at_k": 0.763,
+      "runtime_ms_mean": 0.081991,
+      "joules_mean": 0.241149,
+      "avg_power_w_mean": 260.743,
+      "reward_mean": 0.60089,
+      "reward_std": 1.13623,
+      "experiment": "data_scale_ablation"
+    }
+  ]
+}

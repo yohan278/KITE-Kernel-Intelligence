@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+failure_taxonomy,syntax_error,86,0.1924
+failure_taxonomy,forward_arity_mismatch,37,0.1177
+failure_taxonomy,missing_modelnew,42,0.1658
+failure_taxonomy,compile_fail,26,0.1949
+failure_taxonomy,correctness_fail,109,0.1216
+failure_taxonomy,oom,103,0.1249
+failure_taxonomy,timeout,57,0.0749
+failure_taxonomy,shape_mismatch,29,0.234
+failure_taxonomy,invalid_import,65,0.0705

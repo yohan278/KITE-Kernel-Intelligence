@@ -1,0 +1,13 @@
+{
+  "figure_id": "06_cross_hardware_transfer_scatter",
+  "model": "M4",
+  "sources": [
+    "2026-03_M4_RUNTIME_PPO__runtime_control",
+    "2026-03_M4_RUNTIME_PPO__regime_latency_sensitive",
+    "2026-03_M4_RUNTIME_PPO__regime_throughput",
+    "2026-03_M4_RUNTIME_PPO__regime_mixed",
+    "2026-03_M_ALL__cross_hardware_transfer"
+  ],
+  "source_count": 5,
+  "status": "ready"
+}

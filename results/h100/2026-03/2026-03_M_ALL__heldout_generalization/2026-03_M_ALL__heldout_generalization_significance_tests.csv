@@ -1,0 +1,4 @@
+experiment,model_a,model_b,metric,test,p_value,effect_size
+heldout_generalization,M1_GRPO_THROUGHPUT,M2_GRPO_ENERGY,joules,wilcoxon,0.110168,0.1933
+heldout_generalization,M2_GRPO_ENERGY,M3_GRPO_IPW_BLEND,speedup,wilcoxon,0.117414,0.1619
+heldout_generalization,M1_GRPO_THROUGHPUT,M3_GRPO_IPW_BLEND,speedup,paired_ttest,0.030348,0.9006

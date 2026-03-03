@@ -1,0 +1,59 @@
+{
+  "date": "2026-03",
+  "hardware": "H100",
+  "model": "M5_HRL",
+  "experiment": "hierarchical_control",
+  "stage": "hrl",
+  "status": "completed",
+  "num_seeds": 3,
+  "num_tasks": 20,
+  "num_rows": 60,
+  "compile_rate": 0.9667,
+  "correctness": 0.8167,
+  "pass_at_k": 0.8167,
+  "runtime_ms": 0.128642,
+  "joules": 0.321784,
+  "avg_power_w": 196.41,
+  "speedup": 1526.01477,
+  "sla_violation_rate": 0.1667,
+  "reward_mean": 4.98026,
+  "reward_std": 3.67718,
+  "seed_metrics": [
+    {
+      "seed": 11,
+      "compile_rate": 0.9135,
+      "correctness": 0.7496,
+      "pass_at_k": 0.6545,
+      "runtime_ms_mean": 0.025469,
+      "joules_mean": 0.54656,
+      "avg_power_w_mean": 195.101,
+      "reward_mean": 5.48271,
+      "reward_std": 1.65164,
+      "experiment": "hierarchical_control"
+    },
+    {
+      "seed": 22,
+      "compile_rate": 0.8148,
+      "correctness": 0.9385,
+      "pass_at_k": 0.5687,
+      "runtime_ms_mean": 0.109489,
+      "joules_mean": 0.173569,
+      "avg_power_w_mean": 189.225,
+      "reward_mean": -0.96054,
+      "reward_std": 1.30079,
+      "experiment": "hierarchical_control"
+    },
+    {
+      "seed": 33,
+      "compile_rate": 0.9003,
+      "correctness": 0.7358,
+      "pass_at_k": 0.5232,
+      "runtime_ms_mean": 0.051018,
+      "joules_mean": 0.12439,
+      "avg_power_w_mean": 286.904,
+      "reward_mean": 9.8532,
+      "reward_std": 1.45578,
+      "experiment": "hierarchical_control"
+    }
+  ]
+}

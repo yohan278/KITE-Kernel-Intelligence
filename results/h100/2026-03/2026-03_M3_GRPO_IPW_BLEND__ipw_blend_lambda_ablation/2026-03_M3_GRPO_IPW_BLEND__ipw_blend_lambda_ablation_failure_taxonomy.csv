@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+ipw_blend_lambda_ablation,syntax_error,24,0.1373
+ipw_blend_lambda_ablation,forward_arity_mismatch,102,0.2271
+ipw_blend_lambda_ablation,missing_modelnew,81,0.0826
+ipw_blend_lambda_ablation,compile_fail,55,0.181
+ipw_blend_lambda_ablation,correctness_fail,100,0.1253
+ipw_blend_lambda_ablation,oom,66,0.0342
+ipw_blend_lambda_ablation,timeout,73,0.0799
+ipw_blend_lambda_ablation,shape_mismatch,6,0.2037
+ipw_blend_lambda_ablation,invalid_import,99,0.1665

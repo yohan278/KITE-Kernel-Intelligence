@@ -1,0 +1,4 @@
+run_id,seed,command,checkpoint,status
+run::M0_M1_M2_M3::single_shot_vs_multiturn::seed11,11,conda run -n kite-train python scripts/train_rl.py --config configs/exp/single_shot_vs_multiturn/seed11.yaml,checkpoints/exp/single_shot_vs_multiturn/m0_m1_m2_m3/seed11/checkpoint.json,completed
+run::M0_M1_M2_M3::single_shot_vs_multiturn::seed22,22,conda run -n kite-train python scripts/train_rl.py --config configs/exp/single_shot_vs_multiturn/seed22.yaml,checkpoints/exp/single_shot_vs_multiturn/m0_m1_m2_m3/seed22/checkpoint.json,completed
+run::M0_M1_M2_M3::single_shot_vs_multiturn::seed33,33,conda run -n kite-train python scripts/train_rl.py --config configs/exp/single_shot_vs_multiturn/seed33.yaml,checkpoints/exp/single_shot_vs_multiturn/m0_m1_m2_m3/seed33/checkpoint.json,completed

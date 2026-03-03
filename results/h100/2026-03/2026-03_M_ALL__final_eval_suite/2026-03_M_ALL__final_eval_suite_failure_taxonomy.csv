@@ -1,0 +1,10 @@
+experiment,reason,count,fraction
+final_eval_suite,syntax_error,27,0.1725
+final_eval_suite,forward_arity_mismatch,79,0.0118
+final_eval_suite,missing_modelnew,55,0.2186
+final_eval_suite,compile_fail,37,0.2394
+final_eval_suite,correctness_fail,96,0.1148
+final_eval_suite,oom,9,0.1811
+final_eval_suite,timeout,56,0.1111
+final_eval_suite,shape_mismatch,55,0.1262
+final_eval_suite,invalid_import,63,0.0522

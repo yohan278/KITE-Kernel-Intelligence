@@ -1,0 +1,10 @@
+{
+  "figure_id": "11_efficiency_scaling_curve",
+  "model": "M2",
+  "sources": [
+    "2026-03_M2_GRPO_ENERGY__energy_aware_rl",
+    "2026-03_M_ALL__data_scale_ablation"
+  ],
+  "source_count": 2,
+  "status": "ready"
+}
