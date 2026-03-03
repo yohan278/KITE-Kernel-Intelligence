@@ -457,9 +457,55 @@ def fig09_difficulty_heatmap(results_root, output_dir, dpi):
     plt.close(fig)
 
 
+def fig10_seed_stability_fan(results_root: Path, output_dir: Path, dpi: int):
+    """Seed Stability Fan Plot: reward mean across model progression with 3-seed bands."""
+    path = output_dir / "appendix_figures" / "10_seed_stability_fan_plot.png"
+    if not HAS_MPL:
+        save_placeholder_figure(path, "10: Seed Stability Fan Plot"); return
+
+    models_seq = ["M0", "M1", "M2", "M3"]
+    vals = []
+    for i, mk in enumerate(models_seq):
+        exp_name = MODEL_EXPERIMENTS.get(mk, "")
+        ps_path = results_root / exp_name / f"{exp_name}_per_seed.csv"
+        if not ps_path.exists():
+            continue
+        with open(ps_path) as f:
+            for row in csv.DictReader(f):
+                reward = row.get("reward_mean") or row.get("mean_reward")
+                if reward is not None:
+                    vals.append({"step": i + 1, "model": mk, "reward": float(reward), "seed": int(row["seed"])})
+
+    if not vals:
+        save_placeholder_figure(path, "10: Seed Stability Fan Plot (no data)"); return
+
+    steps = sorted(set(v["step"] for v in vals))
+    means, lo, hi = [], [], []
+    for s in steps:
+        rs = [v["reward"] for v in vals if v["step"] == s]
+        means.append(sum(rs) / len(rs))
+        lo.append(min(rs))
+        hi.append(max(rs))
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(steps, means, "o-", color="#1f77b4", linewidth=2, markersize=8, label="Mean reward")
+    ax.fill_between(steps, lo, hi, alpha=0.25, color="#1f77b4", label="Min-max (3 seeds)")
+    ax.set_xticks(steps)
+    ax.set_xticklabels([models_seq[s - 1] for s in steps])
+    ax.set_ylabel("Reward Mean", fontsize=12)
+    ax.set_title("Seed Stability Fan Plot (M0 → M3)", fontsize=14)
+    ax.legend(frameon=False)
+    ax.grid(True, alpha=0.3)
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=dpi, bbox_inches="tight")
+    plt.close(fig)
+
+
 def make_appendix_figures(results_root, output_dir, dpi):
-    """Generate appendix figures 11-18 as styled plots."""
+    """Generate appendix figures 09-18 as styled plots."""
     fig09_difficulty_heatmap(results_root, output_dir, dpi)
+    fig10_seed_stability_fan(results_root, output_dir, dpi)
 
     simple_appendix = [
         ("11_efficiency_scaling_curve", "Efficiency Scaling: IPW vs # Training Tasks"),
@@ -659,14 +705,55 @@ def table04_pairwise(results_root, output_dir):
 
 
 def table05_matched_runtime(results_root, output_dir):
-    """Matched-Runtime Energy Table."""
-    rng = random.Random(505)
+    """Matched-Runtime Energy Table -- computed from actual pairs data."""
+    pairs_csv = output_dir / "data" / "03_matched_runtime_pairs.csv"
+    if not pairs_csv.exists():
+        pairs_csv = results_root / "2026-03_M1_M2_M3__matched_runtime_different_energy" / \
+                     "2026-03_M1_M2_M3__matched_runtime_different_energy_pairs.csv"
+
+    deltas = []
+    if pairs_csv.exists():
+        with open(pairs_csv) as f:
+            for row in csv.DictReader(f):
+                deltas.append(float(row["delta_joules_pct"]))
+
+    if not deltas:
+        return
+
+    deltas_sorted = sorted(deltas)
+    n = len(deltas_sorted)
+    median_val = (deltas_sorted[n // 2] + deltas_sorted[(n - 1) // 2]) / 2.0
+    q1_idx = n // 4
+    q3_idx = (3 * n) // 4
+    q1 = deltas_sorted[q1_idx]
+    q3 = deltas_sorted[q3_idx]
+
+    mean_d = sum(deltas) / n
+    var_d = sum((x - mean_d) ** 2 for x in deltas) / max(n - 1, 1)
+    std_d = var_d ** 0.5
+    effect_size = abs(mean_d) / std_d if std_d > 0 else 0.0
+
+    ranks = []
+    abs_deltas = [(abs(d), d) for d in deltas if d != 0]
+    abs_deltas.sort(key=lambda x: x[0])
+    for i, (_, orig) in enumerate(abs_deltas, 1):
+        ranks.append((i, orig))
+    w_plus = sum(r for r, d in ranks if d > 0)
+    w_minus = sum(r for r, d in ranks if d < 0)
+    w_stat = min(w_plus, w_minus)
+    nn = len(ranks)
+    mu_w = nn * (nn + 1) / 4.0
+    sigma_w = (nn * (nn + 1) * (2 * nn + 1) / 24.0) ** 0.5
+    z = (w_stat - mu_w) / sigma_w if sigma_w > 0 else 0.0
+    p_approx = 2.0 * (0.5 * math.erfc(-z / (2 ** 0.5)))
+    p_approx = min(p_approx, 1.0)
+
     rows = [{
         "Metric": "Median Delta Joules (%)",
-        "Value": f"{rng.uniform(15, 25):.1f}",
-        "IQR": f"[{rng.uniform(8, 12):.1f}, {rng.uniform(28, 35):.1f}]",
-        "p-value (Wilcoxon)": f"{rng.uniform(0.0001, 0.005):.4f}",
-        "Effect Size (d)": f"{rng.uniform(0.8, 1.5):.2f}",
+        "Value": f"{abs(median_val):.1f}",
+        "IQR": f"[{abs(q3):.1f}, {abs(q1):.1f}]",
+        "p-value (Wilcoxon)": f"{p_approx:.4f}",
+        "Effect Size (d)": f"{effect_size:.2f}",
     }]
     write_csv_table(output_dir / "tables" / "table_05_matched_runtime_energy.csv", rows)
     write_md_table(output_dir / "tables" / "table_05_matched_runtime_energy.md", rows)
