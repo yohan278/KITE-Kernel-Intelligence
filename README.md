@@ -1,6 +1,6 @@
-# KITE -- Kernel Intelligence-per-Watt Tree Explorer
+# WARP-K: Watt-Aware Reinforcement Policy for Kernels
 
-KITE is a research framework for co-optimizing GPU kernel code generation and runtime controls for energy efficiency. It combines three reinforcement learning tracks:
+WARP-K is a research framework for co-optimizing GPU kernel code generation and runtime controls for energy efficiency. It combines three reinforcement learning tracks:
 
 1. **Kernel-only RL** -- correctness and throughput via GRPO on Qwen2.5-Coder-7B.
 2. **Energy-aware kernel RL** -- adds joules, power, and IPW (intelligence-per-watt) to the reward signal.
