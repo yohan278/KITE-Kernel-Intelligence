@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 780" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#424242"/>
+    </marker>
+    <filter id="s" x="-3%" y="-6%" width="106%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1500" height="780" fill="#FAFAFA" rx="12"/>
+  <text x="45" y="34" font-size="12" font-weight="700" fill="#9E9E9E" letter-spacing="2">TRAINING PIPELINE</text>
+
+  <!-- M0 SFT -->
+  <rect x="50" y="55" width="180" height="170" rx="12" fill="#F5F5F5" stroke="#BDBDBD" stroke-width="1.8" filter="url(#s)"/>
+  <rect x="50" y="55" width="180" height="36" rx="12" fill="#E0E0E0"/>
+  <rect x="50" y="79" width="180" height="12" fill="#E0E0E0"/>
+  <text x="140" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#424242">M0  SFT</text>
+  <text x="140" y="116" text-anchor="middle" font-size="11" fill="#616161">Supervised Fine-Tuning</text>
+  <text x="140" y="138" text-anchor="middle" font-size="10" fill="#757575">Qwen2.5-Coder-7B</text>
+  <text x="140" y="154" text-anchor="middle" font-size="10" fill="#757575">+ LoRA (r=64)</text>
+  <text x="140" y="175" text-anchor="middle" font-size="10" fill="#757575">Learn kernel code</text>
+  <text x="140" y="191" text-anchor="middle" font-size="10" fill="#757575">structure from data</text>
+  <text x="140" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#424242">47.9% correct | 6.70 J</text>
+
+  <line x1="230" y1="140" x2="275" y2="140" stroke="#424242" stroke-width="2" marker-end="url(#a)"/>
+  <text x="252" y="130" text-anchor="middle" font-size="8" fill="#9E9E9E" font-style="italic">LoRA init</text>
+
+  <!-- M1 Throughput GRPO -->
+  <rect x="285" y="55" width="200" height="170" rx="12" fill="#E3F2FD" stroke="#42A5F5" stroke-width="2" filter="url(#s)"/>
+  <rect x="285" y="55" width="200" height="36" rx="12" fill="#BBDEFB"/>
+  <rect x="285" y="79" width="200" height="12" fill="#BBDEFB"/>
+  <text x="385" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#1565C0">M1  GRPO</text>
+  <text x="385" y="116" text-anchor="middle" font-size="11" fill="#1976D2" font-weight="600">Throughput RL</text>
+  <text x="385" y="140" text-anchor="middle" font-size="10" fill="#1976D2">Reward: speed only</text>
+  <text x="385" y="157" text-anchor="middle" font-size="9" fill="#42A5F5" font-family="Courier New, monospace">a*log(spd) - n*log(rt)</text>
+  <text x="385" y="173" text-anchor="middle" font-size="9" fill="#42A5F5" font-family="Courier New, monospace">- g*max(0, lat-SLA)</text>
+  <text x="385" y="195" text-anchor="middle" font-size="10" fill="#1565C0" font-weight="600">+19pp correctness</text>
+  <text x="385" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#1565C0">66.7% correct | 5.82 J</text>
+
+  <line x1="485" y1="140" x2="530" y2="140" stroke="#424242" stroke-width="2" marker-end="url(#a)"/>
+  <text x="508" y="130" text-anchor="middle" font-size="8" fill="#9E9E9E" font-style="italic">+energy</text>
+
+  <!-- M2 Energy GRPO -->
+  <rect x="540" y="55" width="200" height="170" rx="12" fill="#E8F5E9" stroke="#66BB6A" stroke-width="2" filter="url(#s)"/>
+  <rect x="540" y="55" width="200" height="36" rx="12" fill="#C8E6C9"/>
+  <rect x="540" y="79" width="200" height="12" fill="#C8E6C9"/>
+  <text x="640" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#2E7D32">M2  GRPO</text>
+  <text x="640" y="116" text-anchor="middle" font-size="11" fill="#388E3C" font-weight="600">Energy-Aware RL</text>
+  <text x="640" y="140" text-anchor="middle" font-size="10" fill="#388E3C">Adds energy penalty</text>
+  <text x="640" y="157" text-anchor="middle" font-size="9" fill="#66BB6A" font-family="Courier New, monospace">- b*log(joules)</text>
+  <text x="640" y="173" text-anchor="middle" font-size="9" fill="#66BB6A" font-family="Courier New, monospace">- d*avg_power_w</text>
+  <text x="640" y="195" text-anchor="middle" font-size="10" fill="#2E7D32" font-weight="600">-24% energy vs M1</text>
+  <text x="640" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#2E7D32">65.4% correct | 4.45 J</text>
+
+  <line x1="740" y1="140" x2="785" y2="140" stroke="#424242" stroke-width="2" marker-end="url(#a)"/>
+  <text x="762" y="130" text-anchor="middle" font-size="8" fill="#9E9E9E" font-style="italic">+IPW</text>
+
+  <!-- M3 IPW Blend -->
+  <rect x="795" y="55" width="200" height="170" rx="12" fill="#FFF3E0" stroke="#FFA726" stroke-width="2" filter="url(#s)"/>
+  <rect x="795" y="55" width="200" height="36" rx="12" fill="#FFE0B2"/>
+  <rect x="795" y="79" width="200" height="12" fill="#FFE0B2"/>
+  <text x="895" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#E65100">M3  GRPO</text>
+  <text x="895" y="116" text-anchor="middle" font-size="11" fill="#EF6C00" font-weight="600">IPW Blend RL</text>
+  <text x="895" y="140" text-anchor="middle" font-size="10" fill="#EF6C00">Blends IPW reward</text>
+  <text x="895" y="157" text-anchor="middle" font-size="9" fill="#FFA726" font-family="Courier New, monospace">+ lambda * R_IPW</text>
+  <text x="895" y="173" text-anchor="middle" font-size="9" fill="#FFA726" font-family="Courier New, monospace">lam in {0.1, 0.25, 0.5}</text>
+  <text x="895" y="195" text-anchor="middle" font-size="10" fill="#E65100" font-weight="600">-35% energy vs M1</text>
+  <text x="895" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#E65100">67.5% correct | 3.76 J</text>
+
+  <!-- Arrow M3 to M4 -->
+  <path d="M 995 140 L 1050 140 Q 1080 140 1080 200 L 1080 290 Q 1080 320 1110 320 L 1130 320" fill="none" stroke="#424242" stroke-width="2" marker-end="url(#a)"/>
+  <text x="1065" y="220" font-size="8" fill="#9E9E9E" font-style="italic">kernel policy</text>
+
+  <!-- M4 Runtime PPO -->
+  <rect x="1140" y="235" width="180" height="170" rx="12" fill="#FFEBEE" stroke="#EF5350" stroke-width="2" filter="url(#s)"/>
+  <rect x="1140" y="235" width="180" height="36" rx="12" fill="#FFCDD2"/>
+  <rect x="1140" y="259" width="180" height="12" fill="#FFCDD2"/>
+  <text x="1230" y="258" text-anchor="middle" font-size="15" font-weight="700" fill="#C62828">M4  PPO</text>
+  <text x="1230" y="296" text-anchor="middle" font-size="11" fill="#D32F2F" font-weight="600">Runtime Control</text>
+  <text x="1230" y="318" text-anchor="middle" font-size="10" fill="#D32F2F">Action space:</text>
+  <text x="1230" y="335" text-anchor="middle" font-size="10" fill="#E57373">power cap, DVFS,</text>
+  <text x="1230" y="350" text-anchor="middle" font-size="10" fill="#E57373">concurrency level</text>
+  <text x="1230" y="375" text-anchor="middle" font-size="10" fill="#C62828" font-weight="600">Adaptive runtime</text>
+  <text x="1230" y="393" text-anchor="middle" font-size="10" font-weight="600" fill="#C62828">56.7% correct | 4.44 J</text>
+
+  <line x1="1230" y1="405" x2="1230" y2="440" stroke="#424242" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- M5 HRL -->
+  <rect x="1140" y="450" width="180" height="170" rx="12" fill="#EDE7F6" stroke="#7E57C2" stroke-width="2" filter="url(#s)"/>
+  <rect x="1140" y="450" width="180" height="36" rx="12" fill="#D1C4E9"/>
+  <rect x="1140" y="474" width="180" height="12" fill="#D1C4E9"/>
+  <text x="1230" y="473" text-anchor="middle" font-size="15" font-weight="700" fill="#4527A0">M5  HRL</text>
+  <text x="1230" y="512" text-anchor="middle" font-size="11" fill="#5E35B1" font-weight="600">Hierarchical RL</text>
+  <text x="1230" y="534" text-anchor="middle" font-size="10" fill="#7E57C2">Alternating training:</text>
+  <text x="1230" y="550" text-anchor="middle" font-size="10" fill="#7E57C2">1) Kernel GRPO round</text>
+  <text x="1230" y="566" text-anchor="middle" font-size="10" fill="#7E57C2">2) Runtime PPO round</text>
+  <text x="1230" y="582" text-anchor="middle" font-size="10" fill="#7E57C2">3) Joint fine-tune</text>
+  <text x="1230" y="607" text-anchor="middle" font-size="10" font-weight="600" fill="#4527A0">56.3% correct | 3.77 J</text>
+
+  <!-- What changes strip -->
+  <rect x="50" y="250" width="945" height="48" rx="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="70" y="270" font-size="10" font-weight="700" fill="#9E9E9E">WHAT CHANGES:</text>
+  <circle cx="200" cy="278" r="5" fill="#E0E0E0"/>
+  <text x="212" y="282" font-size="10" fill="#616161">Code structure</text>
+  <circle cx="340" cy="278" r="5" fill="#42A5F5"/>
+  <text x="352" y="282" font-size="10" fill="#1565C0">+Speed reward</text>
+  <circle cx="470" cy="278" r="5" fill="#66BB6A"/>
+  <text x="482" y="282" font-size="10" fill="#2E7D32">+Energy penalty</text>
+  <circle cx="610" cy="278" r="5" fill="#FFA726"/>
+  <text x="622" y="282" font-size="10" fill="#E65100">+IPW blend</text>
+  <circle cx="730" cy="278" r="5" fill="#EF5350"/>
+  <text x="742" y="282" font-size="10" fill="#C62828">+Runtime actions</text>
+  <circle cx="870" cy="278" r="5" fill="#7E57C2"/>
+  <text x="882" y="282" font-size="10" fill="#4527A0">+Joint training</text>
+
+  <!-- Shared Infrastructure -->
+  <text x="45" y="328" font-size="12" font-weight="700" fill="#9E9E9E" letter-spacing="2">SHARED INFRASTRUCTURE</text>
+
+  <rect x="50" y="348" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5" filter="url(#s)"/>
+  <text x="150" y="370" text-anchor="middle" font-size="11" font-weight="600" fill="#424242">Base Model</text>
+  <text x="150" y="388" text-anchor="middle" font-size="10" fill="#757575">Qwen2.5-Coder-7B-Instruct</text>
+  <text x="150" y="404" text-anchor="middle" font-size="10" fill="#757575">LoRA: r=64, a=16, q/k/v/o</text>
+
+  <rect x="280" y="348" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5" filter="url(#s)"/>
+  <text x="380" y="370" text-anchor="middle" font-size="11" font-weight="600" fill="#424242">GRPO Algorithm</text>
+  <text x="380" y="388" text-anchor="middle" font-size="10" fill="#757575">Group size k=8, keep top 4</text>
+  <text x="380" y="404" text-anchor="middle" font-size="10" fill="#757575">KL penalty beta=0.04</text>
+
+  <rect x="510" y="348" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5" filter="url(#s)"/>
+  <text x="610" y="370" text-anchor="middle" font-size="11" font-weight="600" fill="#424242">KernelBench</text>
+  <text x="610" y="388" text-anchor="middle" font-size="10" fill="#757575">80 tasks x 4 difficulty levels</text>
+  <text x="610" y="404" text-anchor="middle" font-size="10" fill="#757575">Compile + correctness + perf</text>
+
+  <rect x="740" y="348" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5" filter="url(#s)"/>
+  <text x="840" y="370" text-anchor="middle" font-size="11" font-weight="600" fill="#424242">GPU Telemetry</text>
+  <text x="840" y="388" text-anchor="middle" font-size="10" fill="#757575">NVML power sampling (50ms)</text>
+  <text x="840" y="404" text-anchor="middle" font-size="10" fill="#757575">Energy integration + IPW</text>
+
+  <rect x="970" y="348" width="120" height="60" rx="10" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5" filter="url(#s)"/>
+  <text x="1030" y="370" text-anchor="middle" font-size="11" font-weight="600" fill="#424242">Seeds</text>
+  <text x="1030" y="390" text-anchor="middle" font-size="10" fill="#757575">11, 22, 33</text>
+
+  <!-- Evaluation -->
+  <text x="45" y="445" font-size="12" font-weight="700" fill="#9E9E9E" letter-spacing="2">EVALUATION FRAMEWORK</text>
+  <rect x="50" y="462" width="1040" height="100" rx="12" fill="#FFFDE7" stroke="#FFF176" stroke-width="1.5" filter="url(#s)"/>
+
+  <text x="75" y="488" font-size="11" font-weight="700" fill="#F57F17">Core Metrics</text>
+  <rect x="75" y="496" width="990" height="24" rx="6" fill="#FFF9C4"/>
+  <text x="95" y="513" font-size="10" fill="#F57F17" font-weight="600">compile_rate</text>
+  <text x="195" y="513" font-size="10" fill="#F57F17" font-weight="600">correctness</text>
+  <text x="290" y="513" font-size="10" fill="#F57F17" font-weight="600">pass@k</text>
+  <text x="360" y="513" font-size="10" fill="#F57F17" font-weight="600">runtime_ms</text>
+  <text x="460" y="513" font-size="10" fill="#F57F17" font-weight="600">joules</text>
+  <text x="525" y="513" font-size="10" fill="#F57F17" font-weight="600">avg_power_w</text>
+  <text x="630" y="513" font-size="10" fill="#F57F17" font-weight="600">speedup</text>
+  <text x="710" y="513" font-size="10" fill="#F57F17" font-weight="600">sla_violation</text>
+  <text x="820" y="513" font-size="10" fill="#F57F17" font-weight="600">reward_mean</text>
+  <text x="930" y="513" font-size="10" fill="#F57F17" font-weight="600">reward_std</text>
+
+  <text x="75" y="540" font-size="11" font-weight="700" fill="#F57F17">Key Analyses</text>
+  <rect x="75" y="546" width="130" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="140" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Pareto frontier</text>
+  <rect x="213" y="546" width="144" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="285" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Pairwise significance</text>
+  <rect x="365" y="546" width="160" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="445" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Matched-runtime energy</text>
+  <rect x="533" y="546" width="80" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="573" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Ablations</text>
+  <rect x="621" y="546" width="120" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="681" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Failure taxonomy</text>
+  <rect x="749" y="546" width="130" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="814" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Cross-hardware</text>
+  <rect x="887" y="546" width="110" height="16" rx="4" fill="#FFF9C4"/>
+  <text x="942" y="558" text-anchor="middle" font-size="9" fill="#F57F17">Generalization</text>
+
+  <!-- Key Results -->
+  <text x="45" y="600" font-size="12" font-weight="700" fill="#9E9E9E" letter-spacing="2">KEY RESULTS</text>
+
+  <rect x="50" y="618" width="220" height="60" rx="8" fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.2"/>
+  <text x="160" y="644" text-anchor="middle" font-size="22" font-weight="800" fill="#1565C0">+19pp</text>
+  <text x="160" y="666" text-anchor="middle" font-size="10" fill="#1976D2">Correctness gain (M0 to M1)</text>
+
+  <rect x="300" y="618" width="220" height="60" rx="8" fill="#E8F5E9" stroke="#66BB6A" stroke-width="1.2"/>
+  <text x="410" y="644" text-anchor="middle" font-size="22" font-weight="800" fill="#2E7D32">-37%</text>
+  <text x="410" y="666" text-anchor="middle" font-size="10" fill="#388E3C">Energy at matched runtime (M3 vs M1)</text>
+
+  <rect x="550" y="618" width="220" height="60" rx="8" fill="#FFF3E0" stroke="#FFA726" stroke-width="1.2"/>
+  <text x="660" y="644" text-anchor="middle" font-size="22" font-weight="800" fill="#E65100">10.27</text>
+  <text x="660" y="666" text-anchor="middle" font-size="10" fill="#EF6C00">Mean reward (M3, best overall)</text>
+
+  <rect x="800" y="618" width="220" height="60" rx="8" fill="#FFEBEE" stroke="#EF5350" stroke-width="1.2"/>
+  <text x="910" y="644" text-anchor="middle" font-size="22" font-weight="800" fill="#C62828">15.8ms</text>
+  <text x="910" y="666" text-anchor="middle" font-size="10" fill="#D32F2F">Fastest runtime (M5 HRL)</text>
+
+  <rect x="1050" y="618" width="220" height="60" rx="8" fill="#EDE7F6" stroke="#7E57C2" stroke-width="1.2"/>
+  <text x="1160" y="644" text-anchor="middle" font-size="22" font-weight="800" fill="#4527A0">3.76 J</text>
+  <text x="1160" y="666" text-anchor="middle" font-size="10" fill="#5E35B1">Lowest energy (M3 IPW Blend)</text>
+
+  <!-- Footer -->
+  <text x="750" y="730" text-anchor="middle" font-size="10" fill="#BDBDBD">KITE: Kernel Intelligence-per-Watt Tree Explorer  |  H100 GPU  |  KernelBench Benchmark  |  3 seeds x 80 tasks x 4 levels</text>
+
+</svg>

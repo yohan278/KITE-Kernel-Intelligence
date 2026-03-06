@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 880" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#424242"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4A9EDA"/>
+    </marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="gpuGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF8E1"/>
+      <stop offset="100%" stop-color="#FFF3E0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1400" height="880" fill="#FAFAFA" rx="12"/>
+  <text x="700" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#212121">GRPO Training Pipeline: M1 / M2 / M3</text>
+
+  <!-- ROW 1: Task Pool, Prompt Builder, Qwen Model -->
+
+  <rect x="40" y="70" width="200" height="110" rx="10" fill="#EDE7F6" stroke="#B39DDB" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="140" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#4527A0">KernelBench</text>
+  <text x="140" y="118" text-anchor="middle" font-size="13" font-weight="600" fill="#4527A0">Task Pool</text>
+  <text x="140" y="143" text-anchor="middle" font-size="11" fill="#5E35B1">80 tasks, Levels 1-4</text>
+  <text x="140" y="161" text-anchor="middle" font-size="11" fill="#5E35B1">reference PyTorch code</text>
+
+  <line x1="240" y1="125" x2="310" y2="125" stroke="#424242" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="275" y="117" text-anchor="middle" font-size="9" fill="#757575" font-style="italic">KernelTask</text>
+
+  <rect x="320" y="70" width="220" height="110" rx="10" fill="#F5F5F5" stroke="#BDBDBD" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#424242">Prompt Builder</text>
+  <text x="430" y="125" text-anchor="middle" font-size="10" fill="#616161" font-style="italic">"Optimize this PyTorch model</text>
+  <text x="430" y="139" text-anchor="middle" font-size="10" fill="#616161" font-style="italic">with a custom GPU kernel."</text>
+  <text x="430" y="161" text-anchor="middle" font-size="10" fill="#616161">+ reference source code</text>
+
+  <line x1="540" y1="125" x2="610" y2="125" stroke="#424242" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="575" y="117" text-anchor="middle" font-size="9" fill="#757575" font-style="italic">prompt</text>
+
+  <rect x="620" y="60" width="340" height="130" rx="12" fill="#E3F2FD" stroke="#42A5F5" stroke-width="2" filter="url(#shadow)"/>
+  <text x="790" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1565C0">Qwen2.5-Coder-7B-Instruct</text>
+  <text x="790" y="114" text-anchor="middle" font-size="12" fill="#1976D2">+ LoRA adapter (r=64, alpha=16)</text>
+  <text x="790" y="136" text-anchor="middle" font-size="12" fill="#1976D2">targets: q, k, v, o projections</text>
+  <text x="790" y="162" text-anchor="middle" font-size="11" fill="#1976D2" font-weight="600">Generates k=8 candidate kernels per prompt</text>
+
+  <line x1="790" y1="190" x2="790" y2="250" stroke="#424242" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="810" y="225" font-size="9" fill="#757575" font-style="italic">8 CUDA kernel</text>
+  <text x="810" y="237" font-size="9" fill="#757575" font-style="italic">completions</text>
+
+  <!-- Loop-back arrow -->
+  <path d="M 1070 125 Q 1130 125 1130 500 Q 1130 780 790 780 Q 450 780 450 700 Q 450 620 620 620 Q 700 620 700 500 Q 700 310 740 260" fill="none" stroke="#4A9EDA" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrow-blue)"/>
+  <text x="1155" y="440" font-size="10" fill="#4A9EDA" font-weight="600" transform="rotate(90,1155,440)">Updated LoRA weights</text>
+
+  <!-- ROW 2: GPU Evaluation -->
+
+  <rect x="200" y="260" width="800" height="200" rx="12" fill="url(#gpuGrad)" stroke="#FFB74D" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="600" y="284" text-anchor="middle" font-size="14" font-weight="700" fill="#E65100">GPU Evaluation (H100)</text>
+
+  <rect x="225" y="300" width="180" height="140" rx="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="315" y="322" text-anchor="middle" font-size="12" font-weight="600" fill="#424242">Pre-check</text>
+  <text x="315" y="345" text-anchor="middle" font-size="10" fill="#616161">AST parse</text>
+  <text x="315" y="362" text-anchor="middle" font-size="10" fill="#616161">ModelNew class check</text>
+  <text x="315" y="379" text-anchor="middle" font-size="10" fill="#616161">forward() arity match</text>
+  <text x="315" y="420" text-anchor="middle" font-size="9" fill="#EF5350" font-style="italic">fail: reward = -1.0</text>
+
+  <line x1="405" y1="370" x2="460" y2="370" stroke="#424242" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="470" y="300" width="250" height="140" rx="8" fill="#FFF3E0" stroke="#FFB74D" stroke-width="1.2"/>
+  <text x="595" y="322" text-anchor="middle" font-size="12" font-weight="600" fill="#E65100">KernelBench Eval</text>
+  <text x="595" y="345" text-anchor="middle" font-size="10" fill="#BF360C">Compile candidate kernel</text>
+  <text x="595" y="362" text-anchor="middle" font-size="10" fill="#BF360C">3 correctness trials</text>
+  <text x="595" y="379" text-anchor="middle" font-size="10" fill="#BF360C">25 performance trials</text>
+  <text x="595" y="400" text-anchor="middle" font-size="10" fill="#BF360C" font-weight="600">CUDA event timing</text>
+  <text x="595" y="420" text-anchor="middle" font-size="10" fill="#BF360C">runtime_ms, speedup</text>
+
+  <rect x="745" y="300" width="230" height="140" rx="8" fill="#E8F5E9" stroke="#66BB6A" stroke-width="1.2"/>
+  <text x="860" y="322" text-anchor="middle" font-size="12" font-weight="600" fill="#2E7D32">NVML Power Sampler</text>
+  <text x="860" y="345" text-anchor="middle" font-size="10" fill="#388E3C">Concurrent daemon thread</text>
+  <text x="860" y="362" text-anchor="middle" font-size="10" fill="#388E3C">polls pynvml every 50ms</text>
+  <text x="860" y="385" text-anchor="middle" font-size="10" fill="#388E3C">Trapezoidal integration</text>
+  <text x="860" y="422" text-anchor="middle" font-size="10" fill="#388E3C">avg_power_w, joules</text>
+
+  <!-- Arrow down from GPU Eval -->
+  <line x1="600" y1="460" x2="600" y2="510" stroke="#424242" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="500" y="492" font-size="9" fill="#757575" font-style="italic">compile_ok, correct, runtime_ms, speedup, joules, avg_power_w</text>
+
+  <!-- ROW 3: Reward Computation -->
+
+  <rect x="150" y="520" width="900" height="180" rx="12" fill="#FFEBEE" stroke="#EF9A9A" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="600" y="546" text-anchor="middle" font-size="14" font-weight="700" fill="#C62828">Reward Computation</text>
+
+  <rect x="180" y="558" width="540" height="48" rx="6" fill="#FFFFFF" stroke="#FFCDD2" stroke-width="1"/>
+  <text x="450" y="580" text-anchor="middle" font-size="12" font-weight="600" fill="#B71C1C" font-family="Courier New, monospace">R = a*log(spd) - n*log(rt) - b*log(J) - d*W - g*max(0, lat-SLA)</text>
+  <text x="450" y="596" text-anchor="middle" font-size="11" fill="#C62828" font-family="Courier New, monospace">+ lambda * R_IPW          (M3 only)</text>
+
+  <rect x="180" y="616" width="540" height="72" rx="6" fill="#FFFFFF" stroke="#FFCDD2" stroke-width="1"/>
+
+  <rect x="182" y="618" width="536" height="22" rx="0" fill="#E3F2FD"/>
+  <text x="198" y="634" font-size="10.5" font-weight="600" fill="#1565C0">M1 Throughput</text>
+  <text x="340" y="634" font-size="10.5" fill="#1565C0">b = 0       d = 0       lam = 0</text>
+  <text x="570" y="634" font-size="10" fill="#1565C0" font-style="italic">speed only</text>
+
+  <rect x="182" y="640" width="536" height="22" rx="0" fill="#E8F5E9"/>
+  <text x="198" y="656" font-size="10.5" font-weight="600" fill="#2E7D32">M2 Energy</text>
+  <text x="340" y="656" font-size="10.5" fill="#2E7D32">b = 0.5    d = 0.01   lam = 0</text>
+  <text x="570" y="656" font-size="10" fill="#2E7D32" font-style="italic">+ energy penalty</text>
+
+  <rect x="182" y="662" width="536" height="22" rx="0" fill="#FFF3E0"/>
+  <text x="198" y="678" font-size="10.5" font-weight="600" fill="#E65100">M3 IPW Blend</text>
+  <text x="340" y="678" font-size="10.5" fill="#E65100">b = 0.5    d = 0.01   lam = {0.1, 0.25, 0.5}</text>
+  <text x="570" y="678" font-size="10" fill="#E65100" font-style="italic">+ IPW blend</text>
+
+  <rect x="745" y="558" width="280" height="130" rx="6" fill="#FFFFFF" stroke="#FFCDD2" stroke-width="1"/>
+  <text x="885" y="580" text-anchor="middle" font-size="11" font-weight="600" fill="#C62828">Failure Penalties</text>
+  <text x="885" y="602" text-anchor="middle" font-size="10.5" fill="#424242">compile_fail:  -1.0</text>
+  <text x="885" y="620" text-anchor="middle" font-size="10.5" fill="#424242">incorrect:     -0.5</text>
+  <text x="885" y="642" text-anchor="middle" font-size="10.5" fill="#424242">+ OOM penalty  (-0.5)</text>
+  <text x="885" y="670" text-anchor="middle" font-size="10" fill="#9E9E9E" font-style="italic">correct kernels get</text>
+  <text x="885" y="684" text-anchor="middle" font-size="10" fill="#9E9E9E" font-style="italic">the full formula above</text>
+
+  <line x1="600" y1="700" x2="600" y2="750" stroke="#424242" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="640" y="730" font-size="9" fill="#757575" font-style="italic">8 scalar rewards</text>
+
+  <!-- ROW 4: GRPO Policy Update -->
+
+  <rect x="250" y="760" width="700" height="100" rx="12" fill="#1A237E" stroke="#1A237E" stroke-width="0" filter="url(#shadow)"/>
+  <text x="600" y="790" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">GRPO Policy Update</text>
+  <text x="600" y="812" text-anchor="middle" font-size="11" fill="#BBDEFB">Rank 8 completions: group-relative advantages (zero-mean), policy gradient + KL (beta=0.04)</text>
+  <text x="600" y="832" text-anchor="middle" font-size="11" fill="#BBDEFB">Update LoRA weights   |   80 tasks x 3 epochs x 3 seeds</text>
+
+  <rect x="1000" y="780" width="130" height="50" rx="8" fill="#F5F5F5" stroke="#BDBDBD" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="1065" y="802" text-anchor="middle" font-size="11" font-weight="600" fill="#424242">Checkpoint</text>
+  <text x="1065" y="818" text-anchor="middle" font-size="10" fill="#757575">LoRA + .json</text>
+  <line x1="950" y1="810" x2="1000" y2="810" stroke="#424242" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+</svg>
