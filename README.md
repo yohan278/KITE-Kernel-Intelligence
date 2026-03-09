@@ -6,6 +6,14 @@ WARP-K is a research framework for co-optimizing GPU kernel code generation and 
 2. **Energy-aware kernel RL** -- adds joules, power, and IPW (intelligence-per-watt) to the reward signal.
 3. **Hierarchical RL** -- alternates kernel generation (GRPO) and runtime control (PPO) under SLA constraints.
 
+### GRPO Training Pipeline
+
+![GRPO Training Pipeline](results/docs/diagrams/grpo-pipeline.png)
+
+### Telemetry Capture Pipeline
+
+![Telemetry Capture Pipeline](results/docs/diagrams/telemetry-pipeline.png)
+
 ---
 
 ## Table of Contents
